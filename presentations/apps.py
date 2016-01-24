@@ -4,4 +4,4 @@ from django.apps import AppConfig
 
 
 class StudyConfig(AppConfig):
-    name = 'slides'
+    name = 'presentations'
