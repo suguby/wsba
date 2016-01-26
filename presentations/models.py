@@ -45,9 +45,8 @@ class Questions(models.Model):
     presentation_number = models.ForeignKey(Presentation, verbose_name='Номер презентации')
     number = IntegerField(verbose_name='Номер вопроса')
     text = TextField(verbose_name='Текст вопроса')
-    answer_type = IntegerField(verbose_name='Тип ответа')
+    answers_type = IntegerField(verbose_name='Тип ответов')
     # TODO просто будем наследовать модели от этой
-    right_answer = models.BooleanField(verbose_name='Является правильным ответом')
 
     class Meta:
         db_table = 'questions'
@@ -56,6 +55,7 @@ class Questions(models.Model):
 class Answers(models.Model):
     question = models.ForeignKey(Questions)
     text = CharField(verbose_name='Текст ответа', max_length=64)
+    is_right = models.BooleanField(verbose_name='Является правильным ответом')
 
     class Meta:
         db_table = 'answers'
