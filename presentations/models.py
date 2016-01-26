@@ -41,7 +41,7 @@ class CoreSlide(models.Model):
         db_table = 'slides'
 
 
-class Questions(models.Model):
+class Question(models.Model):
     presentation_number = models.ForeignKey(Presentation, verbose_name='Номер презентации')
     number = IntegerField(verbose_name='Номер вопроса')
     text = TextField(verbose_name='Текст вопроса')
@@ -52,8 +52,8 @@ class Questions(models.Model):
         db_table = 'questions'
 
 
-class Answers(models.Model):
-    question = models.ForeignKey(Questions)
+class Answer(models.Model):
+    question = models.ForeignKey(Question)
     text = CharField(verbose_name='Текст ответа', max_length=64)
     is_right = models.BooleanField(verbose_name='Является правильным ответом')
 
@@ -61,7 +61,7 @@ class Answers(models.Model):
         db_table = 'answers'
 
 
-class UserAnswers(models.Model):
+class UserAnswer(models.Model):
     """
         наличие этой записи соответствует ответу user на вариант answer
         иногда может быть комментарий к ответу
