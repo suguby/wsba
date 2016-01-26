@@ -7,9 +7,9 @@
 <body>
     <form method="post" action="">
         <H3>{{ question.text }}</H3>
-
-        <input type="radio" name="Yes" value="Да"> Да<Br>
-        <input type="radio" name="No" value="Нет"> Нет<Br>
+        {% for answer in answers %}
+            <input type="radio" name=answer value=answer> answer<Br>
+        {% endfor %}
         <input type="submit" value="Далее">
     </form>
 </body>
