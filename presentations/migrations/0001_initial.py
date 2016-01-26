@@ -51,7 +51,7 @@ class Migration(migrations.Migration):
                 ('position', models.IntegerField(default=0, verbose_name='Позиция')),
                 ('created_at', models.DateTimeField(auto_now_add=True, null=True, verbose_name='Создано')),
                 ('modified_at', models.DateTimeField(auto_now=True, null=True, verbose_name='Изменено')),
-                ('organisation', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='slides.Organisation')),
+                ('organisation', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='presentations.Organisation')),
             ],
             options={
                 'db_table': 'presentations',
@@ -60,6 +60,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='coreslide',
             name='presentation',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='slides.Presentation'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='presentations.Presentation'),
         ),
     ]
