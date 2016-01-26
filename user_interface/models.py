@@ -11,7 +11,7 @@ class ProjectUser(models.Model):
 
 class UserPresentation(models.Model):
     """
-        связка пользователь - презентации
+        связка пользователь - презентации.
         'когда кто какую проходил и сколько баллов набрал'
     """
     user = models.ForeignKey(ProjectUser)
