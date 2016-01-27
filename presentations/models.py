@@ -54,6 +54,7 @@ class Question(models.Model):
 
 class Answer(models.Model):
     question = models.ForeignKey(Question)
+    variant_number = models.IntegerField(verbose_name='Номер варианта ответа')
     text = CharField(verbose_name='Текст ответа', max_length=64)
     is_right = models.BooleanField(verbose_name='Является правильным ответом')
 
@@ -67,7 +68,7 @@ class UserAnswer(models.Model):
         иногда может быть комментарий к ответу
     """
     user = models.ForeignKey(ProjectUser, verbose_name="Пользователь")
-    answer = models.ForeignKey(Answers, verbose_name="Ответ")
+    answer = models.ForeignKey(Answer, verbose_name="Ответ")
     comment = TextField(verbose_name='Комментарий', blank=True, null=True)
 
     class Meta:
