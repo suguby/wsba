@@ -45,8 +45,12 @@ class Question(models.Model):
     presentation_number = models.ForeignKey(Presentation, verbose_name='Номер презентации')
     number = IntegerField(verbose_name='Номер вопроса')
     text = TextField(verbose_name='Текст вопроса')
-    answers_type = IntegerField(verbose_name='Тип ответов')
-    # TODO просто будем наследовать модели от этой
+    ANSWER_TYPE = (
+        ('YN', 'Yes_or_NO'),
+        ('L', 'List'),
+        ('LC', 'List_and_comment'),
+    )
+    answers_type = CharField(verbose_name='Тип ответов', max_length=2, choices=ANSWER_TYPE)
 
     class Meta:
         db_table = 'questions'
