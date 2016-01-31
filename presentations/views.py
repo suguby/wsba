@@ -16,19 +16,17 @@ class SlideView(DetailView):
     model = Question
 
     def get_context_data(self, **kwargs):
-        context = super(SlideView, self).get_context_data(**kwargs)
+        question = Question.objects.get(presentation_number_id=self.args[1], number=self.args[2])
+        self.answer_type = question.answers_type
 
-        self.answer_type = Question.objects.get(presentation_number_id=self.args[1], number=self.args[2])
-        self.text = get_object_or_404(Question,)
-        Question.objects.filter(publisher=self.answer_type)
+        context = super(SlideView, self).get_context_data(**kwargs)
+        context['variants'] = Answer.objects.get(question_id=question.id)
 
         if self.answer_type == 'YN':
             self.template_name = 'presentations/yes_no_question.html'
         elif self.answer_type == 'L':
             self.template_name = 'presentations/list_question.html'
-            context['answer_list'] = self.get_queryset()
         elif self.answer_type == 'LC':
             self.template_name = 'presentations/list_and_comment_question.html'
-            context['answer_list'] = self.get_queryset()
 
         return context
