@@ -5,8 +5,9 @@
     <title>WSBA</title>
 </head>
 <body>
-    <form method="post" action="">
-        <H3>{{ question.text }}</H3>
+
+    <form method="post" action="">{% csrf_token %}
+        <h3>{{ question_text }}</h3>
         {% for variant in variants %}
             <input type="radio" name="{{ variant }}" value="{{ variant }}">{{ variant }}<Br>
         {% endfor %}

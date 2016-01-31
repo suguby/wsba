@@ -62,6 +62,9 @@ class Answer(models.Model):
     text = CharField(verbose_name='Текст ответа', max_length=64)
     is_right = models.BooleanField(verbose_name='Является правильным ответом')
 
+    def __str__(self):
+        return self.text
+
     class Meta:
         db_table = 'answers'
 

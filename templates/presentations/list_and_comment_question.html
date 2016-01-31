@@ -6,10 +6,11 @@
 </head>
 <body>
     <form method="post" action="">
-        <H3>{{ question.text }}</H3>
-        {% for answer in answers %}
-            <input type="radio" name=answer value=answer> answer<Br>
+        <H3>{{ question_text }}</H3>
+        {% for variant in variants %}
+             <input type="radio" name="{{ variant }}" value="{{ variant }}">{{ variant }}<br>
         {% endfor %}
+        Комментарий:<br>
         <input type="text" name="comment"> {{ comment }}<Br>
         <input type="submit" value="Далее">
     </form>
