@@ -29,7 +29,7 @@ class Presentation(models.Model):
 
 
 class CoreSlide(models.Model):
-    presentation = models.ForeignKey(Presentation)
+    question = models.ForeignKey(Question)
     image = models.ImageField()
     description = models.TextField()
     slug = models.SlugField(verbose_name='Слаг', null=True, blank=True)

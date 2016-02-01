@@ -5,18 +5,21 @@ from django.shortcuts import render, get_object_or_404
 # Create your views here.
 from django.views.generic import DetailView, TemplateView
 
-from presentations.models import Question, Answer
-
-
-class CoreSlide(DetailView):
-    pass
+from presentations.models import Question, Answer, CoreSlide
 
 
 class SlideView(TemplateView):
     model = Question
 
     def get_context_data(self, **kwargs):
-        question = Question.objects.get(presentation_number_id__exact=self.args[1], number__exact=self.args[2])
+
+        # question = Question.objects.get(presentation_number_id__exact=self.args[1], number__exact=self.args[2])
+        for slide in CoreSlide.objects.filter(id=kwargs['slide']).select_related('question'):
+            question = slide.question
+            break
+        else:
+            raise Exception('Нет такого слайда!!!')
+
         self.answer_type = question.answers_type
 
         context = super(SlideView, self).get_context_data(**kwargs)

@@ -22,5 +22,5 @@ from user_interface.views import IndexView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^nnn/', include('presentations.urls')),
+    url(r'^slides/', include('presentations.slides_urls')),
 ]
