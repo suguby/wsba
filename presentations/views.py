@@ -21,13 +21,20 @@ class SlideView(TemplateView):
 
         context = super(SlideView, self).get_context_data(**kwargs)
         context['variants'] = Answer.objects.filter(question_id=question.id)
-        context['question_text'] = question.text # а можно в шаблон передать аттрибут класса? question.text например
+        # TODO не надо переназывать сущности в шаблоне - если это Answer то и назови answers
+        context['question_text'] = question.text
+        # а можно в шаблон передать аттрибут класса? question.text например
+        # TODO можно конечно. лучше просто передавать обьект, а в шаблоне использовать {{ question.text }}
         if self.answer_type == 'YN':
             self.template_name = 'presentations/yes_no_question.html'
         elif self.answer_type == 'L':
             self.template_name = 'presentations/list_question.html'
         elif self.answer_type == 'LC':
             self.template_name = 'presentations/list_and_comment_question.html'
+        # TODO все шаблоны практически одинаковы - копипаста с небольшими изменениями :(
+        # надо унифицировать - передавать тип вопроса, и от него делать или radio или choice
+        # так же и с вариантами ответа - если variant.has_comment - то показывать input text
+
 
         return context
 
