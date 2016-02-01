@@ -28,6 +28,20 @@ class Presentation(models.Model):
         db_table = 'presentations'
 
 
+class Question(models.Model):
+    number = IntegerField(verbose_name='Номер вопроса')
+    text = TextField(verbose_name='Текст вопроса')
+    ANSWER_TYPE = (
+        ('YN', 'Yes_or_NO'),
+        ('L', 'List'),
+        ('LC', 'List_and_comment'),
+    )  # Изучи model_utils.Choices  http://django-model-utils.readthedocs.org/en/latest/utilities.html#choices
+    answers_type = CharField(verbose_name='Тип ответов', max_length=2, choices=ANSWER_TYPE)
+
+    class Meta:
+        db_table = 'questions'
+
+
 class CoreSlide(models.Model):
     presentation_number = models.ForeignKey(Presentation, verbose_name='Презентация')
     # TODO здесь суффикс _number не нужен - думай о поле как о ссылке на презентацию
@@ -42,19 +56,6 @@ class CoreSlide(models.Model):
     class Meta:
         db_table = 'slides'
 
-
-class Question(models.Model):
-    number = IntegerField(verbose_name='Номер вопроса')
-    text = TextField(verbose_name='Текст вопроса')
-    ANSWER_TYPE = (
-        ('YN', 'Yes_or_NO'),
-        ('L', 'List'),
-        ('LC', 'List_and_comment'),
-    )  # Изучи model_utils.Choices  http://django-model-utils.readthedocs.org/en/latest/utilities.html#choices
-    answers_type = CharField(verbose_name='Тип ответов', max_length=2, choices=ANSWER_TYPE)
-
-    class Meta:
-        db_table = 'questions'
 
 
 class Answer(models.Model):

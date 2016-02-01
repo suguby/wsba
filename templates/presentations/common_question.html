@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WSBA</title>
+</head>
+<body>
+    <form method="post" action="">
+        <H3>{{ question_text }}</H3>
+        {% for variant in variants %}
+             <input type="radio" name="{{ variant }}" value="{{ variant }}">{{ variant }}<br>
+        {% endfor %}
+        Комментарий:<br>
+        <input type="text" name="comment"> {{ comment }}<Br>
+        <input type="submit" value="Далее">
+    </form>
+</body>
+</html>
