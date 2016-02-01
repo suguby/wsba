@@ -29,7 +29,9 @@ class Presentation(models.Model):
 
 
 class CoreSlide(models.Model):
-    question = models.ForeignKey(Question)
+    presentation_number = models.ForeignKey(Presentation, verbose_name='Презентация')
+    # TODO здесь суффикс _number не нужен - думай о поле как о ссылке на презентацию
+    question = models.ForeignKey(Question, null=True, blank=True)
     image = models.ImageField()
     description = models.TextField()
     slug = models.SlugField(verbose_name='Слаг', null=True, blank=True)
@@ -42,8 +44,6 @@ class CoreSlide(models.Model):
 
 
 class Question(models.Model):
-    presentation_number = models.ForeignKey(Presentation, verbose_name='Номер презентации')
-    # TODO здесь суффикс _number не нужен - думай о поле как о ссылке на презентацию
     number = IntegerField(verbose_name='Номер вопроса')
     text = TextField(verbose_name='Текст вопроса')
     ANSWER_TYPE = (
