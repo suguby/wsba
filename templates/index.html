@@ -25,6 +25,12 @@
         </tr>
 {% endfor %}
 </table>
-
+<hr>
+Польвователи текущей организации:
+<ul>
+{% for i in test.organisation.all %}
+   <li>{{ i.name }}</li>
+{% endfor %}
+</ul>
 </body>
 </html>
