@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
+from user_interface.models import *
+from presentations.models import Organisation
 
-# Register your models here.
+admin.site.register(ProjectUser)
+admin.site.register(Organisation)

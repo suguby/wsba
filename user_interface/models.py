@@ -2,11 +2,19 @@
 from django.db import models
 
 
+
 class ProjectUser(models.Model):
     name = models.CharField(max_length=64)
+    organisation = models.ForeignKey('presentations.Organisation', related_name="organisation")
+
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         db_table = 'project_users'
+        verbose_name = "Пользователь"
+        verbose_name_plural = "Пользователи"
 
 
 class UserPresentation(models.Model):
