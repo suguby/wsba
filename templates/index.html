@@ -6,9 +6,11 @@
 </head>
 <body>
 
-Привет, {{ user }}!
+Привет, <strong>{{ user }}</strong>! Ваша компания: <strong>{{ user.organisation.name }}</strong>
+<hr>
+Презентаций: <strong>{{ presentation|length }}</strong>
 
-
+{{ test }}
 
 </body>
 </html>
