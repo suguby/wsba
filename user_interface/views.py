@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.views.generic import TemplateView
+from user_interface.models import ProjectUser
 
 
 class IndexView(TemplateView):
@@ -9,7 +10,7 @@ class IndexView(TemplateView):
         context = super(IndexView, self).get_context_data(**kwargs)
 
         context.update({
-            'test': 123
+            'user': ProjectUser.objects.get(name='tester')
         })
 
         return context
