@@ -14,7 +14,7 @@ class IndexView(TemplateView):
 
         context.update({
             'user': projectuser,
-            'presentation': Presentation.objects.filter(
+            'presentations': Presentation.objects.filter(
                 organisation=projectuser.organisation
             ),
 

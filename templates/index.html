@@ -8,9 +8,23 @@
 
 Привет, <strong>{{ user }}</strong>! Ваша компания: <strong>{{ user.organisation.name }}</strong>
 <hr>
-Презентаций: <strong>{{ presentation|length }}</strong>
+Презентаций: <strong>{{ presentations|length }}</strong>
+<br><br>
+<table border="1">
+  <tr>
+    <td><strong>Название</strong></td> <td><strong>Дата создания<strong></td> <td><strong>Дата изменения<strong></td>
+    <td><strong>Пройти<strong></td>
+  </tr>
+    {% for presentation in presentations %}
+         <tr>
+    <td>{{ presentation.name }}</td>
+    <td>{{ presentation.created_at }}</td>
+    <td>{{ presentation.modified_at }}</td>
+    <td><a href="">огонь</a> </td>
 
-{{ test }}
+        </tr>
+{% endfor %}
+</table>
 
 </body>
 </html>
