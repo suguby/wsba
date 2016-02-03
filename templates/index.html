@@ -13,14 +13,14 @@
 <table border="1">
   <tr>
     <td><strong>Название</strong></td> <td><strong>Дата создания<strong></td> <td><strong>Дата изменения<strong></td>
-    <td><strong>Пройти<strong></td>
+    <td><strong>Пройти</strong></td>
   </tr>
     {% for presentation in presentations %}
          <tr>
     <td>{{ presentation.name }}</td>
     <td>{{ presentation.created_at }}</td>
     <td>{{ presentation.modified_at }}</td>
-    <td><a href="">огонь</a> </td>
+    <td><a href="">посмотреть</a> </td>
 
         </tr>
 {% endfor %}
@@ -31,6 +31,7 @@
 {% for i in test.organisation.all %}
    <li>{{ i.name }}</li>
 {% endfor %}
+(если для пробы - то сделай отдельный файл tmp.html а то не очень понятно планируется ли это в проду? )
 </ul>
 </body>
 </html>
