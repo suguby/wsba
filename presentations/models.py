@@ -32,10 +32,9 @@ class Question(models.Model):
     number = IntegerField(verbose_name='Номер вопроса')
     text = TextField(verbose_name='Текст вопроса')
     ANSWER_TYPE = (
-        ('YN', 'Yes_or_NO'),
-        ('L', 'List'),
-        ('LC', 'List_and_comment'),
-    )  # Изучи model_utils.Choices  http://django-model-utils.readthedocs.org/en/latest/utilities.html#choices
+        ('M', 'Multivariate response'),
+        ('U', 'Univariate response'),
+    )
     answers_type = CharField(verbose_name='Тип ответов', max_length=2, choices=ANSWER_TYPE)
 
     class Meta:
@@ -43,8 +42,7 @@ class Question(models.Model):
 
 
 class CoreSlide(models.Model):
-    presentation_number = models.ForeignKey(Presentation, verbose_name='Презентация')
-    # TODO здесь суффикс _number не нужен - думай о поле как о ссылке на презентацию
+    presentation = models.ForeignKey(Presentation, verbose_name='Презентация')
     question = models.ForeignKey(Question, null=True, blank=True)
     image = models.ImageField()
     description = models.TextField()
@@ -57,12 +55,12 @@ class CoreSlide(models.Model):
         db_table = 'slides'
 
 
-
 class Answer(models.Model):
     question = models.ForeignKey(Question)
     variant_number = models.IntegerField(verbose_name='Номер варианта ответа')
     text = CharField(verbose_name='Текст ответа', max_length=64)
     is_right = models.BooleanField(verbose_name='Является правильным ответом')
+    has_comment = models.BooleanField(verbose_name="Ответ с комментарием")
 
     def __str__(self):
         return self.text

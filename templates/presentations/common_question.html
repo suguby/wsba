@@ -6,12 +6,21 @@
 </head>
 <body>
     <form method="post" action="">
+        <img src="{{ slide.image }}">
         <H3>{{ question_text }}</H3>
-        {% for variant in variants %}
-             <input type="radio" name="{{ variant }}" value="{{ variant }}">{{ variant }}<br>
+    
+        {% for answer in answers %}
+            {% if answers_type == 'U' %}
+                <input type="radio" name="{{ answer }}" value="{{ answer }}">{{ answer }}<br>
+            {% endif %}
+            {% if answers_type == 'M' %}
+                <input type="checkbox" name="{{ answer }}" value="{{ answer }}">{{ answer }}<br>
+            {% endif %}
+            {% if answer.has_comment %}
+                Комментарий:<br>
+                <input type="text" name="comment"> {{ comment }}<Br>
+            {% endif %}
         {% endfor %}
-        Комментарий:<br>
-        <input type="text" name="comment"> {{ comment }}<Br>
         <input type="submit" value="Далее">
     </form>
 </body>

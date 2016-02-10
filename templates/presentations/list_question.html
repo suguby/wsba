@@ -7,8 +7,8 @@
 <body>
     <form method="post" action="">
         <h3>{{ question_text }}</h3>
-        {% for variant in variants %}
-             <input type="radio" name="{{ variant }}" value="{{ variant }}">{{ variant }}<Br>
+        {% for answer in answers %}
+             <input type="radio" name="{{ answer }}" value="{{ answer }}">{{ answer }}<Br>
         {% endfor %}
         <input type="submit" value="Далее">
     </form>
