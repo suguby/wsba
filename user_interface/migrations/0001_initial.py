@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
             name='UserPresentation',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('presentation', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='slides.Presentation')),
+                ('presentation', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='presentations.Presentation')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='user_interface.ProjectUser')),
             ],
             options={
@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
             name='UserSlides',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('slide', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='slides.CoreSlide')),
+                ('slide', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='presentations.CoreSlide')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='user_interface.ProjectUser')),
             ],
             options={
