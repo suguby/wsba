@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
-from django.views.generic import TemplateView
+
+from wsba.views import WsbaTemplateView
 
 
-class IndexView(TemplateView):
-    template_name = 'index.html'
+class OrganisationIndexView(WsbaTemplateView):
+    template_name = 'ui/index.html'
+
