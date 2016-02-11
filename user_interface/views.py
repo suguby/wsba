@@ -11,14 +11,14 @@ class IndexView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
 
-        projectuser = ProjectUser.objects.get(name='tester')
+        project_user = ProjectUser.objects.get(name='tester')
 
-        org = Organisation.objects.get(name=projectuser.organisation.name)
+        org = project_user.organisation  # TODO зачем еще раз делать запрос? у пользователя уже есть организация
 
         context.update({
-            'user': projectuser,
+            'user': project_user,
             'presentations': Presentation.objects.filter(
-                organisation=projectuser.organisation
+                organisation=project_user.organisation
             ),
 
             'test': org,
