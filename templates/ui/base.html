@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+
+{%  block title %}{{ organisation.name }}{% endblock %}
+
+{%  block organization %}
+    <a class="navbar-brand" href="/{{ organisation.slug }}">{{ organisation.name }}</a>
+{% endblock %}
