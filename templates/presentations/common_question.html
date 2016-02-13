@@ -1,20 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>WSBA</title>
-</head>
-<body>
+{% extends 'presentations/../base.html' %}
+
+{% block container%}
     <form method="post" action="">
         <img src="{{ slide.image }}">
         <H3>{{ question_text }}</H3>
     
         {% for answer in answers %}
             {% if answers_type == 'U' %}
-                <input type="radio" name="{{ answer }}" value="{{ answer }}">{{ answer }}<br>
+                <input type="radio" name="group1" value="{{ answer }}">{{ answer }}<br>
             {% endif %}
             {% if answers_type == 'M' %}
-                <input type="checkbox" name="{{ answer }}" value="{{ answer }}">{{ answer }}<br>
+                <input type="checkbox" name="group1" value="{{ answer }}">{{ answer }}<br>
             {% endif %}
             {% if answer.has_comment %}
                 Комментарий:<br>
@@ -23,5 +19,4 @@
         {% endfor %}
         <input type="submit" value="Далее">
     </form>
-</body>
-</html>
+{% endblock %}

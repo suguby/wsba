@@ -28,3 +28,4 @@ class SlideView(TemplateView):
         context['question_text'] = question.text
 
         return context
+
