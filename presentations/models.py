@@ -29,12 +29,15 @@ class Presentation(models.Model):
 
 
 class Question(models.Model):
-    number = IntegerField(verbose_name='Номер вопроса')
-    text = TextField(verbose_name='Текст вопроса')
     ANSWER_TYPE = (
+        #  TODO здесь не нужно экономить на символах - сложно поддерживать.
+        #  я бы сделал 'multi' и 'single' + по русски названия
         ('M', 'Multivariate response'),
         ('U', 'Univariate response'),
     )
+
+    number = IntegerField(verbose_name='Номер вопроса')
+    text = TextField(verbose_name='Текст вопроса')
     answers_type = CharField(verbose_name='Тип ответов', max_length=2, choices=ANSWER_TYPE)
 
     class Meta:
@@ -63,6 +66,7 @@ class Answer(models.Model):
     has_comment = models.BooleanField(verbose_name="Ответ с комментарием")
 
     def __str__(self):
+        # TODO эта функция используется в основном в логах и консоли, в шаблоне делай просто answer.text
         return self.text
 
     class Meta:
