@@ -29,3 +29,4 @@ class SlideView(TemplateView):
 
         return context
 
+    def post(self, request, *args, **kwargs):
