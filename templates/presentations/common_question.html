@@ -1,7 +1,8 @@
 {% extends 'presentations/../base.html' %}
 
 {% block container%}
-    <form method="post" action="">{% csrf_token %}
+    <form method="post" action="">
+        {% csrf_token %}
         <img src="{{ slide.image }}">
         <H3>{{ question.text }}</H3>
     
