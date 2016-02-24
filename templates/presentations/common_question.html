@@ -8,16 +8,14 @@
     
         {% for answer in answers %}
             {% if question.answers_type == 'U' %}
-{#                TODO  а почему в value лежит текст ответа? по идее там должен лежать id ответа#}
-                <input type="radio" name="group1" value="{{ answer }}">{{ answer }}<br>
+                <input type="radio" name="group1" value="{{ answer.id }}">{{ answer }}<br>
             {% endif %}
             {% if question.answers_type == 'M' %}
-                <input type="checkbox" name="group1" value="{{ answer }}">{{ answer }}<br>
+                <input type="checkbox" name="group1" value="{{ answer.id }}">{{ answer }}<br>
             {% endif %}
             {% if answer.has_comment %}
                 Комментарий:<br>
-{#                TODO  а что за переменная comment?#}
-                <input type="text" name="comment"> {{ comment }}<br>
+                <input type="text" name="comment" value=""><br>
             {% endif %}
         {% endfor %}
         <input type="submit" value="Далее">

@@ -32,6 +32,7 @@ class Question(models.Model):
     ANSWER_TYPE = (
         #  TODO здесь не нужно экономить на символах - сложно поддерживать.
         #  я бы сделал 'multi' и 'single' + по русски названия
+        # эти данные потом в БД хранить, и это могут быть миллионы дублей multi/single
         ('M', 'Multivariate response'),
         ('U', 'Univariate response'),
     )
