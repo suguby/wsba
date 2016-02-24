@@ -31,8 +31,10 @@ class SlideView(TemplateView):
         question = slide.question
         answers = Answer.objects.filter(question=question)
         # TODO удалить все старые ответы при их наличии
-            # todo 1) получить список id answers по id question
-            # todo 2) удалить записи по списку id одним запросом
+            # todo 1) получить список id из таблицы answers по ключу id question
+        list_of_id_answers = Answer.objects.filter(question_id=question.id)
+            # todo 2) удалить записи из таблицы user_answers по списку id полученных в п.1 одним запросом
+        # UserAnswer.objects.remove(list_of_id_answers)
         for answer in answers:
             if str(answer.id) in request.POST.get('group1'):
                 us = UserAnswer(answer_id=answer.id, user_id=1, comment=request.POST.get('comment'))
