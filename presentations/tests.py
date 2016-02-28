@@ -4,12 +4,9 @@ from django.test import TestCase
 
 
 class QuestionViewTests(TestCase):
-    def test_index_view_with_no_questions(self):
-        """
-        If no questions exist, an appropriate message should be displayed.
-        """
-        response = self.client.get(reverse('slide_view', ))
+
+    def test_view(self):
+        response = self.client.get(reverse('slide_view', kwargs={'slide': '1'}))
+        # response = self.client.get('/slides/1')
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "No polls are available.")
-        self.assertQuerysetEqual(response.context['latest_question_list'], [])
 
