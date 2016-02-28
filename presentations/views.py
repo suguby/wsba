@@ -15,12 +15,16 @@ class SlideView(TemplateView):
             break
         else:
             raise Exception('Нет такого слайда!!!')
-
         context = super(SlideView, self).get_context_data(**kwargs)
         context['slide'] = slide
-        context['answers'] = Answer.objects.filter(question_id=question.id)
-        context['question'] = question
-
+        if question:
+            user_old_answers = UserAnswer.objects.filter(answer__question=question, user_id=1)
+            user_old_answers = {a.answer_id: a for a in user_old_answers}
+            context['answers'] = Answer.objects.filter(question=question)
+            context['user_old_answers'] = user_old_answers
+            context['question'] = question
+        else:
+            context['question'] = None
         return context
 
     def post(self, request, *args, **kwargs):
@@ -30,11 +34,8 @@ class SlideView(TemplateView):
             raise Exception('Нет такого слайда!!!')
         question = slide.question
         answers = Answer.objects.filter(question=question)
-        # TODO удалить все старые ответы при их наличии
-            # todo 1) получить список id из таблицы answers по ключу id question
-        list_of_id_answers = Answer.objects.filter(question_id=question.id)
-            # todo 2) удалить записи из таблицы user_answers по списку id полученных в п.1 одним запросом
-        # UserAnswer.objects.remove(list_of_id_answers)
+        user_old_answers = UserAnswer.objects.filter(answer__question=question, user_id=1)
+        user_old_answers.delete()
         for answer in answers:
             if str(answer.id) in request.POST.get('group1'):
                 us = UserAnswer(answer_id=answer.id, user_id=1, comment=request.POST.get('comment'))
