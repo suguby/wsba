@@ -9,14 +9,14 @@
         <H3>{{ question.text }}</H3>
         {% for answer in answers %}
 
-            {% if question.answers_type == 'U' %}
+            {% if question.answers_type == 'single' %}
                 <input type="radio" name="group1" value="{{ answer.id }}"
                        {% if answer.id in user_old_answers %}
                            checked="1"
                        {% endif %}
                 >{{ answer }}<br>
             {% endif %}
-            {% if question.answers_type == 'M' %}
+            {% if question.answers_type == 'multi' %}
                 <input type="checkbox" name="group1" value="{{ answer.id }}"
                        {% if answer.id in user_old_answers %}
                            checked="1"
