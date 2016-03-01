@@ -28,26 +28,9 @@ class Presentation(models.Model):
         db_table = 'presentations'
 
 
-class Question(models.Model):
-    ANSWER_TYPE = (
-        #  TODO здесь не нужно экономить на символах - сложно поддерживать.
-        #  я бы сделал 'multi' и 'single' + по русски названия
-        # эти данные потом в БД хранить, и это могут быть миллионы дублей multi/single
-        ('M', 'Multivariate response'),
-        ('U', 'Univariate response'),
-    )
-
-    number = IntegerField(verbose_name='Номер вопроса')
-    text = TextField(verbose_name='Текст вопроса')
-    answers_type = CharField(verbose_name='Тип ответов', max_length=2, choices=ANSWER_TYPE)
-
-    class Meta:
-        db_table = 'questions'
-
-
 class CoreSlide(models.Model):
     presentation = models.ForeignKey(Presentation, verbose_name='Презентация')
-    question = models.ForeignKey(Question, null=True, blank=True)
+    question = models.ForeignKey('Question', null=True, blank=True)
     image = models.ImageField()
     description = models.TextField()
     slug = models.SlugField(verbose_name='Слаг', null=True, blank=True)
@@ -57,6 +40,23 @@ class CoreSlide(models.Model):
 
     class Meta:
         db_table = 'slides'
+
+
+class Question(models.Model):
+    ANSWER_TYPE = (
+        # эти данные потом в БД хранить, и это могут быть миллионы дублей multi/single
+        # это экономия на спичках - вопросов будет не миллион, а порядка 1000, пять лишних байт,
+        # 1000 * 5 = 5000 байт ~ 5Кб ;) даже на миллионе ~ 5Мб...
+        ('multi', 'Множественный выбор'),
+        ('single', 'Единичный выбор'),
+    )
+
+    number = IntegerField(verbose_name='Номер вопроса')
+    text = TextField(verbose_name='Текст вопроса')
+    answers_type = CharField(verbose_name='Тип ответов', max_length=8, choices=ANSWER_TYPE, default='multi')
+
+    class Meta:
+        db_table = 'questions'
 
 
 class Answer(models.Model):
