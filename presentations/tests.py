@@ -8,12 +8,12 @@ from presentations.models import CoreSlide, Organisation, Presentation, Question
 class QuestionViewTests(TestCase):
 
     def test_view(self):
-        organisation = Organisation.objects.create(name='ldsfl')
+        organisation = Organisation.objects.create(name='Рога и Копыта')
         presentation = Presentation.objects.create(organisation=organisation)
-        question = Question.objects.create(number=1, text='dsfds')
+        question = Question.objects.create(number=1, text='Кто виноват?')
         slide = CoreSlide.objects.create(question=question, presentation=presentation)
 
         response = self.client.get(reverse('slide_view', kwargs={'slide': slide.id}))
         self.assertEqual(response.status_code, 200)
-        #  TODO проверить что отобразился именно нужный слайд - по содержимому ответа
+        self.assertContains(response, question.text)
 
