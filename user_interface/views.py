@@ -26,20 +26,14 @@ class OrganisationIndexView(OrganisationTemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(OrganisationIndexView, self).get_context_data(**kwargs)
-
         project_user = ProjectUser.objects.get(name='tester')
-
-        org = project_user.organisation  # TODO зачем еще раз делать запрос? у пользователя уже есть организация
-
+        org = project_user.organisation
         context.update({
             'user': project_user,
             'presentations': Presentation.objects.filter(
                 organisation=project_user.organisation
             ),
-
             'test': org,
-
-
         })
 
         return context
