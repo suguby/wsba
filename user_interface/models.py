@@ -2,7 +2,6 @@
 from django.db import models
 
 
-
 class ProjectUser(models.Model):
     name = models.CharField(max_length=64)
     organisation = models.ForeignKey('presentations.Organisation', related_name='organisation')
