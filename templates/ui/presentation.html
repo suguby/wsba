@@ -1,10 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-presentation
-</body>
-</html>
+{% extends 'ui/base.html' %}
+
+{%  block container %}
+
+      <div class="row" style="padding-top: 50px;">
+          <div class="col-md-3"></div>
+          <div class="col-md-6">
+              Презентация: <strong>{{ presenation.name }}</strong>
+              <br/><br/>
+              <strong>Описание:</strong>
+              <div class="well">{{ presenation.description }}</div>
+          </div>
+          <div class="col-md-3"></div>
+      </div>
+
+
+
+{% endblock %}

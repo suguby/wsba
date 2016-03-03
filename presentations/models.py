@@ -20,6 +20,7 @@ class Presentation(models.Model):
     position = models.IntegerField(verbose_name='Позиция', default=0)
     created_at = models.DateTimeField(verbose_name='Создано', auto_now_add=True, null=True)
     modified_at = models.DateTimeField(verbose_name='Изменено', auto_now=True, null=True)
+    description = models.TextField(verbose_name='Описание', null=True, blank=True)
 
     class Meta:
         db_table = 'presentations'

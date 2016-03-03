@@ -45,5 +45,17 @@ class OrganisationIndexView(OrganisationTemplateView):
         return context
 
 
-class ShowPresentation(TemplateView):
+class ShowPresentation(OrganisationTemplateView):
     template_name = 'ui/presentation.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ShowPresentation, self).get_context_data(**kwargs)
+        presentation_id = kwargs.get('pk', '')
+        try:
+            presentation = Presentation.objects.get(id=presentation_id)
+        except Organisation.DoesNotExist:
+            raise Http404()
+        context.update(
+            presenation=presentation
+        )
+        return context
