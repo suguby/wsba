@@ -1,0 +1,16 @@
+{% extends 'ui/base.html' %}
+
+{%  block container %}
+    <div>
+    <br/><br/><br/>
+        <h3>Войдите</h3>
+        <form action="" method="post" >
+            {% csrf_token %}
+            {{ aform }}
+            <br />
+            <button type="submit">Войти</button>
+        </form>
+
+
+    </div>
+{% endblock %}
