@@ -43,3 +43,7 @@ class OrganisationIndexView(OrganisationTemplateView):
         })
 
         return context
+
+
+class ShowPresentation(TemplateView):
+    template_name = 'ui/presentation.html'

@@ -2,7 +2,7 @@
 
 {%  block container %}
     <div>
-    <br/>
+    <br/><br/>
         Привет, <strong>{{ user }}</strong>! Ваша компания: <strong>{{ user.organisation.name }}</strong>
 <hr>
 Презентаций: <strong>{{ presentations|length }}</strong>
@@ -17,19 +17,19 @@
     <td>{{ presentation.name }}</td>
     <td>{{ presentation.created_at }}</td>
     <td>{{ presentation.modified_at }}</td>
-    <td><a href="">посмотреть</a> </td>
+    <td><a href="{% url 'show_presentation' organisation.slug presentation.id %}">посмотреть</a> </td>
 
         </tr>
 {% endfor %}
 </table>
 <hr>
-Польвователи текущей организации:
-<ul>
-{% for i in test.organisation.all %}
-   <li>{{ i.name }}</li>
-{% endfor %}
-(если для пробы - то сделай отдельный файл tmp.html а то не очень понятно планируется ли это в проду? )
-</ul>
+<!--Польвователи текущей организации:-->
+<!--<ul>-->
+<!--{% for i in test.organisation.all %}-->
+   <!--<li>{{ i.name }}</li>-->
+<!--{% endfor %}-->
+<!--(если для пробы - то сделай отдельный файл tmp.html а то не очень понятно планируется ли это в проду? )-->
+<!--</ul>-->
 
 
     </div>
