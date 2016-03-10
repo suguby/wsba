@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'compressor',
+
     'user_interface',
     'presentations',
     'cms',
@@ -131,3 +133,10 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
 STATIC_ROOT = os.path.join(BASE_DIR, 'extra', 'static')
+
+COMPRESS_ROOT = STATIC_ROOT
+
+if DEBUG:
+    COMPRESS_ENABLED = False
+else:
+    COMPRESS_ENABLED = True

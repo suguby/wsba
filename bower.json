@@ -19,6 +19,7 @@
   "dependencies": {
     "bootstrap": "^3.3.6",
     "font-awesome": "fontawesome#^4.5.0",
-    "Waves": "waves#^0.7.5"
+    "Waves": "waves#^0.7.5",
+    "Blueprint-SlidePushMenus": "*"
   }
 }
