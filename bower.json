@@ -1,0 +1,24 @@
+{
+  "name": "wsba",
+  "homepage": "https://github.com/ulkoart/wsba",
+  "authors": [
+    "mitri4 <mitri4@bk.ru>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "font-awesome": "fontawesome#^4.5.0",
+    "Waves": "waves#^0.7.5"
+  }
+}

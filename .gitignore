@@ -1,9 +1,13 @@
-/static/assets
+
 wsba/settings/local.py
 extra/
 logs/
+/static/vendors
+
+
 
 ### Python template
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
