@@ -5,15 +5,15 @@
         <ul class="menu accordion-menu">
 
             <li>
-                <a href="#" class="waves-effect waves-button">
+                <a href="{% url 'cms:main' organisation.slug %}" class="waves-effect waves-button">
                     <span class="menu-icon glyphicon glyphicon-home"></span>
                     <p>Панель</p>
                 </a>
             </li>
             <li>
-                <a href="#" class="waves-effect waves-button">
-                    <span class="menu-icon glyphicon glyphicon-user"></span>
-                    <p>Профиль</p>
+                <a href="{% url 'cms:questions-list' organisation.slug %}" class="waves-effect waves-button">
+                    <span class="menu-icon glyphicon glyphicon-question-sign"></span>
+                    <p>Вопросы</p>
                 </a>
             </li>
 

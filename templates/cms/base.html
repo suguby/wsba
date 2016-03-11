@@ -5,7 +5,7 @@
     <head>
 
         <!-- Title -->
-        <title>WSBA</title>
+        <title>{% block title %}WSBA{% endblock title %}</title>
 
         <meta content="width=device-width, initial-scale=1" name="viewport">
         <meta charset="UTF-8">
@@ -15,7 +15,8 @@
 
         <!-- Styles -->
         {% block fonts %}
-        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600' rel='stylesheet' type='text/css'>
+{#        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600' rel='stylesheet' type='text/css'>#}
+        <link href='https://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
         {% endblock fonts %}
         {% compress css %}
         {% block styles %}
@@ -64,22 +65,23 @@
 
             <div class="page-inner" style="min-height:648px !important"> <!--TODO сделать авто ширину скриптом-->
 
-                {% block breadcrumb %}
+
                 <div class="page-title">
-                    <h3>Пустая страница</h3>
+                    <h3>{{ view.title }}</h3>
+                    {% block breadcrumb %}
                     <div class="page-breadcrumb">
                         <ol class="breadcrumb">
                             <li><a href="#">Главная</a></li>
-                            <li><a href="#">Layouts</a></li>
                             <li class="active">Пустая страница</li>
                         </ol>
                     </div>
+                    {% endblock breadcrumb %}
                 </div>
-                {% endblock breadcrumb %}
+
 
                 <div id="main-wrapper">
                     <div class="row">
-                        {% block content %}{% endblock content %}
+                        {% block layout %}{% endblock layout %}
                     </div><!-- Row -->
                 </div><!-- Main Wrapper -->
 

@@ -1,23 +1,20 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from django.http import Http404
 
-from presentations.models import Question, Answer, Organisation
+from presentations.models import Organisation
 
-from django.views.generic import ListView
+from django.views.generic import TemplateView
 
 
-class MainView(ListView):
-    model = Question
-    template_name = 'cms/index.html'
-    title = 'Главаная'
+class DashboardView(TemplateView):
+    title = 'Панель управления'
+    tab = 'dashboard'
+    template_name = 'cms/dashboard/index.html'
 
     def get_context_data(self, **kwargs):
-        context = super(MainView, self).get_context_data(**kwargs)
+        context = super(DashboardView, self).get_context_data(**kwargs)
         if 'organisation' in self.kwargs:
             context['organisation'] = \
                 Organisation.objects.get(slug=self.kwargs['organisation'])
         return context
 
-    def get_queryset(self):
-        org = self.kwargs['organisation']
-        return Question.objects.all()
