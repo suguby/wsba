@@ -2,6 +2,9 @@
 
 {% block back_button %}{% endblock back_button %}
 {% block edit_button %}{% endblock edit_button %}
+{% block add_button_url %}
+    {% url 'cms:questions-add' organisation.slug %}
+{% endblock add_button_url %}
 
 {% block content %}
 <div class="col-lg-12 col-md-12">
@@ -31,8 +34,8 @@
                                     Выбрать <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#">Открыть</a></li>
-                                    <li><a href="#">Редактировать</a></li>
+                                    <li><a href="{% url 'cms:questions-detail' organisation.slug object.pk %}">Открыть</a></li>
+                                    <li><a href="{% url 'cms:questions-update' organisation.slug object.pk %}">Редактировать</a></li>
                                     <li><a href="#">Копировать</a></li>
                                     <li class="divider"></li>
                                     <li><a href="#">Удалить</a></li>

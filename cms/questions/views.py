@@ -3,7 +3,7 @@
 from django.core.urlresolvers import reverse
 
 from presentations.models import Question, Organisation, Answer
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from cms.questions.forms import QuestionForm
 
 
@@ -22,7 +22,7 @@ class QuestionListView(ListView):
 
     def get_queryset(self):
         org = self.kwargs['organisation']
-        return Question.objects.all()
+        return Question.objects.all().order_by('number')
 
 
 class QuestionDetailView(DetailView):
@@ -42,7 +42,7 @@ class QuestionDetailView(DetailView):
 
 class QuestionCreateView(CreateView):
     form_class = QuestionForm
-    template_name = "cms/questions/create.html"
+    template_name = "cms/questions/edit.html"
     title = 'Добавление вопроса'
 
     def get_context_data(self, **kwargs):
@@ -53,5 +53,24 @@ class QuestionCreateView(CreateView):
         return context
 
     def get_success_url(self):
+        if 'organisation' in self.kwargs:
+            return reverse('cms:questions-list', kwargs={'organisation': self.kwargs['organisation']})
+
+
+class QuestionUpdateView(UpdateView):
+    model = Question
+    template_name = "cms/questions/edit.html"
+    fields = ['number', 'text', 'answers_type']
+    title = 'Редактирование вопроса'
+
+    def get_context_data(self, **kwargs):
+        context = super(QuestionUpdateView, self).get_context_data(**kwargs)
+        if 'organisation' in self.kwargs:
+            context['organisation'] = \
+                Organisation.objects.get(slug=self.kwargs['organisation'])
+        return context
+
+    def get_success_url(self):
+        # TODO: редирект на разные страницы
         if 'organisation' in self.kwargs:
             return reverse('cms:questions-list', kwargs={'organisation': self.kwargs['organisation']})
