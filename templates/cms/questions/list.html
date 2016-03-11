@@ -4,9 +4,8 @@
 <div class="col-lg-12 col-md-12">
     <div class="panel panel-white">
         <div class="panel-heading">
-            <h4 class="panel-title">Список</h4>
             <div class="panel-control">
-                <a href="javascript:void(0);">создать новый</a>
+                <a href="javascript:void(0);">Новый вопрос</a>
             </div>
         </div>
         <div class="panel-body">
@@ -24,7 +23,7 @@
                    {% for object in object_list %}
                        <tr>
                            <th scope="row">{{ object.number }}</th>
-                           <td>{{ object.text }}</td>
+                           <td><a href="{% url 'cms:questions-detail' organisation.slug object.pk %}">{{ object.text }}</a></td>
                            <td><span class="label label-info">{{ object.answers_type }}</span></td>
 
                            <td>
@@ -34,6 +33,7 @@
                                     Выбрать <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#">Открыть</a></li>
                                     <li><a href="#">Редактировать</a></li>
                                     <li><a href="#">Копировать</a></li>
                                     <li class="divider"></li>

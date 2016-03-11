@@ -1,0 +1,20 @@
+{% extends 'cms/layout.html' %}
+
+{% block content %}
+<div class="col-lg-12 col-md-12">
+  <div class="panel">
+    <div class="panel-body">
+        {{ object.text }}
+    </div>
+    <ul class="list-group">
+        {% if answers_list %}
+         {% for answer in answers_list %}
+        <li class="list-group-item">{{ answer.text }}</li>
+         {% endfor %}
+         {% else %}
+        <li class="list-group-item">Нет ответов</li>
+    {% endif %}
+    </ul>
+ </div>
+</div>
+{% endblock content %}

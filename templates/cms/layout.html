@@ -1,6 +1,6 @@
 {% extends 'cms/base.html' %}
 
-{% block title %}{{ view.title }}-{{ block.super }}{% endblock title %}
+{% block title %}{{ block.super }} {% if view.title %} | {{ view.title }}{% endif %}{% endblock title %}
 
 {% block breadcrumb %}
 {% endblock breadcrumb %}
