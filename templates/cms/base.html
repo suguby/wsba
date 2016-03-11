@@ -15,7 +15,6 @@
 
         <!-- Styles -->
         {% block fonts %}
-{#        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600' rel='stylesheet' type='text/css'>#}
         <link href='https://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
         {% endblock fonts %}
         {% compress css %}
@@ -59,13 +58,97 @@
 
         <main class="page-content content-wrap">
 
-            {% include 'cms/_navbar.html' %}
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <div class="sidebar-pusher">
+                        <a href="javascript:void(0);" class="waves-effect waves-classic push-sidebar">
+                            <i class="fa fa-bars"></i>
+                        </a>
+                    </div>
+                    <div class="logo-box">
+                        <a href="#" class="logo-text"><span>WSBA</span></a>
+                    </div><!-- Logo Box -->
+
+                    <div class="topmenu-outer">
+                        <div class="top-menu">
+                            <ul class="nav navbar-nav navbar-left">
+                                <li>
+                                    <a href="javascript:void(0);" class="waves-effect waves-button waves-classic sidebar-toggle">
+                                        <i class="fa fa-bars"></i>
+                                    </a>
+                                </li>
+
+                                {% comment %} Кнопки навигации и действий на текущей странице {% endcomment %}
+                                {#TODO: реализовать отправкой в шаблон наборов действий#}
+                                {% block navbuttons %}
+
+                                {% block back_button %}
+                                <li>
+                                   <a href="{{request.META.HTTP_REFERER}}" class="waves-effect waves-button waves-classic cd-nav-trigger"><i class="fa fa-arrow-left"></i></a>
+                                </li>
+                                {% endblock back_button %}
+
+                                {% block add_button %}
+                                <li>
+                                   <a href="#" class="waves-effect waves-button waves-classic cd-nav-trigger"><i class="fa fa-plus"></i></a>
+                                </li>
+                                {% endblock add_button %}
+                                {% block edit_button %}
+                                <li>
+                                   <a href="#" class="waves-effect waves-button waves-classic cd-nav-trigger"><i class="fa fa-pencil"></i></a>
+                                </li>
+                                {% endblock edit_button %}
+
+                                {% endblock navbuttons %}
+
+                            </ul>
+                            <ul class="nav navbar-nav navbar-right">
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle waves-effect waves-button waves-classic" data-toggle="dropdown">
+                                        <span class="user-name">{{ user }}<i class="fa fa-angle-down"></i></span>
+                                        <img class="img-circle avatar" src="#" width="40" height="40" alt="">
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-list" role="menu">
+
+                                        <li role="presentation">
+                                            <a href="#">
+                                                <i class="fa fa-user"></i>
+                                                Профиль
+                                            </a>
+                                        </li>
+                                        <li role="presentation">
+                                            <a href="#">
+                                                <i class="fa fa-envelope"></i>
+                                                Сообщения
+                                                <span class="badge badge-success pull-right">4</span>
+                                            </a>
+                                        </li>
+                                        <li role="presentation" class="divider"></li>
+                                        <li role="presentation">
+                                            <a href="#">
+                                                <i class="fa fa-sign-out m-r-xs"></i>
+                                                Выход
+                                            </a>
+                                        </li>
+
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" class="waves-effect waves-button waves-classic" id="showRight">
+                                        <i class="fa fa-comments"></i>
+                                    </a>
+                                </li>
+                            </ul><!-- Nav -->
+                        </div><!-- Top Menu -->
+                    </div>
+                </div>
+            </div><!-- Navbar -->
 
             {% include 'cms/_sidebar.html' %}
 
             <div class="page-inner" style="min-height:648px !important"> <!--TODO сделать авто ширину скриптом-->
 
-
+            {% block page_title %}
                 <div class="page-title">
                     <h3>{{ view.title }}</h3>
                     {% block breadcrumb %}
@@ -78,11 +161,14 @@
                     {% endblock breadcrumb %}
                 </div>
 
+            {% endblock page_title %}
 
                 <div id="main-wrapper">
+
                     <div class="row">
                         {% block layout %}{% endblock layout %}
                     </div><!-- Row -->
+
                 </div><!-- Main Wrapper -->
 
                 {% include 'cms/_footer.html' %}
