@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.decorators import login_required
 from django.conf.urls import url, include
-from cms.views import DashboardView
-
+from cms.dashboard.views import DashboardView
 
 urlpatterns = [
     url(r'^$', login_required(DashboardView.as_view()), name='main'),
