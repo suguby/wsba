@@ -24,6 +24,5 @@ urlpatterns = [
     url(r'^$', IndexView.as_view(), name='index'),
     url(r'^admin/', admin.site.urls),
     url(r'^(?P<organisation>\w+)/', include('user_interface.urls')),
-    url(r'^slides/', include('presentations.slides_urls')),
 
 ]
