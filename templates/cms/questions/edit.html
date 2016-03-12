@@ -9,7 +9,7 @@
             <form class='form' method="POST" action="">
                 {% csrf_token %}
                 {{ form | bootstrap }}
-                <button type="submit" class="btn btn-primary">{{ view.mode }}</button>
+                <button type="submit" class="btn btn-success waves-effect waves-classic">{{ view.mode }}</button>
             </form>
         </div>
     </div>
