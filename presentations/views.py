@@ -10,11 +10,12 @@ class SlideView(TemplateView):
     template_name = 'presentations/common_question.html'
 
     def get_context_data(self, **kwargs):
-        for slide in CoreSlide.objects.filter(id=kwargs['slide']).select_related('question'):
-            question = slide.question
+        for slide in CoreSlide.objects.filter(id=kwargs['slide']):
             break
         else:
             raise Exception('Нет такого слайда!!!')
+        question = slide.question
+
         context = super(SlideView, self).get_context_data(**kwargs)
         context['slide'] = slide
         if question:
