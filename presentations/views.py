@@ -10,7 +10,7 @@ class SlideView(TemplateView):
     template_name = 'presentations/common_question.html'
 
     def get_context_data(self, **kwargs):
-        for slide in CoreSlide.objects.filter(id=kwargs['slide']):
+        for slide in CoreSlide.objects.filter(id=kwargs['slide']).select_related('question'):
             question = slide.question
             break
         else:

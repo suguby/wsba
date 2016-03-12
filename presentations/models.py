@@ -60,13 +60,13 @@ class Answer(models.Model):
     question = models.ForeignKey(Question)
     variant_number = models.IntegerField(verbose_name='Номер варианта ответа')
     text = CharField(verbose_name='Текст ответа', max_length=64)
-    is_right = models.BooleanField(verbose_name='Является правильным ответом')
-    has_comment = models.BooleanField(verbose_name="Ответ с комментарием")
+    is_right = models.BooleanField(verbose_name='Является правильным ответом', default=False)
+    has_comment = models.BooleanField(verbose_name="Ответ с комментарием", default=False)
 
     def __str__(self):
         # TODO эта функция используется в основном в логах и консоли, в шаблоне делай просто answer.text
         # Не понял причину, почему использование её только в шаблоне не является
-        #  достаточной причиной её существования? Это такие большие накладные расходы?
+        # достаточной причиной её существования? Это такие большие накладные расходы?
         return self.text
 
     class Meta:
