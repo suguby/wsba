@@ -84,6 +84,7 @@
 
                                 {% block back_button %}
                                 <li>
+                                {#TODO: отправлять на вычисляемую страницу#}
                                    <a href="{{request.META.HTTP_REFERER}}" class="waves-effect waves-button waves-classic cd-nav-trigger"><i class="fa fa-arrow-left"></i></a>
                                 </li>
                                 {% endblock back_button %}
@@ -95,7 +96,7 @@
                                 {% endblock add_button %}
                                 {% block edit_button %}
                                 <li>
-                                   <a href="#" class="waves-effect waves-button waves-classic cd-nav-trigger"><i class="fa fa-pencil"></i></a>
+                                   <a href="{% block edit_button_url %}{% endblock edit_button_url %}" class="waves-effect waves-button waves-classic cd-nav-trigger"><i class="fa fa-pencil"></i></a>
                                 </li>
                                 {% endblock edit_button %}
 
