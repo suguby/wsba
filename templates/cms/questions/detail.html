@@ -40,7 +40,11 @@
         {% if answers_list %}
          {% for answer in answers_list %}
         <li class="list-group-item">
+            {{ answer.variant_number }}.
             {{ answer.text }}
+            {% if answer.is_right %}
+            <span class="label label-success m-l-xs">Правельный</span>
+            {% endif %}
             <div class="pull-right">
             <a href="javascript:void(0);" class=""><i class="fa fa-pencil"></i></a>
             <a href="" class="m-l-xs" data-toggle="modal" data-target=".bs-example-modal-sm" onClick='obj_delete("{{ answer.text }}",

@@ -36,7 +36,7 @@ class QuestionDetailView(DetailView):
         if 'organisation' in self.kwargs:
             context['organisation'] = \
                 Organisation.objects.get(slug=self.kwargs['organisation'])
-        context['answers_list'] = Answer.objects.filter(question=self.kwargs['question'])
+        context['answers_list'] = Answer.objects.filter(question=self.kwargs['question']).order_by('variant_number')
         return context
 
 

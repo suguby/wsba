@@ -21,7 +21,6 @@ class AnswerCreateView(CreateView):
         return initial_new
 
     def get_context_data(self, **kwargs):
-        print(self.kwargs)
         context = super(AnswerCreateView, self).get_context_data(**kwargs)
         if 'organisation' in self.kwargs:
             context['organisation'] = \
@@ -29,7 +28,7 @@ class AnswerCreateView(CreateView):
         if 'question' in self.kwargs:
             context['question'] = \
                 Question.objects.get(pk=self.kwargs['question'])
-            context['answers_list'] = Answer.objects.filter(question=self.kwargs['question'])
+            context['answers_list'] = Answer.objects.filter(question=self.kwargs['question']).order_by('variant_number')
         return context
 
     def get_success_url(self):
@@ -49,7 +48,7 @@ class AnswerDeleteView(DeleteView):
         if 'question' in self.kwargs:
             context['question'] = \
                 Question.objects.get(pk=self.kwargs['question'])
-            context['answers_list'] = Answer.objects.filter(question=self.kwargs['question'])
+            context['answers_list'] = Answer.objects.filter(question=self.kwargs['question']).order_by('variant_number')
         return context
 
     def get_success_url(self):
