@@ -6,6 +6,28 @@
 <div class="panel panel-white">
 
         <div class="panel-body">
+            {{ question.text }}
+        </div>
+    <ul class="list-group">
+        {% if answers_list %}
+         {% for answer in answers_list %}
+        <li class="list-group-item">
+            {{ answer.text }}
+            <div class="pull-right">
+            <a href="javascript:void(0);" class=""><i class="fa fa-pencil"></i></a>
+            <a href="javascript:void(0);" class="m-l-xs"><i class="fa fa-times"></i></a>
+            </div>
+        </li>
+         {% endfor %}
+         {% else %}
+        <li class="list-group-item">Нет ответов</li>
+    {% endif %}
+    </ul>
+    </div>
+
+<div class="panel panel-white">
+
+        <div class="panel-body">
             <form class='form' method="POST" action="">
                 {% csrf_token %}
                 {{ form | bootstrap }}

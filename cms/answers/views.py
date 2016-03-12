@@ -30,6 +30,10 @@ class AnswerCreateView(CreateView):
         if 'organisation' in self.kwargs:
             context['organisation'] = \
                 Organisation.objects.get(slug=self.kwargs['organisation'])
+        if 'pk' in self.kwargs:
+            context['question'] = \
+                Question.objects.get(pk=self.kwargs['pk'])
+            context['answers_list'] = Answer.objects.filter(question=self.kwargs['pk'])
         return context
 
     def get_success_url(self):
