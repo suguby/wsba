@@ -29,14 +29,14 @@ class QuestionDetailView(DetailView):
     model = Question
     template_name = 'cms/questions/detail.html'
     title = 'Вопрос'
+    pk_url_kwarg = 'question'
 
     def get_context_data(self, **kwargs):
         context = super(QuestionDetailView, self).get_context_data(**kwargs)
         if 'organisation' in self.kwargs:
             context['organisation'] = \
                 Organisation.objects.get(slug=self.kwargs['organisation'])
-        context['answers_list'] = Answer.objects.filter(question=self.kwargs['pk'])
-
+        context['answers_list'] = Answer.objects.filter(question=self.kwargs['question'])
         return context
 
 
@@ -45,6 +45,7 @@ class QuestionCreateView(CreateView):
     template_name = "cms/questions/edit.html"
     title = 'Добавление вопроса'
     mode = 'Создать'
+    pk_url_kwarg = 'question'
 
     def get_context_data(self, **kwargs):
         context = super(QuestionCreateView, self).get_context_data(**kwargs)
@@ -64,6 +65,7 @@ class QuestionUpdateView(UpdateView):
     fields = ['number', 'text', 'answers_type']
     title = 'Редактирование вопроса'
     mode = 'Обновить'
+    pk_url_kwarg = 'question'
 
     def get_context_data(self, **kwargs):
         context = super(QuestionUpdateView, self).get_context_data(**kwargs)
@@ -80,6 +82,7 @@ class QuestionUpdateView(UpdateView):
 
 class QuestionDeleteView(DeleteView):
     model = Question
+    pk_url_kwarg = 'question'
 
     def get_context_data(self, **kwargs):
         context = super(QuestionDeleteView, self).get_context_data(**kwargs)

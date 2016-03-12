@@ -9,6 +9,28 @@
 {% endblock add_button_url %}
 
 {% block content %}
+
+ <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="mySmallModalLabel">Удалить данный объект</h4>
+            </div>
+            <form class='form' method="POST" name="delete_form" action="">
+            <div class="modal-body">
+                    {% csrf_token %}
+                <p id="object"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default waves-effect waves-classic" data-dismiss="modal">Отмена</button>
+                <button type="submit" class="btn btn-success waves-effect waves-classic">Удалить</button>
+            </div>
+           </form>
+        </div>
+    </div>
+</div>
+
 <div class="col-lg-12 col-md-12">
   <div class="panel">
     <div class="panel-body">
@@ -21,7 +43,8 @@
             {{ answer.text }}
             <div class="pull-right">
             <a href="javascript:void(0);" class=""><i class="fa fa-pencil"></i></a>
-            <a href="javascript:void(0);" class="m-l-xs"><i class="fa fa-times"></i></a>
+            <a href="" class="m-l-xs" data-toggle="modal" data-target=".bs-example-modal-sm" onClick='obj_delete("{{ answer.text }}",
+                                        "{% url 'cms:answers-delete' organisation.slug object.pk answer.pk %}");'><i class="fa fa-times"></i></a>
             </div>
         </li>
          {% endfor %}

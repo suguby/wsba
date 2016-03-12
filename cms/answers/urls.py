@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.decorators import login_required
 from django.conf.urls import url
-from cms.answers.views import AnswerCreateView
+from cms.answers.views import AnswerCreateView, AnswerDeleteView
 
 
 # GET /<organisation slug>/cms/questions/1/edit/answers/new
@@ -13,4 +13,5 @@ from cms.answers.views import AnswerCreateView
 
 urlpatterns = [
     url(r'^new/$', login_required(AnswerCreateView.as_view()), name='answers-add'),
+    url(r'^(?P<answer>[0-9]+)/delete$', login_required(AnswerDeleteView.as_view()), name='answers-delete'),
 ]
