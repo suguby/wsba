@@ -7,4 +7,5 @@ from cms.dashboard.views import DashboardView
 urlpatterns = [
     url(r'^$', login_required(DashboardView.as_view()), name='main'),
     url(r'^questions/', include('cms.questions.urls')),
+    url(r'^questions/(?P<pk>[0-9]+)/edit/answers/', include('cms.answers.urls')),
 ]
