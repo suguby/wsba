@@ -12,7 +12,14 @@
         {% if answers_list %}
          {% for answer in answers_list %}
         <li class="list-group-item">
+            {{ answer.variant_number }}.
             {{ answer.text }}
+            {% if answer.is_right %}
+            <span class="label label-success m-l-xs">Правильный</span>
+            {% endif %}
+            {% if answer.has_comment %}
+            <span class="label label-primary m-l-xs">С коментарием</span>
+            {% endif %}
         </li>
          {% endfor %}
          {% else %}

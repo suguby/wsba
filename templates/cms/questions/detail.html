@@ -43,10 +43,13 @@
             {{ answer.variant_number }}.
             {{ answer.text }}
             {% if answer.is_right %}
-            <span class="label label-success m-l-xs">Правельный</span>
+            <span class="label label-success m-l-xs">Правильный</span>
+            {% endif %}
+            {% if answer.has_comment %}
+            <span class="label label-primary m-l-xs">С коментарием</span>
             {% endif %}
             <div class="pull-right">
-            <a href="javascript:void(0);" class=""><i class="fa fa-pencil"></i></a>
+            <a href="{% url 'cms:answers-update' organisation.slug object.pk answer.pk %}" class=""><i class="fa fa-pencil"></i></a>
             <a href="" class="m-l-xs" data-toggle="modal" data-target=".bs-example-modal-sm" onClick='obj_delete("{{ answer.text }}",
                                         "{% url 'cms:answers-delete' organisation.slug object.pk answer.pk %}");'><i class="fa fa-times"></i></a>
             </div>
