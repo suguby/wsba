@@ -64,11 +64,18 @@ class GoPresentation(OrganisationTemplateView):
         presentation_id = kwargs.get('pk', '')
         try:
             presentation = Presentation.objects.get(id=presentation_id)
-            slide = CoreSlide.objects.get(presentation=presentation)
-        except Organisation.DoesNotExist:
+            slide = CoreSlide.objects.get(presentation=presentation)  # TODO здесь брать из списка первый
+        except Organisation.DoesNotExist:  # лучше юзать get_object_or_404
             raise Http404()
         context.update(
             presentation=presentation,
             slide=slide
         )
+        # дальше нужно вычислять следующий слайд, передавать в шаблон его id,
+        # а еще лучше прямо урл следующего слайда. Аналогично с предыдущим.
+        # Даже пусть отдельными запросами - потом оптимизируем что-то типа
+        # slide = CoreSlide.objects.get(id=slide_id)
+        # next_slide = CoreSlide.objects.filter(position__gt=slide.position).order_by('position')[0]
+        # prev_slide = CoreSlide.objects.filter(position__lt=slide.position).order_by('-position')[0]
+        # если такового нет отправляем пустой next_slide_url а в шаблоне понимаем и не рисуем кнопку далее.
         return context
