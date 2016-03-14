@@ -4,6 +4,7 @@ from django.views.generic import TemplateView
 from user_interface.models import ProjectUser
 from presentations.models import Presentation
 from presentations.models import Organisation
+from presentations.models import CoreSlide
 
 from presentations.models import Organisation
 
@@ -50,6 +51,24 @@ class ShowPresentation(OrganisationTemplateView):
         except Organisation.DoesNotExist:
             raise Http404()
         context.update(
-            presenation=presentation
+            presentation=presentation
+        )
+        return context
+
+
+class GoPresentation(OrganisationTemplateView):
+    template_name = 'ui/go_presentation.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GoPresentation, self).get_context_data(**kwargs)
+        presentation_id = kwargs.get('pk', '')
+        try:
+            presentation = Presentation.objects.get(id=presentation_id)
+            slide = CoreSlide.objects.get(presentation=presentation)
+        except Organisation.DoesNotExist:
+            raise Http404()
+        context.update(
+            presentation=presentation,
+            slide=slide
         )
         return context

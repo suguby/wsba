@@ -7,11 +7,11 @@
           <div class="col-md-8">
              <div class="panel panel-primary">
     <div class="panel-heading">
-        <h3 class="panel-title">{{ presentation.name }}</h3>
+        <h3 class="panel-title">{{ presentation.name }} | Слайд №</h3>
     </div>
-    <div class="panel-body">{{ presentation.description }} </div>
+    <div class="panel-body">{{ slide.description }}</div>
 
-</div><a class="btn btn-default left" href="{% url 'go_presentation' organisation.slug presentation.id %}" role="button">Начать</a>
+</div><a class="btn btn-default left" href="#" role="button">Далее</a>
 
       </div>
 

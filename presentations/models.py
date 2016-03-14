@@ -37,3 +37,5 @@ class CoreSlide(models.Model):
 
     class Meta:
         db_table = 'slides'
+        verbose_name = "Слайд"
+        verbose_name_plural = "Слайды"
