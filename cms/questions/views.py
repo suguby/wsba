@@ -5,28 +5,21 @@ from django.core.urlresolvers import reverse
 from presentations.models import Question, Organisation, Answer
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from cms.questions.forms import QuestionForm
+from cms.views import BaseQuestionView
 
 
-class QuestionListView(ListView):
+class QuestionListView(ListView, BaseQuestionView):
     model = Question
     template_name = 'cms/questions/list.html'
     tab = 'question'
     title = 'Вопросы'
-
-    def get_context_data(self, **kwargs):
-        context = super(QuestionListView, self).get_context_data(**kwargs)
-        # TODO для всех вьюх одинаковый код получения организации - просится в базовый класс
-        if 'organisation' in self.kwargs:
-            context['organisation'] = \
-                Organisation.objects.get(slug=self.kwargs['organisation'])
-        return context
 
     def get_queryset(self):
         org = self.kwargs['organisation']
         return Question.objects.all().order_by('number')
 
 
-class QuestionDetailView(DetailView):
+class QuestionDetailView(DetailView, BaseQuestionView):
     model = Question
     template_name = 'cms/questions/detail.html'
     title = 'Вопрос'
@@ -34,35 +27,24 @@ class QuestionDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(QuestionDetailView, self).get_context_data(**kwargs)
-        # TODO для всех вьюх одинаковый код получения организации - просится в базовый класс
-        if 'organisation' in self.kwargs:
-            context['organisation'] = \
-                Organisation.objects.get(slug=self.kwargs['organisation'])
-        context['answers_list'] = Answer.objects.filter(question=self.kwargs['question']).order_by('variant_number')
+        context['answers_list'] = \
+            Answer.objects.filter(question=self.kwargs['question']).order_by('variant_number')
         return context
 
 
-class QuestionCreateView(CreateView):
+class QuestionCreateView(CreateView, BaseQuestionView):
     form_class = QuestionForm
     template_name = "cms/questions/edit.html"
     title = 'Добавление вопроса'
     mode = 'Создать'
     pk_url_kwarg = 'question'
 
-    def get_context_data(self, **kwargs):
-        context = super(QuestionCreateView, self).get_context_data(**kwargs)
-        # TODO для всех вьюх одинаковый код получения организации - просится в базовый класс
-        if 'organisation' in self.kwargs:
-            context['organisation'] = \
-                Organisation.objects.get(slug=self.kwargs['organisation'])
-        return context
-
     def get_success_url(self):
         if 'organisation' in self.kwargs:
             return reverse('cms:questions-list', kwargs={'organisation': self.kwargs['organisation']})
 
 
-class QuestionUpdateView(UpdateView):
+class QuestionUpdateView(UpdateView, BaseQuestionView):
     model = Question
     template_name = "cms/questions/edit.html"
     fields = ['number', 'text', 'answers_type']
@@ -70,31 +52,15 @@ class QuestionUpdateView(UpdateView):
     mode = 'Обновить'
     pk_url_kwarg = 'question'
 
-    def get_context_data(self, **kwargs):
-        context = super(QuestionUpdateView, self).get_context_data(**kwargs)
-        # TODO для всех вьюх одинаковый код получения организации - просится в базовый класс
-        if 'organisation' in self.kwargs:
-            context['organisation'] = \
-                Organisation.objects.get(slug=self.kwargs['organisation'])
-        return context
-
     def get_success_url(self):
         # TODO: редирект на разные страницы
         if 'organisation' in self.kwargs:
             return reverse('cms:questions-list', kwargs={'organisation': self.kwargs['organisation']})
 
 
-class QuestionDeleteView(DeleteView):
+class QuestionDeleteView(DeleteView, BaseQuestionView):
     model = Question
     pk_url_kwarg = 'question'
-
-    def get_context_data(self, **kwargs):
-        context = super(QuestionDeleteView, self).get_context_data(**kwargs)
-        # TODO для всех вьюх одинаковый код получения организации - просится в базовый класс
-        if 'organisation' in self.kwargs:
-            context['organisation'] = \
-                Organisation.objects.get(slug=self.kwargs['organisation'])
-        return context
 
     def get_success_url(self):
         if 'organisation' in self.kwargs:

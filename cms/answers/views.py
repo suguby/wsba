@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from django.core.urlresolvers import reverse
 
-from presentations.models import Question, Organisation, Answer
+
+from presentations.models import Question, Answer
 from django.views.generic import CreateView, DeleteView, UpdateView
 from cms.answers.forms import AnswerForm
+from cms.views import BaseAnswerView
 
 
-class AnswerCreateView(CreateView):
+class AnswerCreateView(BaseAnswerView, CreateView):
     form_class = AnswerForm
     template_name = "cms/answers/edit.html"
     title = 'Добавление ответа'
@@ -20,24 +21,8 @@ class AnswerCreateView(CreateView):
         initial_new['question'] = Question.objects.get(id=self.kwargs['question'])
         return initial_new
 
-    def get_context_data(self, **kwargs):
-        context = super(AnswerCreateView, self).get_context_data(**kwargs)
-        if 'organisation' in self.kwargs:
-            context['organisation'] = \
-                Organisation.objects.get(slug=self.kwargs['organisation'])
-        if 'question' in self.kwargs:
-            context['question'] = \
-                Question.objects.get(pk=self.kwargs['question'])
-            context['answers_list'] = \
-                Answer.objects.filter(question=self.kwargs['question']).order_by('variant_number')
-        return context
 
-    def get_success_url(self):
-        return reverse('cms:questions-detail', kwargs={'organisation': self.kwargs['organisation'],
-                                                       'question': self.kwargs['question']})
-
-
-class AnswerUpdateView(UpdateView):
+class AnswerUpdateView(BaseAnswerView, UpdateView):
     form_class = AnswerForm
     model = Answer
     template_name = "cms/answers/edit.html"
@@ -45,39 +30,15 @@ class AnswerUpdateView(UpdateView):
     mode = 'Обновить'
     pk_url_kwarg = 'answer'
 
-    def get_context_data(self, **kwargs):
-        context = super(AnswerUpdateView, self).get_context_data(**kwargs)
-        if 'organisation' in self.kwargs:
-            context['organisation'] = \
-                Organisation.objects.get(slug=self.kwargs['organisation'])
-        if 'question' in self.kwargs:
-            context['question'] = \
-                Question.objects.get(pk=self.kwargs['question'])
-            context['answers_list'] = \
-                Answer.objects.filter(question=self.kwargs['question']).order_by('variant_number')
-        return context
-
-    def get_success_url(self):
-        return reverse('cms:questions-detail', kwargs={'organisation': self.kwargs['organisation'],
-                                                       'question': self.kwargs['question']})
+    # def get_success_url(self):
+    #     return reverse('cms:questions-detail', kwargs={'organisation': self.kwargs['organisation'],
+    #                                                    'question': self.kwargs['question']})
 
 
-class AnswerDeleteView(DeleteView):
+class AnswerDeleteView(BaseAnswerView, DeleteView):
     model = Answer
     pk_url_kwarg = 'answer'
-
-    def get_context_data(self, **kwargs):
-        context = super(AnswerDeleteView, self).get_context_data(**kwargs)
-        if 'organisation' in self.kwargs:
-            context['organisation'] = \
-                Organisation.objects.get(slug=self.kwargs['organisation'])
-        if 'question' in self.kwargs:
-            context['question'] = \
-                Question.objects.get(pk=self.kwargs['question'])
-            context['answers_list'] = \
-                Answer.objects.filter(question=self.kwargs['question']).order_by('variant_number')
-        return context
-
-    def get_success_url(self):
-        return reverse('cms:questions-detail', kwargs={'organisation': self.kwargs['organisation'],
-                                                       'question': self.kwargs['question']})
+    #
+    # def get_success_url(self):
+    #     return reverse('cms:questions-detail', kwargs={'organisation': self.kwargs['organisation'],
+    #                                                    'question': self.kwargs['question']})
