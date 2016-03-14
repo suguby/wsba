@@ -15,6 +15,7 @@ class QuestionListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(QuestionListView, self).get_context_data(**kwargs)
+        # TODO для всех вьюх одинаковый код получения организации - просится в базовый класс
         if 'organisation' in self.kwargs:
             context['organisation'] = \
                 Organisation.objects.get(slug=self.kwargs['organisation'])
@@ -33,6 +34,7 @@ class QuestionDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(QuestionDetailView, self).get_context_data(**kwargs)
+        # TODO для всех вьюх одинаковый код получения организации - просится в базовый класс
         if 'organisation' in self.kwargs:
             context['organisation'] = \
                 Organisation.objects.get(slug=self.kwargs['organisation'])
@@ -49,6 +51,7 @@ class QuestionCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(QuestionCreateView, self).get_context_data(**kwargs)
+        # TODO для всех вьюх одинаковый код получения организации - просится в базовый класс
         if 'organisation' in self.kwargs:
             context['organisation'] = \
                 Organisation.objects.get(slug=self.kwargs['organisation'])
@@ -69,6 +72,7 @@ class QuestionUpdateView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(QuestionUpdateView, self).get_context_data(**kwargs)
+        # TODO для всех вьюх одинаковый код получения организации - просится в базовый класс
         if 'organisation' in self.kwargs:
             context['organisation'] = \
                 Organisation.objects.get(slug=self.kwargs['organisation'])
@@ -86,6 +90,7 @@ class QuestionDeleteView(DeleteView):
 
     def get_context_data(self, **kwargs):
         context = super(QuestionDeleteView, self).get_context_data(**kwargs)
+        # TODO для всех вьюх одинаковый код получения организации - просится в базовый класс
         if 'organisation' in self.kwargs:
             context['organisation'] = \
                 Organisation.objects.get(slug=self.kwargs['organisation'])
