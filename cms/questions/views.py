@@ -12,7 +12,6 @@ from cms.views import AnswerAddBtn
 
 
 class QuestionListView(ListView, BaseQuestionView, QuestionAddBtn):
-    model = Question
     template_name = 'cms/questions/list.html'
     tab = 'question'
     title = 'Вопросы'
@@ -23,7 +22,6 @@ class QuestionListView(ListView, BaseQuestionView, QuestionAddBtn):
 
 class QuestionDetailView(DetailView, BaseQuestionView, BackBtnToListQuestion,
                          QuestionEditBtn, QuestionDelBtn, AnswerAddBtn):
-    model = Question
     template_name = 'cms/questions/detail.html'
     title = 'Вопрос'
 
@@ -40,27 +38,19 @@ class QuestionCreateView(CreateView, BaseQuestionView, BackBtnToListQuestion):
     title = 'Добавление вопроса'
     mode = 'Создать'
 
-    def get_success_url(self):
-        if 'organisation' in self.kwargs:
-            return reverse('cms:questions-list', kwargs={'organisation': self.kwargs['organisation']})
-
 
 class QuestionUpdateView(UpdateView, BaseQuestionView, BackBtnToQuestion):
-    model = Question
     template_name = "cms/questions/edit.html"
     fields = ['number', 'text', 'answers_type']
     title = 'Редактирование вопроса'
     mode = 'Обновить'
 
     def get_success_url(self):
-        # TODO: редирект на разные страницы
-        if 'organisation' in self.kwargs:
-            return reverse('cms:questions-list', kwargs={'organisation': self.kwargs['organisation']})
+        return reverse('cms:questions-detail', kwargs={'organisation': self.kwargs['organisation'],
+                                                       'question': self.kwargs['question']})
 
 
 class QuestionDeleteView(DeleteView, BaseQuestionView):
-    model = Question
+    pass
 
-    def get_success_url(self):
-        if 'organisation' in self.kwargs:
-            return reverse('cms:questions-list', kwargs={'organisation': self.kwargs['organisation']})
+

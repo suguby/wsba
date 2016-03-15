@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from presentations.models import Question, Answer
+from presentations.models import Question
 from django.views.generic import CreateView, DeleteView, UpdateView
 from cms.answers.forms import AnswerForm
 from cms.views import BaseAnswerView
@@ -22,11 +22,10 @@ class AnswerCreateView(BaseAnswerView, CreateView, BackBtnToQuestion):
 
 class AnswerUpdateView(BaseAnswerView, UpdateView, BackBtnToQuestion, AnswerDelBtn):
     form_class = AnswerForm
-    model = Answer
     template_name = "cms/answers/edit.html"
     title = 'Редактирование ответа'
     mode = 'Обновить'
 
 
 class AnswerDeleteView(BaseAnswerView, DeleteView):
-    model = Answer
+    pass

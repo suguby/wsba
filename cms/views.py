@@ -8,6 +8,7 @@ from django.core.urlresolvers import reverse
 class BaseQuestionView(ContextMixin, View):
 
     def __init__(self):
+        self.model = Question
         self.pk_url_kwarg = 'question'
 
     def get_context_data(self, **kwargs):
@@ -17,10 +18,14 @@ class BaseQuestionView(ContextMixin, View):
                 Organisation.objects.get(slug=self.kwargs['organisation'])
         return context
 
+    def get_success_url(self):
+        return reverse('cms:questions-list', kwargs={'organisation': self.kwargs['organisation']})
+
 
 class BaseAnswerView(ContextMixin, View):
 
     def __init__(self):
+        self.model = Answer
         self.pk_url_kwarg = 'answer'
 
     def get_context_data(self, **kwargs):
