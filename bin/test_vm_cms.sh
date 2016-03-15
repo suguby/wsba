@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-git checkout feature/cms
+# git clone https://github.com/ulkoart/wsba.git && cd wsba && git checkout feature/cms && bin/test_vm_cms.sh
+
 virtualenv env
 source env/bin/activate
 pip install -r requirements.txt
