@@ -10,6 +10,7 @@ from presentations.models import Organisation
 
 
 class OrganisationTemplateView(TemplateView):
+
     def get_context_data(self, **kwargs):
         context = super(OrganisationTemplateView, self).get_context_data(**kwargs)
         org_slug = kwargs.get('organisation', '')
@@ -31,7 +32,7 @@ class OrganisationIndexView(OrganisationTemplateView):
         context.update({
             'user': project_user,
             'presentations': Presentation.objects.filter(
-                    organisation=project_user.organisation
+                organisation=project_user.organisation
             ),
             'test': org,
         })
@@ -50,7 +51,7 @@ class ShowPresentation(OrganisationTemplateView):
         except Organisation.DoesNotExist:
             raise Http404()
         context.update(
-                presentation=presentation
+            presentation=presentation
         )
         return context
 
@@ -63,11 +64,11 @@ class GoPresentation(OrganisationTemplateView):
         presentation_id = kwargs.get('pk', '')
         try:
             presentation = Presentation.objects.get(id=presentation_id)
-            slide = CoreSlide.objects.filter(presentation=presentation)[0]
+            slide = CoreSlide.objects.get(presentation=presentation)
         except Organisation.DoesNotExist:
             raise Http404()
         context.update(
-                presentation=presentation,
-                slide=slide
+            presentation=presentation,
+            slide=slide
         )
         return context
