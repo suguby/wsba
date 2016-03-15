@@ -2,7 +2,7 @@
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
-from presentations.models import CoreSlide, Organisation, Presentation, Question, Answer
+from presentations.models import CoreSlide, Organisation, Presentation, Question, Answer, UserAnswer
 
 
 class QuestionViewTests(TestCase):
@@ -13,10 +13,8 @@ class QuestionViewTests(TestCase):
 
 
     def test_no_question(self):
-        self.question = Question.objects.create(number=1, text='Кто виноват?', answers_type='single')
-        self.slide = CoreSlide.objects.create(question=self.question, presentation=self.presentation)
+        self.slide = CoreSlide.objects.create(presentation=self.presentation)
 
-        # self.slide.question = None
         response = self.client.get(reverse('slide_view', kwargs={'slide': self.slide.id}))
         self.assertInHTML(needle='<form method="post" action="">', haystack=response.rendered_content, count=0)
 
@@ -64,4 +62,14 @@ class QuestionViewTests(TestCase):
         self.assertInHTML(needle='<input type="checkbox" name="group1" value="{}">'.format(answer2.id), haystack=response.rendered_content)
         self.assertInHTML(needle='<input type="checkbox" name="group1" value="{}">'.format(answer3.id), haystack=response.rendered_content)
 
+    def test_single_answer_saving(self):
+        self.question = Question.objects.create(number=1, text='Кто виноват?', answers_type='single')
+        self.slide = CoreSlide.objects.create(question=self.question, presentation=self.presentation)
+
+        answer1 = Answer.objects.create(question_id=self.question.id, variant_number=1, text='Yes', has_comment=False)
+        answer2 = Answer.objects.create(question_id=self.question.id, variant_number=2, text='No', has_comment=False)
+
+        response = self.client.get(reverse('slide_view', kwargs={'slide': self.slide.id}))
+        qs = UserAnswer.objects.filter(id=1)
+        self.assertQuerysetEqual(qs=qs, values=)
 
