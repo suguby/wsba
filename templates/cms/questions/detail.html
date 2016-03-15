@@ -1,13 +1,5 @@
 {% extends 'cms/layout.html' %}
 
-{% block edit_button_url %}
-    {% url 'cms:questions-update' organisation.slug object.pk %}
-{% endblock edit_button_url %}
-
-{% block add_button_url %}
-    {% url 'cms:answers-add' organisation.slug object.pk %}
-{% endblock add_button_url %}
-
 {% block content %}
 
 {% include 'cms/_modal_delete.html' %}
@@ -30,7 +22,7 @@
             <span class="label label-primary m-l-xs">С коментарием</span>
             {% endif %}
             <div class="pull-right">
-            <a href="{% url 'cms:answers-update' organisation.slug object.pk answer.pk %}" class=""><i class="fa fa-pencil"></i></a>
+            <a href="{% url 'cms:answers-edit' organisation.slug object.pk answer.pk %}" class=""><i class="fa fa-pencil"></i></a>
             <a href="" class="m-l-xs" data-toggle="modal" data-target=".bs-example-modal-sm" onClick='obj_delete("{{ answer.text }}",
                                         "{% url 'cms:answers-delete' organisation.slug object.pk answer.pk %}");'><i class="fa fa-times"></i></a>
             </div>

@@ -1,11 +1,5 @@
 {% extends 'cms/layout.html' %}
 
-{% block back_button %}{% endblock back_button %}
-{% block edit_button %}{% endblock edit_button %}
-{% block add_button_url %}
-    {% url 'cms:questions-add' organisation.slug %}
-{% endblock add_button_url %}
-
 {% block content %}
 
 {% include 'cms/_modal_delete.html' %}
@@ -38,7 +32,7 @@
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="{% url 'cms:questions-detail' organisation.slug object.pk %}">Открыть</a></li>
-                                    <li><a href="{% url 'cms:questions-update' organisation.slug object.pk %}">Редактировать</a></li>
+                                    <li><a href="{% url 'cms:questions-edit' organisation.slug object.pk %}">Редактировать</a></li>
                                     <li><a href="#">Копировать</a></li>
                                     <li class="divider"></li>
                                     <li><a href="" data-toggle="modal" data-target=".bs-example-modal-sm" onClick='obj_delete("{{ object.text }}",
