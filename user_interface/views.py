@@ -64,7 +64,7 @@ class GoPresentation(OrganisationTemplateView):
         presentation_id = kwargs.get('pk', '')
         try:
             presentation = Presentation.objects.get(id=presentation_id)
-            slide = CoreSlide.objects.get(presentation=presentation)
+            slide = CoreSlide.objects.filter(presentation=presentation)[0]
         except Organisation.DoesNotExist:
             raise Http404()
         context.update(
