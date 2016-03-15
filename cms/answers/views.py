@@ -4,7 +4,7 @@ from presentations.models import Question, Answer
 from django.views.generic import CreateView, DeleteView, UpdateView
 from cms.answers.forms import AnswerForm
 from cms.views import BaseAnswerView
-from cms.views import BackBtnToQuestion
+from cms.views import BackBtnToQuestion, AnswerDelBtn
 
 
 class AnswerCreateView(BaseAnswerView, CreateView, BackBtnToQuestion):
@@ -20,7 +20,7 @@ class AnswerCreateView(BaseAnswerView, CreateView, BackBtnToQuestion):
         return initial_new
 
 
-class AnswerUpdateView(BaseAnswerView, UpdateView, BackBtnToQuestion):
+class AnswerUpdateView(BaseAnswerView, UpdateView, BackBtnToQuestion, AnswerDelBtn):
     form_class = AnswerForm
     model = Answer
     template_name = "cms/answers/edit.html"

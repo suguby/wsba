@@ -90,3 +90,12 @@ class AnswerAddBtn(ContextMixin, View):
         context['add_button'] = reverse('cms:answers-add', kwargs={'organisation': self.kwargs['organisation'],
                                         'question': self.kwargs['question']})
         return context
+
+
+class AnswerDelBtn(ContextMixin, View):
+
+    def get_context_data(self, **kwargs):
+        context = super(AnswerDelBtn, self).get_context_data(**kwargs)
+        context['del_button'] = reverse('cms:answers-delete', kwargs={'organisation': self.kwargs['organisation'],
+                                        'question': self.kwargs['question'], 'answer': self.kwargs['answer']})
+        return context
