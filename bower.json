@@ -5,8 +5,6 @@
     "mitri4 <mitri4@bk.ru>"
   ],
   "description": "",
-  "main": "",
-  "moduleType": [],
   "license": "MIT",
   "private": true,
   "dependencies": {
