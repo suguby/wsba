@@ -38,6 +38,9 @@ class QuestionCreateView(CreateView, BaseQuestionView, BackBtnToListQuestion):
     title = 'Добавление вопроса'
     mode = 'Создать'
 
+    def get_success_url(self):
+        return reverse('cms:questions-list', kwargs={'organisation': self.kwargs['organisation']})
+
 
 class QuestionUpdateView(UpdateView, BaseQuestionView, BackBtnToQuestion):
     template_name = "cms/questions/edit.html"
@@ -51,6 +54,6 @@ class QuestionUpdateView(UpdateView, BaseQuestionView, BackBtnToQuestion):
 
 
 class QuestionDeleteView(DeleteView, BaseQuestionView):
-    pass
 
-
+    def get_success_url(self):
+        return reverse('cms:questions-list', kwargs={'organisation': self.kwargs['organisation']})
