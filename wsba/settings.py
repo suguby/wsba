@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
     'compressor',
     'bootstrapform',
+    'django_extensions',
 
     'user_interface',
     'presentations',
