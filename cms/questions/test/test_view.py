@@ -49,10 +49,11 @@ class CmsQuestionAddViewTests(BaseQuestionTestCase):
         response = self.client.post(reverse('cms:questions-add', kwargs={'organisation': self.organisation.slug}))
         self.assertEqual(response.status_code, 200)
 
+    # надо ли выносить в отдельные тесты или переназвать класс и модуль?
     def test_question_add(self):
         self.assertEquals(self.question.text, "test")
 
-# ?
+# пока не придумал как проверить
 # class CmsQuestionDeleteViewTests(BaseQuestionTestCase):
 #
 #     def test_post_view(self):
