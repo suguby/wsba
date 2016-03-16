@@ -22,7 +22,7 @@ class QuestionViewTestsCase(TestCase):
         self.assertInHTML(needle='<span class="label label-info">single</span>', haystack=response.rendered_content)
 
     def test_detail_view(self):
-        question = Question.objects.create(number=2, text='test?')
+        question = Question.objects.create(number=2, text='test?', answers_type='single')
         url = reverse('cms:questions-detail', kwargs={'organisation': self.organisation.slug,
                                                       'question': question.id})
         response = self.client.get(url)
@@ -40,8 +40,22 @@ class QuestionViewTestsCase(TestCase):
         self.assertTemplateUsed(response_get, 'cms/questions/edit.html')
 
     def test_update_view(self):
-        pass
+        question = Question.objects.create(number=3, text='test update', answers_type='single')
+        url = reverse('cms:questions-edit', kwargs={'organisation': self.organisation.slug, 'question': question.id})
+        response_get = self.client.get(url)
+        response_post = self.client.post(url, {'number': 1000, 'text': 'edit question', 'answers_type': 'multi'})
+        self.assertEquals(response_get.status_code, 200)
+        self.assertEquals(response_post.status_code, 302)
+        self.assertEqual(Question.objects.get(text='edit question').number, 1000)
+        self.assertTemplateUsed(response_get, 'cms/questions/edit.html')
 
     def test_delete_view(self):
-        pass
+        Question.objects.create(number=1, text='test delete', answers_type='single')
+        Question.objects.create(number=2, text='test delete 2', answers_type='single')
+        question = Question.objects.create(number=3, text='test delete 3', answers_type='single')
+        url = reverse('cms:questions-delete', kwargs={'organisation': self.organisation.slug, 'question': question.id})
+        response = self.client.post(url)
+        self.assertEquals(response.status_code, 302)
+        self.assertEqual(Question.objects.count(), 2)
+
 
