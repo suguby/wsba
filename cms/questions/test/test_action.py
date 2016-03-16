@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from cms.questions.test.common import BaseQuestionTestCase
+from cms.tests import BaseQuestionTestCase
 from presentations.models import Question
 
 
