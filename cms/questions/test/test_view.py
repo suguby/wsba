@@ -33,6 +33,11 @@ class CmsQuestionEditViewTests(BaseQuestionTestCase):
                                                                           'question': self.question.id}))
         self.assertEqual(response.status_code, 200)
 
+    def test_question_edit(self):
+        self.question.text = 'new_test'
+        self.question.save()
+        self.assertEqual(self.question.text, 'new_test')
+
 
 class CmsQuestionAddViewTests(BaseQuestionTestCase):
 
@@ -44,6 +49,10 @@ class CmsQuestionAddViewTests(BaseQuestionTestCase):
         response = self.client.post(reverse('cms:questions-add', kwargs={'organisation': self.organisation.slug}))
         self.assertEqual(response.status_code, 200)
 
+    def test_question_add(self):
+        self.assertEquals(self.question.text, "test")
+
+# ?
 # class CmsQuestionDeleteViewTests(BaseQuestionTestCase):
 #
 #     def test_post_view(self):
