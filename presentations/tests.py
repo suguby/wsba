@@ -78,3 +78,31 @@ class QuestionViewTests(TestCase):
         self.assertEqual(response.status_code, 302)
         answers = UserAnswer.objects.filter(user_id=1, answer_id=2)
         self.assertEqual(len(answers), 1)
+
+    def test_multi_answer_saving(self):
+        self.question = Question.objects.create(number=1, text='Кто виноват?', answers_type='multi')
+        self.slide = CoreSlide.objects.create(question=self.question, presentation=self.presentation)
+
+        answer1 = Answer.objects.create(question_id=self.question.id, variant_number=1, text='Yes', has_comment=False)
+        answer2 = Answer.objects.create(question_id=self.question.id, variant_number=2, text='No', has_comment=False)
+
+        url = reverse('slide_view', kwargs={'slide': self.slide.id})
+        response = self.client.post(url, {'group1': ['2'],})
+        self.assertEqual(response.status_code, 302)
+        answers = UserAnswer.objects.filter(user_id=1, answer_id=2)
+        self.assertEqual(len(answers), 1)
+
+    def test_single_answer_comment_saving(self):
+        self.question = Question.objects.create(number=1, text='Кто виноват?', answers_type='single')
+        self.slide = CoreSlide.objects.create(question=self.question, presentation=self.presentation)
+
+        answer1 = Answer.objects.create(question_id=self.question.id, variant_number=1, text='Yes', has_comment=True)
+        answer2 = Answer.objects.create(question_id=self.question.id, variant_number=2, text='No', has_comment=False)
+
+        url = reverse('slide_view', kwargs={'slide': self.slide.id})
+        response = self.client.post(url, {'group1': ['1'], 'comment': 'some text'})
+        self.assertEqual(response.status_code, 302)
+        answers = UserAnswer.objects.filter(user_id=1, answer_id=1)
+        self.assertEqual(len(answers), 1)
+        self.assertEqual(answers[0].comment, 'some text')
+
