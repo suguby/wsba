@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'compressor',
     'bootstrapform',
     'django_extensions',
+    'bootstrap_pagination',
 
     'user_interface',
     'presentations',
@@ -138,7 +139,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'extra', 'static')
 
 COMPRESS_ROOT = STATIC_ROOT
 
+# Для уменьшения css и js файлов
 if DEBUG:
     COMPRESS_ENABLED = False
 else:
     COMPRESS_ENABLED = True
+
+LOGIN_URL = '/admin/'
+
+# Вывод количества объектов из списка на странице с пагинатором
+PAGINATE = 5

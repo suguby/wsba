@@ -17,7 +17,7 @@ class QuestionViewTestsCase(TestCase):
         url = reverse('cms:questions-list', kwargs={'organisation': self.organisation.slug})
         question = Question.objects.create(number=1, text='test', answers_type='single')
         response = self.client.get(url)
-
+        print(response.context)
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed(response, 'cms/questions/list.html')
         self.assertInHTML(needle='<span class="label label-info">single</span>', haystack=response.rendered_content)
