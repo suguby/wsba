@@ -17,6 +17,7 @@ class QuestionViewTestsCase(TestCase):
         url = reverse('cms:questions-list', kwargs={'organisation': self.organisation.slug})
         question = Question.objects.create(number=1, text='test', answers_type='single')
         response = self.client.get(url)
+
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed(response, 'cms/questions/list.html')
         self.assertInHTML(needle='<span class="label label-info">single</span>', haystack=response.rendered_content)
@@ -38,6 +39,7 @@ class QuestionViewTestsCase(TestCase):
                                                           'question': 2})
         response = self.client.get(url)
         response_404 = self.client.get(url_404)
+
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed(response, 'cms/questions/detail.html')
         self.assertEqual(response.context['question'].pk, question.id)
@@ -73,6 +75,7 @@ class QuestionViewTestsCase(TestCase):
         url = reverse('cms:questions-add', kwargs={'organisation': self.organisation.slug})
         response_get = self.client.get(url)
         response_post = self.client.post(url, {'number': 1, 'text': 'new_question', 'answers_type': 'multi'})
+
         self.assertEquals(response_get.status_code, 200)
         self.assertContains(response_get, 'Создать', status_code=200)
         self.assertContains(response_get, 'Добавление вопроса', status_code=200)
@@ -95,6 +98,7 @@ class QuestionViewTestsCase(TestCase):
         response_get = self.client.get(url)
         response_post = self.client.post(url, {'number': 1000, 'text': 'edit question', 'answers_type': 'multi'})
         form = response_get.context['form']
+
         self.assertEquals(response_get.status_code, 200)
         self.assertContains(response_get, 'Обновить', status_code=200)
         self.assertContains(response_get, 'Редактирование вопроса', status_code=200)
@@ -123,6 +127,7 @@ class QuestionViewTestsCase(TestCase):
         question = Question.objects.create(number=3, text='test delete 3', answers_type='single')
         url = reverse('cms:questions-delete', kwargs={'organisation': self.organisation.slug, 'question': question.id})
         response = self.client.post(url)
+
         self.assertEquals(response.status_code, 302)
         self.assertEqual(Question.objects.count(), 2)
         self.assertEqual(Question.objects.filter(number=3).count(), 0)

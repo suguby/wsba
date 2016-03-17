@@ -19,7 +19,7 @@
             <span class="label label-success m-l-xs">Правильный</span>
             {% endif %}
             {% if answer.has_comment %}
-            <span class="label label-primary m-l-xs">С коментарием</span>
+            <span class="label label-primary m-l-xs">С комментарием</span>
             {% endif %}
             <div class="pull-right">
             <a href="{% url 'cms:answers-edit' organisation.slug object.pk answer.pk %}" class=""><i class="fa fa-pencil"></i></a>
