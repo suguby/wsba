@@ -409,7 +409,7 @@ class QuestionEditViewTests(QuestionTests):
         Question.objects.create(number=3, text='test update', answers_type='single')
         url = reverse('cms:questions-add', kwargs={'organisation': self.organisation.slug})
         self.client.post(url, {'number': 1000, 'text': 'edit question', 'answers_type': 'multi'})
-        
+
         self.assertEqual(Question.objects.get(text='edit question').number, 1000)
 
     def test_name_form_btn_mode_html(self):
