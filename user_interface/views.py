@@ -4,12 +4,13 @@ from django.views.generic import TemplateView
 from user_interface.models import ProjectUser
 from presentations.models import Presentation
 from presentations.models import Organisation
+from presentations.models import CoreSlide
+from django.core.paginator import Paginator
 
 from presentations.models import Organisation
 
 
 class OrganisationTemplateView(TemplateView):
-
     def get_context_data(self, **kwargs):
         context = super(OrganisationTemplateView, self).get_context_data(**kwargs)
         org_slug = kwargs.get('organisation', '')
@@ -31,7 +32,7 @@ class OrganisationIndexView(OrganisationTemplateView):
         context.update({
             'user': project_user,
             'presentations': Presentation.objects.filter(
-                organisation=project_user.organisation
+                    organisation=project_user.organisation
             ),
             'test': org,
         })
@@ -50,6 +51,27 @@ class ShowPresentation(OrganisationTemplateView):
         except Organisation.DoesNotExist:
             raise Http404()
         context.update(
-            presenation=presentation
+                presentation=presentation
+        )
+        return context
+
+
+class GoPresentation(OrganisationTemplateView):
+    template_name = 'ui/go_presentation.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GoPresentation, self).get_context_data(**kwargs)
+        presentation_id = kwargs.get('pk', '')
+        try:
+            presentation = Presentation.objects.get(id=presentation_id)
+            slides = CoreSlide.objects.filter(presentation=presentation)
+            slide=slides[0]
+        except Organisation.DoesNotExist:
+            raise Http404()
+        context.update(
+                presentation=presentation,
+                slide=slide,
+                slides=slides,
+
         )
         return context
