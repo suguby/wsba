@@ -25,6 +25,9 @@ class Presentation(models.Model):
     class Meta:
         db_table = 'presentations'
 
+    def __str__(self):
+        return 'presentation: {name}, id: {id}'.format(name=self.name, id=self.id)
+
 
 class CoreSlide(models.Model):
     presentation = models.ForeignKey(Presentation)
