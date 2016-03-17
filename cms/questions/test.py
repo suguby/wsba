@@ -22,6 +22,14 @@ class QuestionViewTestsCase(TestCase):
         self.assertInHTML(needle='<span class="label label-info">single</span>', haystack=response.rendered_content)
         self.assertContains(response, question.text, status_code=200)
 
+        self.assertNotIn('back_button', response.context)
+        self.assertIn('add_button', response.context)
+        self.assertEqual(reverse('cms:questions-add', kwargs={'organisation': self.organisation.slug}),
+                         response.context['add_button'])
+        self.assertContains(response, 'id="add_button"', status_code=200)
+        self.assertNotIn('edit_button', response.context)
+        self.assertNotIn('del_button', response.context)
+
     def test_detail_view(self):
         question = Question.objects.create(number=2, text='test?', answers_type='single')
         url = reverse('cms:questions-detail', kwargs={'organisation': self.organisation.slug,
@@ -41,6 +49,25 @@ class QuestionViewTestsCase(TestCase):
         self.assertContains(response, question.text, status_code=200)
         self.assertEqual(response_404.status_code, 404)
 
+        self.assertIn('back_button', response.context)
+        self.assertEqual(reverse('cms:questions-list', kwargs={'organisation': self.organisation.slug}),
+                         response.context['back_button'])
+        self.assertContains(response, 'id="back_button"', status_code=200)
+        self.assertIn('add_button', response.context)
+        self.assertEqual(reverse('cms:answers-add', kwargs={'organisation': self.organisation.slug,
+                                 'question': question.id}),
+                         response.context['add_button'])
+        self.assertIn('edit_button', response.context)
+        self.assertEqual(reverse('cms:questions-edit', kwargs={'organisation': self.organisation.slug,
+                                                               'question': question.id}),
+                         response.context['edit_button'])
+        self.assertContains(response, 'id="edit_button"', status_code=200)
+        self.assertIn('del_button', response.context)
+        self.assertEqual(reverse('cms:questions-delete', kwargs={'organisation': self.organisation.slug,
+                                                                 'question': question.id}),
+                         response.context['del_button'])
+        self.assertContains(response, 'id="del_button"', status_code=200)
+
     def test_create_view(self):
         Question.objects.create(number=3, text='test update', answers_type='single')
         url = reverse('cms:questions-add', kwargs={'organisation': self.organisation.slug})
@@ -54,7 +81,15 @@ class QuestionViewTestsCase(TestCase):
         self.assertEqual(Question.objects.get(number=1).text, 'new_question')
         self.assertTemplateUsed(response_get, 'cms/questions/edit.html')
 
-    def test_update_view(self):
+        self.assertIn('back_button', response_get.context)
+        self.assertEqual(reverse('cms:questions-list', kwargs={'organisation': self.organisation.slug}),
+                         response_get.context['back_button'])
+        self.assertContains(response_get, 'id="back_button"', status_code=200)
+        self.assertNotIn('add_button', response_get.context)
+        self.assertNotIn('edit_button', response_get.context)
+        self.assertNotIn('del_button', response_get.context)
+
+    def test_edit_view(self):
         question = Question.objects.create(number=3, text='test update', answers_type='single')
         url = reverse('cms:questions-edit', kwargs={'organisation': self.organisation.slug, 'question': question.id})
         response_get = self.client.get(url)
@@ -72,6 +107,15 @@ class QuestionViewTestsCase(TestCase):
         self.assertEquals(response_post.status_code, 302)
         self.assertEqual(Question.objects.get(text='edit question').number, 1000)
         self.assertTemplateUsed(response_get, 'cms/questions/edit.html')
+
+        self.assertIn('back_button', response_get.context)
+        self.assertEqual(reverse('cms:questions-detail', kwargs={'organisation': self.organisation.slug,
+                                                                 'question':question.id}),
+                         response_get.context['back_button'])
+        self.assertContains(response_get, 'id="back_button"', status_code=200)
+        self.assertNotIn('add_button', response_get.context)
+        self.assertNotIn('edit_button', response_get.context)
+        self.assertNotIn('del_button', response_get.context)
 
     def test_delete_view(self):
         Question.objects.create(number=1, text='test delete', answers_type='single')

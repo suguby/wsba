@@ -72,22 +72,22 @@
 
                                 {% if back_button %}
                                 <li>
-                                   <a href="{{ back_button }}" class="waves-effect waves-button waves-classic cd-nav-trigger"><i class="fa fa-arrow-left"></i></a>
+                                   <a href="{{ back_button }}" id="back_button" class="waves-effect waves-button waves-classic cd-nav-trigger"><i class="fa fa-arrow-left"></i></a>
                                 </li>
                                 {% endif %}
                                 {% if add_button %}
                                 <li>
-                                   <a href="{{ add_button }}" class="waves-effect waves-button waves-classic cd-nav-trigger"><i class="fa fa-plus"></i></a>
+                                   <a href="{{ add_button }}" id="add_button" class="waves-effect waves-button waves-classic cd-nav-trigger"><i class="fa fa-plus"></i></a>
                                 </li>
                                 {% endif %}
                                 {% if edit_button %}
                                 <li>
-                                   <a href="{{ edit_button }}" class="waves-effect waves-button waves-classic cd-nav-trigger"><i class="fa fa-pencil"></i></a>
+                                   <a href="{{ edit_button }}" id="edit_button" class="waves-effect waves-button waves-classic cd-nav-trigger"><i class="fa fa-pencil"></i></a>
                                 </li>
                                 {% endif %}
                                 {% if del_button %}
                                 <li>
-                                   <a href="" data-toggle="modal" data-target=".bs-example-modal-sm" onClick='obj_delete("{{ object.text }}",
+                                   <a href="" id="del_button" data-toggle="modal" data-target=".bs-example-modal-sm" onClick='obj_delete("{{ object.text }}",
                                         "{{ del_button }}");'
                                       class="waves-effect waves-button waves-classic cd-nav-trigger"><i class="fa fa-times"></i></a>
                                 </li>
