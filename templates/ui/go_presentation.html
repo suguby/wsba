@@ -1,20 +1,30 @@
 {% extends 'ui/base.html' %}
 
-{%  block container %}
+{% block container %}
 
-      <div class="row" style="padding-top: 50px;">
-          <div class="col-md-2"></div>
-          <div class="col-md-8">
-             <div class="panel panel-primary">
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ presentation.name }} | Слайд {{ slide.position }} из {{ slides|length }}</h3>
+    <div class="row" style="padding-top: 50px;">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ presentation.name }} | Слайд {{ slide.position }} из {{ len }}</h3>
+                </div>
+                <div class="panel-body">{{ slide.description }}</div>
+
+            </div>
+
+            {% if previous_url %}
+                <a class="btn btn-default left" href="{{ previous_url }}" role="button">Назад</a>
+            {% endif %}
+
+            {% if next_url %}
+                <a class="btn btn-default left" href="{{ next_url }}" role="button">Далее</a>
+            {% endif %}
+
+        </div>
+
+        <div class="col-md-2"></div>
     </div>
-    <div class="panel-body">{{ slide.description }}</div>
 
-</div><a class="btn btn-default left" href="#" role="button">Далее</a>
-
-      </div>
-
-<div class="col-md-2"></div>
 
 {% endblock %}
