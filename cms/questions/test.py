@@ -16,14 +16,18 @@ class QuestionTests(TestCase):
 
 class QuestionListViewTests(QuestionTests):
 
+    def get_response(self):
+        url = reverse('cms:questions-list', kwargs={'organisation': self.organisation.slug})
+        response = self.client.get(url)
+        return response
+
     def test_user_is_anonymous(self):
         """
         Тестирует посещение страницы входа неавторизованного пользователя
         проверяем что отправляет на страницу авторизации
         """
         self.client.logout()
-        url = reverse('cms:questions-list', kwargs={'organisation': self.organisation.slug})
-        response = self.client.get(url)
+        response = self.get_response()
 
         self.assertEqual(response.status_code, 302)
 
@@ -32,8 +36,7 @@ class QuestionListViewTests(QuestionTests):
         Тестируем вывод страницы списка вопросов авторизованным пользователем
         с определенными правами(в дальнейшем)
         """
-        url = reverse('cms:questions-list', kwargs={'organisation': self.organisation.slug})
-        response = self.client.get(url)
+        response = self.get_response()
 
         self.assertEquals(response.status_code, 200)
 
@@ -41,8 +44,7 @@ class QuestionListViewTests(QuestionTests):
         """
         Тестируем использование вьюхой нужного нам шаблона
         """
-        url = reverse('cms:questions-list', kwargs={'organisation': self.organisation.slug})
-        response = self.client.get(url)
+        response = self.get_response()
 
         self.assertTemplateUsed(response, 'cms/questions/list.html')
 
@@ -55,9 +57,7 @@ class QuestionListViewTests(QuestionTests):
         Question.objects.create(number=2, text='test2', answers_type='single')
         Question.objects.create(number=3, text='test3', answers_type='single')
         questions = Question.objects.all()
-
-        url = reverse('cms:questions-list', kwargs={'organisation': self.organisation.slug})
-        response = self.client.get(url)
+        response = self.get_response()
 
         self.assertEqual(len(questions), len(response.context['object_list']))
 
@@ -76,8 +76,7 @@ class QuestionListViewTests(QuestionTests):
         Тестируем вывод навигационных кнопок
         Отправка их в контекст ответа на рендер страницы
         """
-        url = reverse('cms:questions-list', kwargs={'organisation': self.organisation.slug})
-        response = self.client.get(url)
+        response = self.get_response()
 
         self.assertNotIn('back_button', response.context)
         self.assertIn('add_button', response.context)
@@ -100,13 +99,19 @@ class QuestionListViewTests(QuestionTests):
         Тестируем вывод навигационных кнопок
         Отрисовка кнопок в шаблоне
         """
-        url = reverse('cms:questions-list', kwargs={'organisation': self.organisation.slug})
-        response = self.client.get(url)
+        response = self.get_response()
 
         self.assertContains(response, 'id="add_button"', status_code=200)
 
 
 class QuestionDetailViewTests(QuestionTests):
+
+    def get_response_and_question(self):
+        question = Question.objects.create(number=2, text='test?', answers_type='single')
+        url = reverse('cms:questions-detail', kwargs={'organisation': self.organisation.slug,
+                                                      'question': question.id})
+        response = self.client.get(url)
+        return question, response
 
     def test_user_is_anonymous(self):
         """
@@ -114,11 +119,7 @@ class QuestionDetailViewTests(QuestionTests):
         проверяем что отправляет на страницу авторизации
         """
         self.client.logout()
-        question = Question.objects.create(number=2, text='test?', answers_type='single')
-        url = reverse('cms:questions-detail', kwargs={'organisation': self.organisation.slug,
-                                                      'question': question.id})
-        response = self.client.get(url)
-
+        question, response = self.get_response_and_question()
         self.assertEqual(response.status_code, 302)
 
     def test_user_is_authenticated(self):
@@ -126,11 +127,7 @@ class QuestionDetailViewTests(QuestionTests):
         Тестируем вывод страницы списка вопросов авторизованным пользователем
         с определенными правами(в дальнейшем)
         """
-        question = Question.objects.create(number=2, text='test?', answers_type='single')
-        url = reverse('cms:questions-detail', kwargs={'organisation': self.organisation.slug,
-                                                      'question': question.id})
-        response = self.client.get(url)
-
+        question, response = self.get_response_and_question()
         self.assertEquals(response.status_code, 200)
 
     def test_not_get_object(self):
@@ -147,33 +144,21 @@ class QuestionDetailViewTests(QuestionTests):
         """
         Тестируем использование вьюхой нужного нам шаблона
         """
-        question = Question.objects.create(number=2, text='test?', answers_type='single')
-        url = reverse('cms:questions-detail', kwargs={'organisation': self.organisation.slug,
-                                                      'question': question.id})
-        response = self.client.get(url)
-
+        question, response = self.get_response_and_question()
         self.assertTemplateUsed(response, 'cms/questions/detail.html')
 
     def test_object_in_context(self):
         """
         Тестируем наличие вопроса в контексте
         """
-        question = Question.objects.create(number=2, text='test?', answers_type='single')
-        url = reverse('cms:questions-detail', kwargs={'organisation': self.organisation.slug,
-                                                      'question': question.id})
-        response = self.client.get(url)
-
+        question, response = self.get_response_and_question()
         self.assertEqual(question, response.context['object'])
 
     def test_object_in_html(self):
         """
         Тестируем вывод вопроса в шаблон
         """
-        question = Question.objects.create(number=2, text='test?', answers_type='single')
-        url = reverse('cms:questions-detail', kwargs={'organisation': self.organisation.slug,
-                                                      'question': question.id})
-        response = self.client.get(url)
-
+        question, response = self.get_response_and_question()
         self.assertInHTML(needle='<div class="panel-body">test?</div>', haystack=response.rendered_content)
         self.assertContains(response, question.number, status_code=200)
         self.assertContains(response, question.text, status_code=200)
@@ -186,10 +171,7 @@ class QuestionDetailViewTests(QuestionTests):
         В контексте должны быть все навигационные кнопки
         Назад, Добавить, Редактировать, Удалить
         """
-        question = Question.objects.create(number=2, text='test?', answers_type='single')
-        url = reverse('cms:questions-detail', kwargs={'organisation': self.organisation.slug,
-                                                      'question': question.id})
-        response = self.client.get(url)
+        question, response = self.get_response_and_question()
 
         self.assertIn('back_button', response.context)
         self.assertIn('add_button', response.context)
@@ -213,11 +195,7 @@ class QuestionDetailViewTests(QuestionTests):
         Удалить -> удалить ответ, url_delete
         /organisation_slug/questions/question_id/delete
         """
-        question = Question.objects.create(number=2, text='test?', answers_type='single')
-        url = reverse('cms:questions-detail', kwargs={'organisation': self.organisation.slug,
-                                                      'question': question.id})
-        response = self.client.get(url)
-
+        question, response = self.get_response_and_question()
         url_back = reverse('cms:questions-list', kwargs={'organisation': self.organisation.slug})
         url_add = reverse('cms:answers-add', kwargs={'organisation': self.organisation.slug,
                                                      'question': question.id})
@@ -225,7 +203,6 @@ class QuestionDetailViewTests(QuestionTests):
                                                          'question': question.id})
         url_delete = reverse('cms:questions-delete', kwargs={'organisation': self.organisation.slug,
                                                              'question': question.id})
-
         self.assertEqual(url_back, response.context['back_button'])
         self.assertEqual(url_add, response.context['add_button'])
         self.assertEqual(url_edit, response.context['edit_button'])
@@ -236,11 +213,7 @@ class QuestionDetailViewTests(QuestionTests):
         Тестируем вывод навигационных кнопок
         Отрисовка кнопок в шаблоне
         """
-        question = Question.objects.create(number=2, text='test?', answers_type='single')
-        url = reverse('cms:questions-detail', kwargs={'organisation': self.organisation.slug,
-                                                      'question': question.id})
-        response = self.client.get(url)
-
+        question, response = self.get_response_and_question()
         self.assertContains(response, 'id="back_button"', status_code=200)
         self.assertContains(response, 'id="add_button"', status_code=200)
         self.assertContains(response, 'id="edit_button"', status_code=200)
@@ -249,17 +222,19 @@ class QuestionDetailViewTests(QuestionTests):
 
 class QuestionCreateViewTests(QuestionTests):
 
+    def get_response(self):
+        Question.objects.create(number=3, text='test update', answers_type='single')
+        url = reverse('cms:questions-add', kwargs={'organisation': self.organisation.slug})
+        response = self.client.get(url)
+        return response
+
     def test_user_is_anonymous(self):
         """
         Тестирует посещение страницы входа неавторизованного пользователя
         проверяем что отправляет на страницу авторизации
         """
         self.client.logout()
-
-        Question.objects.create(number=3, text='test update', answers_type='single')
-        url = reverse('cms:questions-add', kwargs={'organisation': self.organisation.slug})
-        response = self.client.get(url)
-
+        response = self.get_response()
         self.assertEqual(response.status_code, 302)
 
     def test_user_is_authenticated(self):
@@ -267,30 +242,21 @@ class QuestionCreateViewTests(QuestionTests):
         Тестируем вывод страницы списка вопросов авторизованным пользователем
         с определенными правами(в дальнейшем)
         """
-        Question.objects.create(number=3, text='test update', answers_type='single')
-        url = reverse('cms:questions-add', kwargs={'organisation': self.organisation.slug})
-        response = self.client.get(url)
-
+        response = self.get_response()
         self.assertEquals(response.status_code, 200)
 
     def test_template(self):
         """
         Тестируем использование вьюхой нужного нам шаблона
         """
-        Question.objects.create(number=3, text='test update', answers_type='single')
-        url = reverse('cms:questions-add', kwargs={'organisation': self.organisation.slug})
-        response = self.client.get(url)
-
+        response = self.get_response()
         self.assertTemplateUsed(response, 'cms/questions/edit.html')
 
     def test_object_in_context(self):
         """
         Тестируем наличие объектов в контексте
         """
-        Question.objects.create(number=3, text='test update', answers_type='single')
-        url = reverse('cms:questions-add', kwargs={'organisation': self.organisation.slug})
-        response = self.client.get(url)
-
+        response = self.get_response()
         self.assertIn('form', response.context)
 
     def test_post_status_valid(self):
@@ -301,7 +267,6 @@ class QuestionCreateViewTests(QuestionTests):
         Question.objects.create(number=3, text='test update', answers_type='single')
         url = reverse('cms:questions-add', kwargs={'organisation': self.organisation.slug})
         response = self.client.post(url, {'number': 1, 'text': 'new_question', 'answers_type': 'multi'})
-
         self.assertEquals(response.status_code, 302)
 
     def test_post_status_invalid(self):
@@ -312,7 +277,6 @@ class QuestionCreateViewTests(QuestionTests):
         Question.objects.create(number=3, text='test update', answers_type='single')
         url = reverse('cms:questions-add', kwargs={'organisation': self.organisation.slug})
         response = self.client.post(url, {'number': 1, 'text': 'new_question'})
-
         self.assertNotEquals(response.status_code, 302)
 
     def test_post_add_object(self):
@@ -326,9 +290,7 @@ class QuestionCreateViewTests(QuestionTests):
         """
         Question.objects.create(number=3, text='test update', answers_type='single')
         url = reverse('cms:questions-add', kwargs={'organisation': self.organisation.slug})
-
         self.client.post(url, {'number': 1, 'text': 'new_question', 'answers_type': 'multi'})
-
         self.assertEqual(Question.objects.count(), 2)
         self.assertEqual(Question.objects.get(number=1).text, 'new_question')
 
@@ -336,10 +298,7 @@ class QuestionCreateViewTests(QuestionTests):
         """
         Проверяем верные надписи на форме в шаблоне
         """
-        Question.objects.create(number=3, text='test update', answers_type='single')
-        url = reverse('cms:questions-add', kwargs={'organisation': self.organisation.slug})
-        response = self.client.get(url)
-
+        response = self.get_response()
         self.assertContains(response, 'Создать', status_code=200)
         self.assertContains(response, 'Добавление вопроса', status_code=200)
 
@@ -351,10 +310,7 @@ class QuestionCreateViewTests(QuestionTests):
         В контексте должны быть следующие навигационные кнопки
         Назад
         """
-        Question.objects.create(number=3, text='test update', answers_type='single')
-        url = reverse('cms:questions-add', kwargs={'organisation': self.organisation.slug})
-        response = self.client.get(url)
-
+        response = self.get_response()
         self.assertIn('back_button', response.context)
         self.assertNotIn('add_button', response.context)
         self.assertNotIn('edit_button', response.context)
@@ -369,25 +325,26 @@ class QuestionCreateViewTests(QuestionTests):
         /organisation_slug/questions/
 
         """
-        Question.objects.create(number=3, text='test update', answers_type='single')
-        url = reverse('cms:questions-add', kwargs={'organisation': self.organisation.slug})
-        response = self.client.get(url)
-        self.assertEqual(reverse('cms:questions-list', kwargs={'organisation': self.organisation.slug}),
-                         response.context['back_button'])
+        response = self.get_response()
+        url_back = reverse('cms:questions-list', kwargs={'organisation': self.organisation.slug})
+        self.assertEqual(url_back, response.context['back_button'])
 
     def test_nav_button_in_html(self):
         """
         Тестируем вывод навигационных кнопок
         Отрисовка кнопок в шаблоне
         """
-        Question.objects.create(number=3, text='test update', answers_type='single')
-        url = reverse('cms:questions-add', kwargs={'organisation': self.organisation.slug})
-        response = self.client.get(url)
-
+        response = self.get_response()
         self.assertContains(response, 'id="back_button"', status_code=200)
 
 
 class QuestionEditViewTests(QuestionTests):
+
+    def get_response_and_question(self):
+        question = Question.objects.create(number=3, text='test update', answers_type='single')
+        url = reverse('cms:questions-edit', kwargs={'organisation': self.organisation.slug, 'question': question.id})
+        response = self.client.get(url)
+        return question, response
 
     def test_user_is_anonymous(self):
         """
@@ -395,10 +352,7 @@ class QuestionEditViewTests(QuestionTests):
         проверяем что отправляет на страницу авторизации
         """
         self.client.logout()
-        question = Question.objects.create(number=3, text='test update', answers_type='single')
-        url = reverse('cms:questions-edit', kwargs={'organisation': self.organisation.slug, 'question': question.id})
-        response = self.client.get(url)
-
+        question, response = self.get_response_and_question()
         self.assertEqual(response.status_code, 302)
 
     def test_user_is_authenticated(self):
@@ -406,19 +360,14 @@ class QuestionEditViewTests(QuestionTests):
         Тестируем вывод страницы списка вопросов авторизованным пользователем
         с определенными правами(в дальнейшем)
         """
-        question = Question.objects.create(number=3, text='test update', answers_type='single')
-        url = reverse('cms:questions-edit', kwargs={'organisation': self.organisation.slug, 'question': question.id})
-        response = self.client.get(url)
-
+        question, response = self.get_response_and_question()
         self.assertEquals(response.status_code, 200)
 
     def test_template(self):
         """
         Тестируем использование вьюхой нужного нам шаблона
         """
-        question = Question.objects.create(number=3, text='test update', answers_type='single')
-        url = reverse('cms:questions-edit', kwargs={'organisation': self.organisation.slug, 'question': question.id})
-        response = self.client.get(url)
+        question, response = self.get_response_and_question()
 
         self.assertTemplateUsed(response, 'cms/questions/edit.html')
 
@@ -426,9 +375,7 @@ class QuestionEditViewTests(QuestionTests):
         """
         Тестируем наличие объектов в контексте
         """
-        question = Question.objects.create(number=3, text='test update', answers_type='single')
-        url = reverse('cms:questions-edit', kwargs={'organisation': self.organisation.slug, 'question': question.id})
-        response = self.client.get(url)
+        question, response = self.get_response_and_question()
         self.assertEqual(question.id, response.context['object'].id)
 
     def test_post_status_valid(self):
@@ -462,17 +409,14 @@ class QuestionEditViewTests(QuestionTests):
         Question.objects.create(number=3, text='test update', answers_type='single')
         url = reverse('cms:questions-add', kwargs={'organisation': self.organisation.slug})
         self.client.post(url, {'number': 1000, 'text': 'edit question', 'answers_type': 'multi'})
-
+        
         self.assertEqual(Question.objects.get(text='edit question').number, 1000)
 
     def test_name_form_btn_mode_html(self):
         """
         Проверяем верные надписи на форме в шаблоне
         """
-        question = Question.objects.create(number=3, text='test update', answers_type='single')
-        url = reverse('cms:questions-edit', kwargs={'organisation': self.organisation.slug, 'question': question.id})
-        response = self.client.get(url)
-
+        question, response = self.get_response_and_question()
         self.assertContains(response, 'Обновить', status_code=200)
         self.assertContains(response, 'Редактирование вопроса', status_code=200)
 
@@ -480,13 +424,10 @@ class QuestionEditViewTests(QuestionTests):
         """
         Проверяем отображение объекта в шаблоне
         """
-        question = Question.objects.create(number=3, text='test update', answers_type='single')
-        url = reverse('cms:questions-edit', kwargs={'organisation': self.organisation.slug, 'question': question.id})
-        response_get = self.client.get(url)
-
-        self.assertContains(response_get, question.number, status_code=200)
-        self.assertContains(response_get, question.text, status_code=200)
-        self.assertContains(response_get, question.answers_type, status_code=200)
+        question, response = self.get_response_and_question()
+        self.assertContains(response, question.number, status_code=200)
+        self.assertContains(response, question.text, status_code=200)
+        self.assertContains(response, question.answers_type, status_code=200)
 
     def test_nav_button_in_context(self):
         """
@@ -496,10 +437,7 @@ class QuestionEditViewTests(QuestionTests):
         В контексте должны быть следующие навигационные кнопки
         Назад
         """
-        question = Question.objects.create(number=3, text='test update', answers_type='single')
-        url = reverse('cms:questions-edit', kwargs={'organisation': self.organisation.slug, 'question': question.id})
-        response = self.client.get(url)
-
+        question, response = self.get_response_and_question()
         self.assertIn('back_button', response.context)
         self.assertNotIn('add_button', response.context)
         self.assertNotIn('edit_button', response.context)
@@ -519,7 +457,6 @@ class QuestionEditViewTests(QuestionTests):
         back_url = reverse('cms:questions-detail', kwargs={'organisation': self.organisation.slug,
                                                            'question': question.id})
         response = self.client.get(url)
-
         self.assertEqual(back_url, response.context['back_button'])
 
     def test_nav_button_in_html(self):
@@ -527,10 +464,7 @@ class QuestionEditViewTests(QuestionTests):
         Тестируем вывод навигационных кнопок
         Отрисовка кнопок в шаблоне
         """
-        question = Question.objects.create(number=3, text='test update', answers_type='single')
-        url = reverse('cms:questions-edit', kwargs={'organisation': self.organisation.slug, 'question': question.id})
-        response = self.client.get(url)
-
+        question, response = self.get_response_and_question()
         self.assertContains(response, 'id="back_button"', status_code=200)
 
 
