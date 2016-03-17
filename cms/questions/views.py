@@ -16,7 +16,6 @@ class QuestionListView(ListView, BaseQuestionView, QuestionAddBtn):
     """
     Представление для списка вопросов
     """
-
     template_name = 'cms/questions/list.html'
     tab = 'question'
     title = 'Вопросы'
@@ -36,7 +35,6 @@ class QuestionDetailView(DetailView, BaseQuestionView, BackBtnToListQuestion,
     """
     Представление для одного вопроса
     """
-
     template_name = 'cms/questions/detail.html'
     title = 'Вопрос'
 
@@ -51,7 +49,6 @@ class QuestionCreateView(CreateView, BaseQuestionView, BackBtnToListQuestion):
     """
     Создание вопроса
     """
-
     form_class = QuestionForm
     template_name = "cms/questions/edit.html"
     title = 'Добавление вопроса'
@@ -65,7 +62,6 @@ class QuestionUpdateView(UpdateView, BaseQuestionView, BackBtnToQuestion):
     """
     Изменение вопроса
     """
-
     template_name = "cms/questions/edit.html"
     fields = ['number', 'text', 'answers_type']
     title = 'Редактирование вопроса'
@@ -80,6 +76,5 @@ class QuestionDeleteView(DeleteView, BaseQuestionView):
     """
     Удаление вопроса
     """
-
     def get_success_url(self):
         return reverse('cms:questions-list', kwargs={'organisation': self.kwargs['organisation']})
