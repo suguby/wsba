@@ -115,6 +115,14 @@
                                                 <span class="badge badge-success pull-right">4</span>
                                             </a>
                                         </li>
+                                        {% if user.is_superuser %}
+                                         <li role="presentation">
+                                            <a href="{% url 'admin:index' %}">
+                                                <i class="fa fa-cogs"></i>
+                                                Администрирование
+                                            </a>
+                                        </li>
+                                        {% endif %}
                                         <li role="presentation" class="divider"></li>
                                         <li role="presentation">
                                             <a href="#">

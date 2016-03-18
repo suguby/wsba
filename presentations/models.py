@@ -14,6 +14,11 @@ class Organisation(models.Model):
 
     class Meta:
         db_table = 'organisations'
+        verbose_name = 'Организация'
+        verbose_name_plural = 'организации'
+
+    def __str__(self):
+        return self.name
 
 
 class Presentation(models.Model):
@@ -26,6 +31,8 @@ class Presentation(models.Model):
 
     class Meta:
         db_table = 'presentations'
+        verbose_name = 'Презентация'
+        verbose_name_plural = 'презентации'
 
 
 class CoreSlide(models.Model):
@@ -40,6 +47,8 @@ class CoreSlide(models.Model):
 
     class Meta:
         db_table = 'slides'
+        verbose_name = 'Слайд'
+        verbose_name_plural = 'слайды'
 
 
 class Question(models.Model):
@@ -54,9 +63,15 @@ class Question(models.Model):
     number = IntegerField(verbose_name='Номер вопроса')
     text = TextField(verbose_name='Текст вопроса')
     answers_type = CharField(verbose_name='Тип ответов', max_length=8, choices=ANSWER_TYPE, default='multi')
+    organisation = models.ForeignKey(Organisation, null=True, blank=True)
 
     class Meta:
         db_table = 'questions'
+        verbose_name = 'Вопрос'
+        verbose_name_plural = 'вопросы'
+
+    def __str__(self):
+        return self.text
 
 
 class Answer(models.Model):
@@ -67,11 +82,12 @@ class Answer(models.Model):
     has_comment = models.BooleanField(verbose_name="Ответ с комментарием")
 
     def __str__(self):
-        # TODO эта функция используется в основном в логах и консоли, в шаблоне делай просто answer.text
         return self.text
 
     class Meta:
         db_table = 'answers'
+        verbose_name = 'Ответ'
+        verbose_name_plural = 'ответы'
 
 
 class UserAnswer(models.Model):
@@ -85,3 +101,5 @@ class UserAnswer(models.Model):
 
     class Meta:
         db_table = 'user_answers'
+        verbose_name = 'Ответ пользователя'
+        verbose_name_plural = 'ответы пользователей'
