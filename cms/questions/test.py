@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.test import TestCase
 from presentations.models import Organisation, Question
-
+from django.conf import settings
 
 class BaseTests(TestCase):
 
@@ -25,10 +25,12 @@ class QuestionListViewTests(BaseTests):
         """
         Тестирует посещение страницы входа неавторизованного пользователя
         проверяем что отправляет на страницу авторизации
+        url которой прописан в настройках settings параметр LOGIN_URL
         """
         self.client.logout()
         response = self.get_response()
-
+        # c self.assertRedirects непонятная ошибканепонятная ошибка
+        self.assertIn(settings.LOGIN_URL, response.url)
         self.assertEqual(response.status_code, 302)
 
     def test_user_is_authenticated(self):
