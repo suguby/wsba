@@ -10,6 +10,7 @@ class BaseQuestionView(ContextMixin, View):
     def __init__(self):
         self.model = Question
         self.pk_url_kwarg = 'question'
+        self.tab = 'tab_questions'
 
     def get_context_data(self, **kwargs):
         context = super(BaseQuestionView, self).get_context_data(**kwargs)
@@ -29,6 +30,7 @@ class BaseAnswerView(ContextMixin, View):
     def __init__(self):
         self.model = Answer
         self.pk_url_kwarg = 'answer'
+        self.tab = 'tab_questions'
 
     def get_context_data(self, **kwargs):
         context = super(BaseAnswerView, self).get_context_data(**kwargs)

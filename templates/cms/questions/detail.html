@@ -8,6 +8,10 @@
   <div class="panel">
     <div class="panel-body">
         {{ object.text }}
+        <span class="label label-info m-l-xs">{{ object.answers_type }}</span>
+        {% if not object.organisation %}
+         <span class="label label-warning m-l-xs">Общий</span>
+        {% endif %}
     </div>
     <ul class="list-group">
         {% if answers_list %}
