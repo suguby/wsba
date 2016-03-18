@@ -159,7 +159,6 @@ class QuestionDetailViewTests(BaseTests):
         Тестируем вывод вопроса в шаблон
         """
         question, response = self.get_response_and_question()
-        self.assertInHTML(needle='<div class="panel-body">test?</div>', haystack=response.rendered_content)
         self.assertContains(response, question.number, status_code=200)
         self.assertContains(response, question.text, status_code=200)
 

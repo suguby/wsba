@@ -8,7 +8,7 @@
   <div class="panel">
     <div class="panel-body">
         {{ object.text }}
-        <span class="label label-info m-l-xs">{{ object.answers_type }}</span>
+        <span class="label label-info m-l-xs">{{ object.get_answers_type_display }}</span>
         {% if not object.organisation %}
          <span class="label label-warning m-l-xs">Общий</span>
         {% endif %}

@@ -24,7 +24,7 @@
                            <th scope="row">{{ object.number }}</th>
                            <td><a href="{% url 'cms:questions-detail' organisation.slug object.pk %}">{{ object.text }}</a></td>
                            <td>
-                               <span class="label label-info">{{ object.answers_type }}</span>
+                               <span class="label label-info">{{ object.get_answers_type_display }}</span>
                                {% if not object.organisation %}<br/>
                                    <span class="label label-warning">Общий</span>
                                {% endif %}
