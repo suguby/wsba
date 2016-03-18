@@ -1,19 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from django.core.urlresolvers import reverse
-from django.contrib.auth.models import User
-from django.test import TestCase
-from presentations.models import Organisation, Question, Answer
+from cms.questions.test import BaseTests
+from presentations.models import Question, Answer
 
 
-class AnswerViewTestsCase(TestCase):
+class AnswerEditViewTests(BaseTests):
 
-    def setUp(self):
-        User.objects.create_user('admin', 'admin@example.com', 'admin')
-        self.client.login(username='admin', password='admin')
-        self.organisation = Organisation.objects.create(name='test', slug='test')
-
-    def test_edit_view(self):
+    def get_param_list(self):
+        """
+        Инициализация основных параметров, возвращает список get_response, question, answer, url
+        :return: list(response, question, answer, url)
+        """
         question = Question.objects.create(number=2, text='test?', answers_type='single')
         Answer.objects.create(question=question, variant_number=1, text='test',
                               is_right=True, has_comment=True)
@@ -21,45 +19,155 @@ class AnswerViewTestsCase(TestCase):
                                        is_right=False, has_comment=False)
         url = reverse('cms:answers-edit', kwargs={'organisation': self.organisation.slug,
                                                   'question': question.id, 'answer': answer.id})
-        response_get = self.client.get(url)
-        form = response_get.context['form']
-        response_post = self.client.post(url, {'variant_number': 1000, 'text': 'test edit',
-                                               'is_right': True, 'has_comment': True, 'question': question.id})
+        response = self.client.get(url)
+        return response, question, answer, url
 
-        self.assertEquals(response_get.status_code, 200)
-        self.assertTemplateUsed(response_get, 'cms/answers/edit.html')
-        self.assertContains(response_get, 'Обновить', status_code=200)
-        self.assertContains(response_get, 'Редактирование ответа', status_code=200)
-        self.assertContains(response_get, question.number, status_code=200)
-        self.assertContains(response_get, question.text, status_code=200)
-        self.assertContains(response_get, answer.variant_number, status_code=200)
-        self.assertContains(response_get, answer.text, status_code=200)
-        self.assertContains(response_get, 'Правильный', status_code=200)
-        self.assertContains(response_get, 'С комментарием', status_code=200)
-        self.assertEquals(form['variant_number'].value(), 10)
-        self.assertEquals(form['text'].value(), answer.text)
-        self.assertEquals(form['is_right'].value(), answer.is_right)
-        self.assertEquals(form['has_comment'].value(), answer.has_comment)
-        self.assertEquals(form['question'].value(), answer.question.pk)
+    def test_user_is_anonymous(self):
+        """
+        Тестирует посещение страницы входа неавторизованного пользователя
+        проверяем что отправляет на страницу авторизации
+        """
+        self.client.logout()
+        response = self.get_param_list()[0]
+        self.assertEqual(response.status_code, 302)
 
-        self.assertEquals(response_post.status_code, 302)
-        self.assertEqual(Answer.objects.filter(variant_number=10).count(), 0)
-        self.assertEqual(Answer.objects.get(text='test edit').pk, 2)
+    def test_user_is_authenticated(self):
+        """
+        Тестируем вывод страницы списка вопросов авторизованным пользователем
+        с определенными правами(в дальнейшем)
+        """
+        response= self.get_param_list()[0]
+        self.assertEquals(response.status_code, 200)
 
-        self.assertIn('back_button', response_get.context)
-        self.assertEqual(reverse('cms:questions-detail', kwargs={'organisation': self.organisation.slug,
-                                                                 'question': question.id}),
-                         response_get.context['back_button'])
-        self.assertContains(response_get, 'id="back_button"', status_code=200)
-        self.assertNotIn('add_button', response_get.context)
-        self.assertNotIn('edit_button', response_get.context)
-        self.assertIn('del_button', response_get.context)
-        self.assertEqual(reverse('cms:answers-delete', kwargs={'organisation': self.organisation.slug,
-                                                               'question': question.id, 'answer': answer.id}),
-                         response_get.context['del_button'])
-        self.assertContains(response_get, 'id="del_button"', status_code=200)
+    def test_template(self):
+        """
+        Тестируем использование вьюхой нужного нам шаблона
+        """
+        response = self.get_param_list()[0]
+        self.assertTemplateUsed(response, 'cms/answers/edit.html')
 
-    def test_create_view(self):
+    def test_object_in_context(self):
+        """
+        Тестируем наличие объектов в контексте
+        """
+        response = self.get_param_list()[0]
+        self.assertIn('form', response.context)
+
+    def test_init_form_in_html(self):
+        """
+        Тестируем инициализацию скрытых значений формы,
+        наличие объектов на отрендеренной страничке
+        """
+        response, question = self.get_param_list()[0:2]
+        hidden_input = '<input id="id_question" name="question" type="hidden" value="{}" />'.format(question.id)
+        self.assertInHTML(needle=hidden_input, haystack=response.rendered_content)
+
+    def test_post_status_valid(self):
+        """
+        Тестируем POST запрос, отправляем данные в форму.
+        Проверяем при валидных данных проходит ли редирект
+        """
+        question, answer = self.get_param_list()[1:3]
+        url = reverse('cms:answers-edit', kwargs={'organisation': self.organisation.slug,
+                                                  'question': question.id, 'answer': answer.id})
+        response = self.client.post(url, {'variant_number': 1000, 'text': 'test edit',
+                                          'is_right': True, 'has_comment': True, 'question': question.id})
+        self.assertEquals(response.status_code, 302)
+
+    def test_post_status_invalid(self):
+        """
+        Тестируем POST запрос, отправляем данные в форму.
+        Проверяем при невалидных данных не проходит ли редирект
+        """
+        question, answer = self.get_param_list()[1:3]
+        url = reverse('cms:answers-edit', kwargs={'organisation': self.organisation.slug,
+                                                  'question': question.id, 'answer': answer.id})
+        response = self.client.post(url, {'variant_number': 1000, 'text': 'test edit',
+                                          'is_right': True, 'has_comment': True})
+        self.assertNotEquals(response.status_code, 302)
+
+    def test_post_edit_object(self):
+        """
+        Тестируем POST запрос, отправляем данные в форму.
+
+        Проверяем изменение ответа
+        """
+        question, _, url = self.get_param_list()[1:4]
+        self.client.post(url, {'variant_number': 1000, 'text': 'test edit',
+                               'is_right': True, 'has_comment': True, 'question': question.id})
+        self.assertEqual(Answer.objects.get(text='test edit').variant_number, 1000)
+
+    def test_name_form_btn_mode_html(self):
+        """
+        Проверяем верные надписи на форме в шаблоне
+        """
+        response = self.get_param_list()[0]
+        self.assertContains(response, 'Обновить', status_code=200)
+        self.assertContains(response, 'Редактирование ответа', status_code=200)
+
+    def test_object_in_html(self):
+        """
+        Проверяем отображение объекта в шаблоне
+        """
+        response, question, answer, _ = self.get_param_list()
+        self.assertContains(response, question.number, status_code=200)
+        self.assertContains(response, question.text, status_code=200)
+        self.assertContains(response, answer.variant_number, status_code=200)
+        self.assertContains(response, answer.text, status_code=200)
+        self.assertContains(response, 'Правильный', status_code=200)
+        self.assertContains(response, 'С комментарием', status_code=200)
+
+    def test_nav_button_in_context(self):
+        """
+        Тестируем вывод навигационных кнопок
+        Отправка их в контекст ответа на рендер страницы
+
+        В контексте должны быть следующие навигационные кнопки
+        Назад, Удалить
+        """
+        response = self.get_param_list()[0]
+        self.assertIn('back_button', response.context)
+        self.assertNotIn('add_button', response.context)
+        self.assertNotIn('edit_button', response.context)
+        self.assertIn('del_button', response.context)
+
+    def test_nav_button_url_in_context(self):
+        """
+        Тестируем вывод правильных юрлов навигационных кнопок
+        Отправка их в контекст ответа на рендер страницы
+
+        Назад -> к вопросу, back_url
+        /organisation_slug/questions/questions_id/
+
+        Удалить -> к вопросу, del_url
+        /organisation_slug/questions/questions_id/answers/answer_id
+
+        """
+        response, question, answer, _ = self.get_param_list()
+        back_url = reverse('cms:questions-detail', kwargs={'organisation': self.organisation.slug,
+                                                           'question': question.id})
+        del_url = reverse('cms:answers-delete', kwargs={'organisation': self.organisation.slug,
+                                                        'question': question.id, 'answer': answer.id})
+        self.assertEqual(back_url, response.context['back_button'])
+        self.assertEqual(del_url, response.context['del_button'])
+
+    def test_nav_button_in_html(self):
+        """
+        Тестируем вывод навигационных кнопок
+        Отрисовка кнопок в шаблоне
+        """
+        response = self.get_param_list()[0]
+        self.assertContains(response, 'id="back_button"', status_code=200)
+        self.assertContains(response, 'id="del_button"', status_code=200)
+
+
+class AnswerAddViewTests(BaseTests):
+
+    def get_param_list(self):
+        """
+        Инициализация основных параметров, возвращает список get_response, question, url
+        :return: list(response, question, url)
+        """
         question = Question.objects.create(number=2, text='test?', answers_type='single')
         Answer.objects.create(question=question, variant_number=1, text='test',
                               is_right=False, has_comment=True)
@@ -67,44 +175,183 @@ class AnswerViewTestsCase(TestCase):
                               is_right=False, has_comment=False)
         url = reverse('cms:answers-add', kwargs={'organisation': self.organisation.slug,
                                                  'question': question.id})
-        response_get = self.client.get(url)
-        response_post = self.client.post(url, {'variant_number': 3, 'text': 'new',
-                                               'is_right': True, 'has_comment': True, 'question': question.id})
+        response = self.client.get(url)
+        return response, question, url
 
-        self.assertEquals(response_get.status_code, 200)
-        self.assertTemplateUsed(response_get, 'cms/answers/edit.html')
+    def test_user_is_anonymous(self):
+        """
+        Тестирует посещение страницы входа неавторизованного пользователя
+        проверяем что отправляет на страницу авторизации
+        """
+        self.client.logout()
+        response = self.get_param_list()[0]
+        self.assertEqual(response.status_code, 302)
 
-        self.assertContains(response_get, 'Создать', status_code=200)
-        self.assertContains(response_get, 'Добавление ответа', status_code=200)
-        self.assertContains(response_get, question.number, status_code=200)
-        self.assertContains(response_get, question.text, status_code=200)
-        self.assertContains(response_get, 'С комментарием', status_code=200)
-        self.assertEqual(response_get.context['question'].pk, question.id)
+    def test_user_is_authenticated(self):
+        """
+        Тестируем вывод страницы списка вопросов авторизованным пользователем
+        с определенными правами(в дальнейшем)
+        """
+        response= self.get_param_list()[0]
+        self.assertEquals(response.status_code, 200)
 
-        self.assertEquals(response_post.status_code, 302)
+    def test_template(self):
+        """
+        Тестируем использование вьюхой нужного нам шаблона
+        """
+        response = self.get_param_list()[0]
+        self.assertTemplateUsed(response, 'cms/answers/edit.html')
+
+    def test_object_in_context(self):
+        """
+        Тестируем наличие объектов в контексте
+        """
+        response = self.get_param_list()[0]
+        self.assertIn('form', response.context)
+
+    def test_init_form_in_html(self):
+        """
+        Тестируем инициализацию скрытых значений формы,
+        наличие объектов на отрендеренной страничке
+        """
+        response, question = self.get_param_list()[0:2]
+        hidden_input = '<input id="id_question" name="question" type="hidden" value="{}" />'.format(question.id)
+        self.assertInHTML(needle=hidden_input, haystack=response.rendered_content)
+
+    def test_init_form_in_context(self):
+        """
+        Тестируем наличие вопроса в контексте
+        """
+        response, question = self.get_param_list()[0:2]
+        self.assertEqual(response.context['question'].pk, question.id)
+
+    def test_post_status_valid(self):
+        """
+        Тестируем POST запрос, отправляем данные в форму.
+        Проверяем при валидных данных проходит ли редирект
+        """
+        _, question, url = self.get_param_list()
+        response = self.client.post(url, {'variant_number': 3, 'text': 'new',
+                                          'is_right': True, 'has_comment': True, 'question': question.id})
+        self.assertEquals(response.status_code, 302)
+
+    def test_post_status_invalid(self):
+        """
+        Тестируем POST запрос, отправляем данные в форму.
+        Проверяем при невалидных данных не проходит ли редирект
+        """
+        _, _, url = self.get_param_list()
+        response = self.client.post(url, {'variant_number': 3, 'text': 'new',
+                                          'is_right': True, 'has_comment': True})
+        self.assertNotEquals(response.status_code, 302)
+
+    def test_post_edit_object(self):
+        """
+        Тестируем POST запрос, отправляем данные в форму.
+
+        Проверяем изменение ответа
+        """
+        _, question, url = self.get_param_list()
+        self.client.post(url, {'variant_number': 3, 'text': 'new',
+                               'is_right': True, 'has_comment': True, 'question': question.id})
         self.assertEqual(Answer.objects.filter(variant_number=3).count(), 1)
         self.assertEqual(Answer.objects.get(text='new').is_right, True)
 
-        self.assertIn('back_button', response_get.context)
-        self.assertEqual(reverse('cms:questions-detail', kwargs={'organisation': self.organisation.slug,
-                                                                 'question': question.id}),
-                         response_get.context['back_button'])
-        self.assertContains(response_get, 'id="back_button"', status_code=200)
-        self.assertNotIn('add_button', response_get.context)
-        self.assertNotIn('edit_button', response_get.context)
-        self.assertNotIn('del_button', response_get.context)
+    def test_name_form_btn_mode_html(self):
+        """
+        Проверяем верные надписи на форме в шаблоне
+        """
+        response = self.get_param_list()[0]
+        self.assertContains(response, 'Создать', status_code=200)
+        self.assertContains(response, 'Добавление ответа', status_code=200)
 
-    def test_delete_view(self):
+    def test_object_in_html(self):
+        """
+        Проверяем отображение объекта в шаблоне
+        """
+        response, question, _ = self.get_param_list()
+        self.assertContains(response, question.number, status_code=200)
+        self.assertContains(response, question.text, status_code=200)
+        self.assertContains(response, 'С комментарием', status_code=200)
+
+    def test_nav_button_in_context(self):
+        """
+        Тестируем вывод навигационных кнопок
+        Отправка их в контекст ответа на рендер страницы
+
+        В контексте должны быть следующие навигационные кнопки
+        Назад
+        """
+        response = self.get_param_list()[0]
+        self.assertIn('back_button', response.context)
+        self.assertNotIn('add_button', response.context)
+        self.assertNotIn('edit_button', response.context)
+        self.assertNotIn('del_button', response.context)
+
+    def test_nav_button_url_in_context(self):
+        """
+        Тестируем вывод правильных юрлов навигационных кнопок
+        Отправка их в контекст ответа на рендер страницы
+
+        Назад -> к вопросу, url_back
+        /organisation_slug/questions/questions_id/
+
+        """
+        response, question, _ = self.get_param_list()
+        url_back = reverse('cms:questions-detail', kwargs={'organisation': self.organisation.slug,
+                                                           'question': question.id})
+        self.assertEqual(url_back, response.context['back_button'])
+
+    def test_nav_button_in_html(self):
+        """
+        Тестируем вывод навигационных кнопок
+        Отрисовка кнопок в шаблоне
+        """
+        response = self.get_param_list()[0]
+        self.assertContains(response, 'id="back_button"', status_code=200)
+
+
+class AnswerDeleteViewTests(BaseTests):
+
+    def get_param_list(self):
+        """
+        Инициализация основных параметров, возвращает список response(post), question, answer, url
+        :return: list(response, question, answer, url)
+        """
         question = Question.objects.create(number=2, text='test?', answers_type='single')
         Answer.objects.create(question=question, variant_number=1, text='test',
                               is_right=False, has_comment=True)
         answer = Answer.objects.create(question=question, variant_number=2, text='test2',
                                        is_right=False, has_comment=False)
-        url = reverse('cms:answers-edit', kwargs={'organisation': self.organisation.slug,
-                                                  'question': question.id, 'answer': answer.id})
+        url = reverse('cms:answers-delete', kwargs={'organisation': self.organisation.slug,
+                                                    'question': question.id, 'answer': answer.id})
         response = self.client.post(url, {'variant_number': 3, 'text': 'new',
                                           'is_right': True, 'has_comment': True, 'question': question.id})
+        return response, question, answer, url
 
+    def test_post_status_valid(self):
+        """
+        Тестируем POST запрос, отправляем данные в форму.
+        Проверяем при валидных данных проходит ли редирект
+        """
+        response = self.get_param_list()[0]
         self.assertEquals(response.status_code, 302)
+
+    def test_post_status_invalid(self):
+        """
+        Тестируем POST запрос, отправляем данные в форму.
+        Проверяем при невалидных данных не проходит ли редирект
+        """
+        question = self.get_param_list()[1]
+        url = reverse('cms:answers-delete', kwargs={'organisation': self.organisation.slug,
+                                                    'question': question.id, 'answer': 100})
+        response = self.client.post(url)
+        self.assertNotEquals(response.status_code, 302)
+
+    def test_delete_object(self):
+        """
+        Проверям что объект удалился из базы
+        """
+        question = self.get_param_list()[1]
         self.assertEqual(Answer.objects.filter(question=question).count(), 1)
         self.assertEqual(Answer.objects.filter(variant_number=2, question=question).count(), 0)

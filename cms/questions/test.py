@@ -6,7 +6,7 @@ from django.test import TestCase
 from presentations.models import Organisation, Question
 
 
-class QuestionTests(TestCase):
+class BaseTests(TestCase):
 
     def setUp(self):
         User.objects.create_user('admin', 'admin@example.com', 'admin')
@@ -14,7 +14,7 @@ class QuestionTests(TestCase):
         self.organisation = Organisation.objects.create(name='test', slug='test')
 
 
-class QuestionListViewTests(QuestionTests):
+class QuestionListViewTests(BaseTests):
 
     def get_response(self):
         url = reverse('cms:questions-list', kwargs={'organisation': self.organisation.slug})
@@ -104,7 +104,7 @@ class QuestionListViewTests(QuestionTests):
         self.assertContains(response, 'id="add_button"', status_code=200)
 
 
-class QuestionDetailViewTests(QuestionTests):
+class QuestionDetailViewTests(BaseTests):
 
     def get_response_and_question(self):
         question = Question.objects.create(number=2, text='test?', answers_type='single')
@@ -220,7 +220,7 @@ class QuestionDetailViewTests(QuestionTests):
         self.assertContains(response, 'id="del_button"', status_code=200)
 
 
-class QuestionCreateViewTests(QuestionTests):
+class QuestionCreateViewTests(BaseTests):
 
     def get_response(self):
         Question.objects.create(number=3, text='test update', answers_type='single')
@@ -338,7 +338,7 @@ class QuestionCreateViewTests(QuestionTests):
         self.assertContains(response, 'id="back_button"', status_code=200)
 
 
-class QuestionEditViewTests(QuestionTests):
+class QuestionEditViewTests(BaseTests):
 
     def get_response_and_question(self):
         question = Question.objects.create(number=3, text='test update', answers_type='single')
@@ -409,7 +409,6 @@ class QuestionEditViewTests(QuestionTests):
         Question.objects.create(number=3, text='test update', answers_type='single')
         url = reverse('cms:questions-add', kwargs={'organisation': self.organisation.slug})
         self.client.post(url, {'number': 1000, 'text': 'edit question', 'answers_type': 'multi'})
-
         self.assertEqual(Question.objects.get(text='edit question').number, 1000)
 
     def test_name_form_btn_mode_html(self):
@@ -468,7 +467,7 @@ class QuestionEditViewTests(QuestionTests):
         self.assertContains(response, 'id="back_button"', status_code=200)
 
 
-class QuestionDeleteViewTests(QuestionTests):
+class QuestionDeleteViewTests(BaseTests):
 
     # TODO: Реализовать: Удаление пользователем, не имеющих соответствующих прав
 
