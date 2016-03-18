@@ -6,6 +6,7 @@ from django.test import TestCase
 from presentations.models import Organisation, Question
 from django.conf import settings
 
+
 class BaseTests(TestCase):
 
     def setUp(self):
@@ -26,10 +27,13 @@ class QuestionListViewTests(BaseTests):
         Тестирует посещение страницы входа неавторизованного пользователя
         проверяем что отправляет на страницу авторизации
         url которой прописан в настройках settings параметр LOGIN_URL
+        на стронице логин происходит тоже редирект поэтому и status_code=302, target_status_code=302
         """
         self.client.logout()
         response = self.get_response()
-        # c self.assertRedirects непонятная ошибканепонятная ошибка
+        redirect_url = settings.LOGIN_URL + '?next={}'.format(reverse('cms:questions-list',
+                                                                      kwargs={'organisation': self.organisation.slug}))
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=302)
         self.assertIn(settings.LOGIN_URL, response.url)
         self.assertEqual(response.status_code, 302)
 
