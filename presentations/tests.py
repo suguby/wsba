@@ -37,7 +37,7 @@ class QuestionViewTests(TestCase):
         self.assertInHTML(needle='<input type="radio" name="group1" value="{}">'.format(answer2.id),
                           haystack=response.rendered_content)
 
-    def test_single_comment_answer(self):
+    def test_single_commented_answer(self):
         self.question = Question.objects.create(number=1, text='Кто виноват?', answers_type='single')
         self.slide = CoreSlide.objects.create(question=self.question, presentation=self.presentation)
 
@@ -74,7 +74,7 @@ class QuestionViewTests(TestCase):
         answer2 = Answer.objects.create(question_id=self.question.id, variant_number=2, text='No', has_comment=False)
 
         url = reverse('slide_view', kwargs={'slide': self.slide.id})
-        response = self.client.post(url, {'group1': ['2'],})
+        response = self.client.post(url, {'group1': ['2'], })
         self.assertEqual(response.status_code, 302)
         answers = UserAnswer.objects.filter(user_id=1, answer_id=2)
         self.assertEqual(len(answers), 1)
@@ -92,7 +92,7 @@ class QuestionViewTests(TestCase):
         answers = UserAnswer.objects.filter(user_id=1, answer_id=2)
         self.assertEqual(len(answers), 1)
 
-    def test_single_answer_comment_saving(self):
+    def test_single_answer_commented_saving(self):
         self.question = Question.objects.create(number=1, text='Кто виноват?', answers_type='single')
         self.slide = CoreSlide.objects.create(question=self.question, presentation=self.presentation)
 
@@ -106,3 +106,48 @@ class QuestionViewTests(TestCase):
         self.assertEqual(len(answers), 1)
         self.assertEqual(answers[0].comment, 'some text')
 
+    def test_view_old_single_answer(self):
+        self.question = Question.objects.create(number=1, text='Кто виноват?', answers_type='single')
+        self.slide = CoreSlide.objects.create(question=self.question, presentation=self.presentation)
+
+        answer1 = Answer.objects.create(question_id=self.question.id, variant_number=1, text='Yes', has_comment=False)
+        answer2 = Answer.objects.create(question_id=self.question.id, variant_number=2, text='No', has_comment=False)
+
+        user_answer = UserAnswer.objects.create(user_id=1, answer_id=1)
+
+        response = self.client.get(reverse('slide_view', kwargs={'slide': self.slide.id}))
+        self.assertInHTML(needle='<input type="radio" name="group1" value="1" checked="1">'.format(answer1.id),
+                          haystack=response.rendered_content)
+# Вот такое форматирование в респонсе:
+# <input type="radio" name="group1" value="1"
+#
+#                            checked="1"
+#
+#                 >Yes<br>
+
+    def test_view_old_multi_answer(self):
+        self.question = Question.objects.create(number=1, text='Кто виноват?', answers_type='multi')
+        self.slide = CoreSlide.objects.create(question=self.question, presentation=self.presentation)
+
+        answer1 = Answer.objects.create(question_id=self.question.id, variant_number=1, text='Yes', has_comment=False)
+        answer2 = Answer.objects.create(question_id=self.question.id, variant_number=2, text='No', has_comment=False)
+
+        user_answer = UserAnswer.objects.create(user_id=1, answer_id=1)
+
+        response = self.client.get(reverse('slide_view', kwargs={'slide': self.slide.id}))
+        self.assertInHTML(needle='<input type="checkbox" name="group1" value="1" checked="1">'.format(answer1.id),
+                          haystack=response.rendered_content)
+
+    def test_view_old_single_commented_answer(self):
+        self.question = Question.objects.create(number=1, text='Кто виноват?', answers_type='single')
+        self.slide = CoreSlide.objects.create(question=self.question, presentation=self.presentation)
+
+        answer1 = Answer.objects.create(question_id=self.question.id, variant_number=1, text='Yes', has_comment=True)
+        answer2 = Answer.objects.create(question_id=self.question.id, variant_number=2, text='No', has_comment=False)
+
+        user_answer = UserAnswer.objects.create(user_id=1, answer_id=1, comment="Это комментарий!")
+
+        response = self.client.get(reverse('slide_view', kwargs={'slide': self.slide.id}))
+        self.assertInHTML(needle='<input type="radio" name="group1" value="1" checked="1">'.format(answer1.id),
+                          haystack=response.rendered_content)
+        self.assertContains(response, "Это комментарий!")
