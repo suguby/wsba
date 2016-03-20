@@ -22,6 +22,7 @@
 
         <link href="{% static 'vendors/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
         <link href="{% static 'vendors/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'vendors/simple-line-icons/css/simple-line-icons.css' %}" rel="stylesheet" type="text/css">
         <link href="{% static 'vendors/Waves/dist/waves.min.css' %}" rel="stylesheet" type="text/css">
         <link href="{% static 'vendors/Blueprint-SlidePushMenus/css/component.css' %}" rel="stylesheet" type="text/css">
 
@@ -58,7 +59,7 @@
                         </a>
                     </div>
                     <div class="logo-box">
-                        <a href="#" class="logo-text"><span>WSBA</span></a>
+                        <a href="{% url 'cms:main' organisation.slug %}" class="logo-text"><span>WSBA</span></a>
                     </div><!-- Logo Box -->
 
                     <div class="topmenu-outer">
@@ -171,6 +172,7 @@
 
         {% block vendor_scripts %}
         <script src="{% static 'vendors/jquery/dist/jquery.min.js' %}"></script>
+        <script src="{% static 'vendors/jquery-ui/jquery-ui.min.js' %}"></script>
         <script src="{% static 'vendors/bootstrap/dist/js/bootstrap.min.js' %}"></script>
         <script src="{% static 'vendors/Waves/dist/waves.min.js' %}"></script>
         {% endblock vendor_scripts %}

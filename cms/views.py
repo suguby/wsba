@@ -108,3 +108,18 @@ class AnswerDelBtn(ContextMixin, View):
         context['del_button'] = reverse('cms:answers-delete', kwargs={'organisation': self.kwargs['organisation'],
                                         'question': self.kwargs['question'], 'answer': self.kwargs['answer']})
         return context
+
+
+class BasePresentationsView(ContextMixin, View):
+
+    def __init__(self):
+        self.model = Question
+        self.pk_url_kwarg = 'question'
+        self.tab = 'tab_questions'
+
+    def get_context_data(self, **kwargs):
+        context = super(BasePresentationsView, self).get_context_data(**kwargs)
+        if 'organisation' in self.kwargs:
+            context['organisation'] = \
+                Organisation.objects.get(slug=self.kwargs['organisation'])
+        return context

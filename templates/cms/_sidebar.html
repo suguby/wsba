@@ -12,6 +12,12 @@
                     <p>Панель</p>
                 </a>
             </li>
+            <li {% if view.tab == 'tab_presentations' %}class="active"{% endif %}>
+                <a href="{% url "cms:presentations-list" organisation.slug %}" class="waves-effect waves-button">
+                    <span class="menu-icon glyphicon glyphicon-list-alt"></span>
+                    <p>Презентации</p>
+                </a>
+            </li>
             <li {% if view.tab == 'tab_questions' %}class="active"{% endif %}>
                 <a href="{% url "cms:questions-list" organisation.slug %}" class="waves-effect waves-button">
                     <span class="menu-icon glyphicon glyphicon-question-sign"></span>
