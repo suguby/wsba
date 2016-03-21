@@ -15,24 +15,24 @@ class AnswerTest(TestCase):
         self.answer_3 = Answer.objects.create(question=self.question, position=3, text='test3',
                                               is_right=False, has_comment=False)
 
-    def test_has_previous(self):
+    def test_get_previous(self):
         question = Question.objects.create(text='test question2', answers_type='single')
-        answer = Answer.objects.create(question=question, position=1, text='test1',
+        answer = Answer.objects.create(question=question, position=4, text='test1',
                                        is_right=False, has_comment=False)
-        self.assertEqual(self.answer_1.has_previous, False)
-        self.assertEqual(self.answer_2.has_previous, True)
-        self.assertEqual(self.answer_3.has_previous, True)
-        self.assertEqual(answer.has_previous, False)
+        self.assertEqual(self.answer_1.get_previous, False)
+        self.assertEqual(self.answer_2.get_previous, self.answer_1)
+        self.assertEqual(self.answer_3.get_previous, self.answer_2)
+        self.assertEqual(answer.get_previous, False)
 
-    def test_next(self):
+    def test_get_next(self):
         question = Question.objects.create(text='test question2', answers_type='single')
-        answer = Answer.objects.create(question=question, position=1, text='test1',
+        answer = Answer.objects.create(question=question, position=4, text='test1',
                                        is_right=False, has_comment=False)
-        self.assertEqual(self.answer_1.has_next, True)
-        self.assertEqual(self.answer_2.has_next, True)
-        self.assertEqual(self.answer_3.has_next, False)
-        self.assertEqual(answer.has_next, False)
+        self.assertEqual(self.answer_1.get_next, self.answer_2)
+        self.assertEqual(self.answer_2.get_next, self.answer_3)
+        self.assertEqual(self.answer_3.get_next, False)
+        self.assertEqual(answer.get_next, False)
 
     def test_next_and_previous(self):
-        self.assertEqual(self.answer_2.has_next, True)
-        self.assertEqual(self.answer_3.has_previous, True)
+        self.assertEqual(self.answer_2.get_next, self.answer_3)
+        self.assertEqual(self.answer_3.get_previous, self.answer_2)

@@ -3,7 +3,7 @@
 from django.db import models
 from django.db.models import CharField, TextField
 
-from presentations.managers import PositionManager
+from presentations.managers import AnswerManager
 from user_interface.models import ProjectUser
 
 
@@ -76,12 +76,12 @@ class Question(models.Model):
 
 class Answer(models.Model):
     question = models.ForeignKey(Question)
-    position = models.IntegerField(verbose_name='Номер варианта ответа')
+    position = models.IntegerField(default=0, editable=False)
     text = CharField(verbose_name='Текст ответа', max_length=64)
     is_right = models.BooleanField(verbose_name='Является правильным ответом')
     has_comment = models.BooleanField(verbose_name="Ответ с комментарием")
 
-    objects = PositionManager()
+    objects = AnswerManager()
 
     def __str__(self):
         return self.text
@@ -92,20 +92,25 @@ class Answer(models.Model):
         verbose_name_plural = 'ответы'
 
     @property
-    def has_previous(self):
+    def get_previous(self):
         previous_answers = Answer.objects.filter(question=self.question_id).filter(position__lt=self.position)
         if previous_answers:
-            return True
+            return previous_answers.last()
         else:
             return False
 
     @property
-    def has_next(self):
+    def get_next(self):
         next_answers = Answer.objects.filter(question=self.question_id).filter(position__gt=self.position)
         if next_answers:
-            return True
+            return next_answers.first()
         else:
             return False
+
+    def save(self, *args, **kwargs):
+        if self.position == 0:
+            self.position = Answer.objects.filter(question=self.question_id).count() + 1
+        return super().save(*args, **kwargs)
 
 
 class UserAnswer(models.Model):

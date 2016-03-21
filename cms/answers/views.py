@@ -40,5 +40,23 @@ class AnswerDeleteView(BaseAnswerView, DeleteView):
 @require_POST
 def answer_up(request, **kwargs):
     answer = Answer.objects.get(id=kwargs['answer'])
-    print(answer)
+    previous = answer.get_previous
+    if previous:
+        previous.position += 1
+        answer.position -= 1
+        previous.save()
+        answer.save()
+    return HttpResponseRedirect(reverse('cms:questions-detail', args=[kwargs['organisation'], kwargs['question']]))
+
+
+@login_required
+@require_POST
+def answer_down(request, **kwargs):
+    answer = Answer.objects.get(id=kwargs['answer'])
+    next = answer.get_next
+    if next:
+        next.position -= 1
+        answer.position += 1
+        next.save()
+        answer.save()
     return HttpResponseRedirect(reverse('cms:questions-detail', args=[kwargs['organisation'], kwargs['question']]))

@@ -8,7 +8,6 @@ from presentations.models import Answer, Question
 
 class AnswerForm(ModelForm):
     question = ModelChoiceField(label="Вопрос", queryset=Question.objects.all(), widget=HiddenInput())
-    position = IntegerField(widget=HiddenInput())
 
     class Meta:
         model = Answer

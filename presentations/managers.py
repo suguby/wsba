@@ -3,7 +3,7 @@
 from django.db.models import Manager
 
 
-class PositionManager(Manager):
+class AnswerManager(Manager):
 
-    def sorted(self):
-        return self.order_by('position')
+    def get_queryset(self):
+        return super(AnswerManager, self).get_queryset().order_by('position')
