@@ -150,4 +150,5 @@ class QuestionViewTests(TestCase):
         response = self.client.get(reverse('slide_view', kwargs={'slide': self.slide.id}))
         self.assertInHTML(needle='<input type="radio" name="group1" value="1" checked="1">'.format(answer1.id),
                           haystack=response.rendered_content)
+        # TODO тест падает - наверно надо как предыдущий сделать - искать элемент на странице
         self.assertContains(response, "Это комментарий!")
