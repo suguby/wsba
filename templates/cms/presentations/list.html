@@ -6,33 +6,51 @@
 {% include 'cms/_modal_delete.html' %}
 
 <div class="col-lg-12 col-md-12">
-<div class="sortable ui-sortable">
-{% for object in object_list %}
+    <div class="panel panel-white">
+        <div class="panel-body">
+            <div class="project-stats">
+               <table class="table">
+                   <thead>
+                        <tr>
+                           <th>#</th>
+                           <th>Название</th>
+                           <th>Действия</th>
+                       </tr>
+                   </thead>
+                   <tbody>
+                   {% for object in object_list %}
+                       <tr>
+                           <th scope="row">{{ object.position }}</th>
+                           <td><a href="">{{ object.name }}</a></td>
 
 
-    <div class="panel panel-white ui-sortable-handle">
-        <div class="panel-heading">
-            <h3 class="panel-title"><a href="">{{ object.name }}</a></h3>
-            <div class="panel-control">
-                <a href="javascript:void(0);"><i class="icon-arrow-up"></i></a>
-                <a href="javascript:void(0);"><i class="icon-arrow-down"></i></a>
-                <a href="javascript:void(0);"><i class="icon-close"></i></a>
+                           <td>
+                               <div class="btn-group">
+                                <button type="button" class="btn btn-success btn-xs dropdown-toggle"
+                                        data-toggle="dropdown" aria-expanded="true">
+                                    Выбрать <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="">Открыть</a></li>
+                                    <li><a href="">Редактировать</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="" data-toggle="modal" data-target=".bs-example-modal-sm" onClick='obj_delete("{{ object.text }}",
+                                        "#");'>Удалить</a></li>
+                                </ul>
+                                </div>
+                           </td>
+                       </tr>
+                   {% endfor %}
+                   </tbody>
+                </table>
             </div>
-        </div>
-{#        <div class="panel-body">#}
-{#           оставил пока          #}
-{#            {{ object.name }}#}
-{#        </div>#}
-     </div>
-
-{% endfor %}
-</div>
-    {% if is_paginated %}
+        {% if is_paginated %}
             <nav class="text-center">
-                {% bootstrap_paginate page_obj url_view_name="cms:presentations-list-paginated" url_extra_kwargs=page_kwargs %}
+{#                {% bootstrap_paginate page_obj url_view_name="cms:questions-list-paginated" url_extra_kwargs=page_kwargs %}#}
             </nav>
-    {% endif %}
-
+        {% endif %}
+        </div>
+    </div>
 </div>
 
 {% endblock content %}

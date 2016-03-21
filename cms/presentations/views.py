@@ -13,7 +13,6 @@ class PresentationListView(ListView, BasePresentationsView):
     Представление для списка презентаций
     """
     template_name = 'cms/presentations/list.html'
-    tab = 'tab_presentations'
     title = 'Презентации'
     paginate_by = settings.PAGINATE
 

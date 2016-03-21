@@ -12,4 +12,4 @@ class QuestionForm(ModelForm):
 
     class Meta:
         model = Question
-        fields = ['number', 'text', 'answers_type', 'common']
+        fields = ['text', 'answers_type', 'common']

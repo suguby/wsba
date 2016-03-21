@@ -60,7 +60,7 @@ class Question(models.Model):
         ('single', 'Единичный выбор'),
     )
 
-    number = IntegerField(verbose_name='Номер вопроса')
+    number = IntegerField(verbose_name='Номер вопроса', blank=True, null=True)
     text = TextField(verbose_name='Текст вопроса')
     answers_type = CharField(verbose_name='Тип ответов', max_length=8, choices=ANSWER_TYPE, default='multi')
     organisation = models.ForeignKey(Organisation, null=True, blank=True)
@@ -76,7 +76,7 @@ class Question(models.Model):
 
 class Answer(models.Model):
     question = models.ForeignKey(Question)
-    variant_number = models.IntegerField(verbose_name='Номер варианта ответа')
+    position = models.IntegerField(verbose_name='Номер варианта ответа')
     text = CharField(verbose_name='Текст ответа', max_length=64)
     is_right = models.BooleanField(verbose_name='Является правильным ответом')
     has_comment = models.BooleanField(verbose_name="Ответ с комментарием")

@@ -17,7 +17,6 @@
         {% if answers_list %}
          {% for answer in answers_list %}
         <li class="list-group-item">
-            {{ answer.variant_number }}.
             {{ answer.text }}
             {% if answer.is_right %}
             <span class="label label-success m-l-xs">Правильный</span>

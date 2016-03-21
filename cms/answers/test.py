@@ -95,7 +95,7 @@ class AnswerEditViewTests(BaseTests):
         question, _, url = self.get_param_list()[1:4]
         self.client.post(url, {'variant_number': 1000, 'text': 'test edit',
                                'is_right': True, 'has_comment': True, 'question': question.id})
-        self.assertEqual(Answer.objects.get(text='test edit').variant_number, 1000)
+        self.assertEqual(Answer.objects.get(text='test edit').position, 1000)
 
     def test_name_form_btn_mode_html(self):
         """
@@ -112,7 +112,7 @@ class AnswerEditViewTests(BaseTests):
         response, question, answer, _ = self.get_param_list()
         self.assertContains(response, question.number, status_code=200)
         self.assertContains(response, question.text, status_code=200)
-        self.assertContains(response, answer.variant_number, status_code=200)
+        self.assertContains(response, answer.position, status_code=200)
         self.assertContains(response, answer.text, status_code=200)
         self.assertContains(response, 'Правильный', status_code=200)
         self.assertContains(response, 'С комментарием', status_code=200)

@@ -43,7 +43,7 @@ class QuestionDetailView(DetailView, BaseQuestionView, BackBtnToListQuestion,
     def get_context_data(self, **kwargs):
         context = super(QuestionDetailView, self).get_context_data(**kwargs)
         context['answers_list'] = \
-            Answer.objects.filter(question=self.kwargs['question']).order_by('variant_number')
+            Answer.objects.filter(question=self.kwargs['question']).order_by('position')
         return context
 
 
