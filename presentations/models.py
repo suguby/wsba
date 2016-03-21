@@ -60,7 +60,7 @@ class Question(models.Model):
         ('single', 'Единичный выбор'),
     )
 
-    number = IntegerField(verbose_name='Номер вопроса', blank=True, null=True)
+    # number = IntegerField(verbose_name='Номер вопроса', blank=True, null=True)
     text = TextField(verbose_name='Текст вопроса')
     answers_type = CharField(verbose_name='Тип ответов', max_length=8, choices=ANSWER_TYPE, default='multi')
     organisation = models.ForeignKey(Organisation, null=True, blank=True)

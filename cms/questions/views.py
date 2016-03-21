@@ -24,7 +24,7 @@ class QuestionListView(ListView, BaseQuestionView, QuestionAddBtn):
 
     def get_queryset(self):
         organisation = Organisation.objects.get(slug=self.kwargs['organisation']) or None
-        return Question.objects.filter(Q(organisation=organisation)| Q(organisation=None)).order_by('number')
+        return Question.objects.filter(Q(organisation=organisation)| Q(organisation=None))
 
     def get_context_data(self, **kwargs):
         context = super(QuestionListView, self).get_context_data(**kwargs)
