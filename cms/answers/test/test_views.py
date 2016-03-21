@@ -12,9 +12,9 @@ class AnswerEditViewTests(BaseTests):
         :return: list(response, question, answer, url)
         """
         question = Question.objects.create(text='test?', answers_type='single')
-        Answer.objects.create(question=question, position=1, text='test',
+        Answer.objects.create(question=question, text='test',
                               is_right=True, has_comment=True)
-        answer = Answer.objects.create(question=question, position=10, text='test',
+        answer = Answer.objects.create(question=question, text='test',
                                        is_right=False, has_comment=False)
         url = reverse('cms:answers-edit', kwargs={'organisation': self.organisation.slug,
                                                   'question': question.id, 'answer': answer.id})
@@ -69,7 +69,7 @@ class AnswerEditViewTests(BaseTests):
         question, answer = self.get_param_list()[1:3]
         url = reverse('cms:answers-edit', kwargs={'organisation': self.organisation.slug,
                                                   'question': question.id, 'answer': answer.id})
-        response = self.client.post(url, {'position': 1000, 'text': 'test edit',
+        response = self.client.post(url, {'text': 'test edit',
                                           'is_right': True, 'has_comment': True, 'question': question.id})
         self.assertEquals(response.status_code, 302)
 
@@ -81,7 +81,7 @@ class AnswerEditViewTests(BaseTests):
         question, answer = self.get_param_list()[1:3]
         url = reverse('cms:answers-edit', kwargs={'organisation': self.organisation.slug,
                                                   'question': question.id, 'answer': answer.id})
-        response = self.client.post(url, {'position': 1000, 'text': 'test edit',
+        response = self.client.post(url, {'text': 'test edit',
                                           'is_right': True, 'has_comment': True})
         self.assertNotEquals(response.status_code, 302)
 
@@ -92,9 +92,9 @@ class AnswerEditViewTests(BaseTests):
         Проверяем изменение ответа
         """
         question, _, url = self.get_param_list()[1:4]
-        self.client.post(url, {'position': 1000, 'text': 'test edit',
+        self.client.post(url, {'text': 'test edit',
                                'is_right': True, 'has_comment': True, 'question': question.id})
-        self.assertEqual(Answer.objects.get(text='test edit').position, 1000)
+        self.assertEqual(Answer.objects.filter(text='test edit').count(), 1)
 
     def test_name_form_btn_mode_html(self):
         """
@@ -111,7 +111,6 @@ class AnswerEditViewTests(BaseTests):
         response, question, answer, _ = self.get_param_list()
 
         self.assertContains(response, question.text, status_code=200)
-        self.assertContains(response, answer.position, status_code=200)
         self.assertContains(response, answer.text, status_code=200)
         self.assertContains(response, 'Правильный', status_code=200)
         self.assertContains(response, 'С комментарием', status_code=200)
@@ -167,9 +166,9 @@ class AnswerAddViewTests(BaseTests):
         :return: list(response, question, url)
         """
         question = Question.objects.create(text='test?', answers_type='single')
-        Answer.objects.create(question=question, position=1, text='test',
+        Answer.objects.create(question=question, text='test',
                               is_right=False, has_comment=True)
-        Answer.objects.create(question=question, position=2, text='test2',
+        Answer.objects.create(question=question, text='test2',
                               is_right=False, has_comment=False)
         url = reverse('cms:answers-add', kwargs={'organisation': self.organisation.slug,
                                                  'question': question.id})
@@ -229,7 +228,7 @@ class AnswerAddViewTests(BaseTests):
         Проверяем при валидных данных проходит ли редирект
         """
         _, question, url = self.get_param_list()
-        response = self.client.post(url, {'position': 3, 'text': 'new',
+        response = self.client.post(url, {'text': 'new',
                                           'is_right': True, 'has_comment': True, 'question': question.id})
         self.assertEquals(response.status_code, 302)
 
@@ -239,7 +238,7 @@ class AnswerAddViewTests(BaseTests):
         Проверяем при невалидных данных не проходит ли редирект
         """
         _, _, url = self.get_param_list()
-        response = self.client.post(url, {'position': 3, 'text': 'new',
+        response = self.client.post(url, {'text': 'new',
                                           'is_right': True, 'has_comment': True})
         self.assertNotEquals(response.status_code, 302)
 
@@ -250,9 +249,8 @@ class AnswerAddViewTests(BaseTests):
         Проверяем изменение ответа
         """
         _, question, url = self.get_param_list()
-        self.client.post(url, {'position': 3, 'text': 'new',
+        self.client.post(url, {'text': 'new',
                                'is_right': True, 'has_comment': True, 'question': question.id})
-        self.assertEqual(Answer.objects.filter(position=3).count(), 1)
         self.assertEqual(Answer.objects.get(text='new').is_right, True)
 
     def test_name_form_btn_mode_html(self):
@@ -315,9 +313,9 @@ class AnswerDeleteViewTests(BaseTests):
         :return: list(response, question, answer, url)
         """
         question = Question.objects.create(text='test?', answers_type='single')
-        Answer.objects.create(question=question, position=1, text='test',
+        Answer.objects.create(question=question, text='test',
                               is_right=False, has_comment=True)
-        answer = Answer.objects.create(question=question, position=2, text='test2',
+        answer = Answer.objects.create(question=question, text='test2',
                                        is_right=False, has_comment=False)
         url = reverse('cms:answers-delete', kwargs={'organisation': self.organisation.slug,
                                                     'question': question.id, 'answer': answer.id})
