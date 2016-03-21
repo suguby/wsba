@@ -1,10 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from presentations.models import Question
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+
+from presentations.models import Question, Answer
 from django.views.generic import CreateView, DeleteView, UpdateView
 from cms.answers.forms import AnswerForm
 from cms.views import BaseAnswerView
 from cms.views import BackBtnToQuestion, AnswerDelBtn
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 
 
 class AnswerCreateView(BaseAnswerView, CreateView, BackBtnToQuestion):
@@ -29,3 +34,11 @@ class AnswerUpdateView(BaseAnswerView, UpdateView, BackBtnToQuestion, AnswerDelB
 
 class AnswerDeleteView(BaseAnswerView, DeleteView):
     pass
+
+
+@login_required
+@require_POST
+def answer_up(request, **kwargs):
+    answer = Answer.objects.get(id=kwargs['answer'])
+    print(answer)
+    return HttpResponseRedirect(reverse('cms:questions-detail', args=[kwargs['organisation'], kwargs['question']]))

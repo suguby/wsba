@@ -59,9 +59,9 @@ class QuestionListViewTests(BaseTests):
         Тестируем наличие объектов в контексте
         Отправка их в контекст ответа на рендер страницы
         """
-        Question.objects.create(number=1, text='test', answers_type='single')
-        Question.objects.create(number=2, text='test2', answers_type='single')
-        Question.objects.create(number=3, text='test3', answers_type='single')
+        Question.objects.create(text='test', answers_type='single')
+        Question.objects.create(text='test2', answers_type='single')
+        Question.objects.create(text='test3', answers_type='single')
         questions = Question.objects.all()
         response = self.get_response()
 
@@ -72,7 +72,7 @@ class QuestionListViewTests(BaseTests):
         Тестируем вывод наших данных в шаблоне
         """
         url = reverse('cms:questions-list', kwargs={'organisation': self.organisation.slug})
-        question = Question.objects.create(number=1, text='test', answers_type='single')
+        question = Question.objects.create(text='test', answers_type='single')
         response = self.client.get(url)
 
         self.assertContains(response, question.text, status_code=200)
@@ -113,7 +113,7 @@ class QuestionListViewTests(BaseTests):
 class QuestionDetailViewTests(BaseTests):
 
     def get_response_and_question(self):
-        question = Question.objects.create(number=2, text='test?', answers_type='single')
+        question = Question.objects.create(text='test?', answers_type='single')
         url = reverse('cms:questions-detail', kwargs={'organisation': self.organisation.slug,
                                                       'question': question.id})
         response = self.client.get(url)
@@ -165,7 +165,6 @@ class QuestionDetailViewTests(BaseTests):
         Тестируем вывод вопроса в шаблон
         """
         question, response = self.get_response_and_question()
-        self.assertContains(response, question.number, status_code=200)
         self.assertContains(response, question.text, status_code=200)
 
     def test_nav_button_in_context(self):
@@ -228,7 +227,7 @@ class QuestionDetailViewTests(BaseTests):
 class QuestionCreateViewTests(BaseTests):
 
     def get_response(self):
-        Question.objects.create(number=3, text='test update', answers_type='single')
+        Question.objects.create(text='test update', answers_type='single')
         url = reverse('cms:questions-add', kwargs={'organisation': self.organisation.slug})
         response = self.client.get(url)
         return response
@@ -269,9 +268,9 @@ class QuestionCreateViewTests(BaseTests):
         Тестируем POST запрос, отправляем данные в форму.
         Проверяем при валидных данных проходит ли редирект
         """
-        Question.objects.create(number=3, text='test update', answers_type='single')
+        Question.objects.create(text='test update', answers_type='single')
         url = reverse('cms:questions-add', kwargs={'organisation': self.organisation.slug})
-        response = self.client.post(url, {'number': 1, 'text': 'new_question', 'answers_type': 'multi'})
+        response = self.client.post(url, {'text': 'new_question', 'answers_type': 'multi'})
         self.assertEquals(response.status_code, 302)
 
     def test_post_status_invalid(self):
@@ -279,9 +278,9 @@ class QuestionCreateViewTests(BaseTests):
         Тестируем POST запрос, отправляем данные в форму.
         Проверяем при невалидных данных не проходит ли редирект
         """
-        Question.objects.create(number=3, text='test update', answers_type='single')
+        Question.objects.create(text='test update', answers_type='single')
         url = reverse('cms:questions-add', kwargs={'organisation': self.organisation.slug})
-        response = self.client.post(url, {'number': 1, 'text': 'new_question'})
+        response = self.client.post(url, {'text': 'new_question'})
         self.assertNotEquals(response.status_code, 302)
 
     def test_post_add_object(self):
@@ -293,11 +292,11 @@ class QuestionCreateViewTests(BaseTests):
 
         Ищем наш объект в базе и проверяем его имя сходится ли оно с введенными данными в форму
         """
-        Question.objects.create(number=3, text='test update', answers_type='single')
+        Question.objects.create(text='test update', answers_type='single')
         url = reverse('cms:questions-add', kwargs={'organisation': self.organisation.slug})
-        self.client.post(url, {'number': 1, 'text': 'new_question', 'answers_type': 'multi'})
+        self.client.post(url, {'text': 'new_question', 'answers_type': 'multi'})
         self.assertEqual(Question.objects.count(), 2)
-        self.assertEqual(Question.objects.get(number=1).text, 'new_question')
+        self.assertEqual(Question.objects.filter(text='new_question').count(), 1)
 
     def test_name_form_btn_mode_html(self):
         """
@@ -346,7 +345,7 @@ class QuestionCreateViewTests(BaseTests):
 class QuestionEditViewTests(BaseTests):
 
     def get_response_and_question(self):
-        question = Question.objects.create(number=3, text='test update', answers_type='single')
+        question = Question.objects.create(text='test update', answers_type='single')
         url = reverse('cms:questions-edit', kwargs={'organisation': self.organisation.slug, 'question': question.id})
         response = self.client.get(url)
         return question, response
@@ -388,9 +387,9 @@ class QuestionEditViewTests(BaseTests):
         Тестируем POST запрос, отправляем данные в форму.
         Проверяем при валидных данных проходит ли редирект
         """
-        question = Question.objects.create(number=3, text='test update', answers_type='single')
+        question = Question.objects.create(text='test update', answers_type='single')
         url = reverse('cms:questions-edit', kwargs={'organisation': self.organisation.slug, 'question': question.id})
-        response = self.client.post(url, {'number': 1000, 'text': 'edit question', 'answers_type': 'multi'})
+        response = self.client.post(url, {'text': 'edit question', 'answers_type': 'multi'})
 
         self.assertEquals(response.status_code, 302)
 
@@ -399,9 +398,9 @@ class QuestionEditViewTests(BaseTests):
         Тестируем POST запрос, отправляем данные в форму.
         Проверяем при невалидных данных не проходит ли редирект
         """
-        question = Question.objects.create(number=3, text='test update', answers_type='single')
+        question = Question.objects.create(text='test update', answers_type='single')
         url = reverse('cms:questions-edit', kwargs={'organisation': self.organisation.slug, 'question': question.id})
-        response = self.client.post(url, {'number': 1000, 'text': ''})
+        response = self.client.post(url, {'text': '1'})
 
         self.assertNotEquals(response.status_code, 302)
 
@@ -411,10 +410,10 @@ class QuestionEditViewTests(BaseTests):
 
         Проверяем изменение вопроса
         """
-        Question.objects.create(number=3, text='test update', answers_type='single')
+        Question.objects.create(text='test update', answers_type='single')
         url = reverse('cms:questions-add', kwargs={'organisation': self.organisation.slug})
-        self.client.post(url, {'number': 1000, 'text': 'edit question', 'answers_type': 'multi'})
-        self.assertEqual(Question.objects.get(text='edit question').number, 1000)
+        self.client.post(url, {'text': 'edit question', 'answers_type': 'multi'})
+        self.assertEqual(Question.objects.filter(answers_type='test update').count(), 0)
 
     def test_name_form_btn_mode_html(self):
         """
@@ -429,7 +428,6 @@ class QuestionEditViewTests(BaseTests):
         Проверяем отображение объекта в шаблоне
         """
         question, response = self.get_response_and_question()
-        self.assertContains(response, question.number, status_code=200)
         self.assertContains(response, question.text, status_code=200)
         self.assertContains(response, question.answers_type, status_code=200)
 
@@ -456,7 +454,7 @@ class QuestionEditViewTests(BaseTests):
         /organisation_slug/questions/questions_id/
 
         """
-        question = Question.objects.create(number=3, text='test update', answers_type='single')
+        question = Question.objects.create(text='test update', answers_type='single')
         url = reverse('cms:questions-edit', kwargs={'organisation': self.organisation.slug, 'question': question.id})
         back_url = reverse('cms:questions-detail', kwargs={'organisation': self.organisation.slug,
                                                            'question': question.id})
@@ -481,7 +479,7 @@ class QuestionDeleteViewTests(BaseTests):
         Тестируем POST запрос, отправляем данные в форму.
         Проверяем при валидных данных проходит ли редирект
         """
-        question = Question.objects.create(number=3, text='test delete 3', answers_type='single')
+        question = Question.objects.create(text='test delete 3', answers_type='single')
         url = reverse('cms:questions-delete', kwargs={'organisation': self.organisation.slug,
                                                       'question': question.id})
         response = self.client.post(url)
@@ -502,11 +500,11 @@ class QuestionDeleteViewTests(BaseTests):
         """
         Проверям что объект удалился из базы
         """
-        Question.objects.create(number=1, text='test delete', answers_type='single')
-        Question.objects.create(number=2, text='test delete 2', answers_type='single')
-        question = Question.objects.create(number=3, text='test delete 3', answers_type='single')
+        Question.objects.create(text='test delete', answers_type='single')
+        Question.objects.create(text='test delete 2', answers_type='single')
+        question = Question.objects.create(text='test delete 3', answers_type='single')
         url = reverse('cms:questions-delete', kwargs={'organisation': self.organisation.slug, 'question': question.id})
         self.client.post(url)
 
         self.assertEqual(Question.objects.count(), 2)
-        self.assertEqual(Question.objects.filter(number=3).count(), 0)
+        self.assertEqual(Question.objects.filter(text='test delete 3').count(), 0)

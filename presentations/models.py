@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.db.models import CharField, IntegerField, TextField
+from django.db.models import CharField, TextField
 
+from presentations.managers import PositionManager
 from user_interface.models import ProjectUser
 
 
@@ -60,7 +61,6 @@ class Question(models.Model):
         ('single', 'Единичный выбор'),
     )
 
-    # number = IntegerField(verbose_name='Номер вопроса', blank=True, null=True)
     text = TextField(verbose_name='Текст вопроса')
     answers_type = CharField(verbose_name='Тип ответов', max_length=8, choices=ANSWER_TYPE, default='multi')
     organisation = models.ForeignKey(Organisation, null=True, blank=True)
@@ -81,6 +81,8 @@ class Answer(models.Model):
     is_right = models.BooleanField(verbose_name='Является правильным ответом')
     has_comment = models.BooleanField(verbose_name="Ответ с комментарием")
 
+    objects = PositionManager()
+
     def __str__(self):
         return self.text
 
@@ -88,6 +90,22 @@ class Answer(models.Model):
         db_table = 'answers'
         verbose_name = 'Ответ'
         verbose_name_plural = 'ответы'
+
+    @property
+    def has_previous(self):
+        previous_answers = Answer.objects.filter(question=self.question_id).filter(position__lt=self.position)
+        if previous_answers:
+            return True
+        else:
+            return False
+
+    @property
+    def has_next(self):
+        next_answers = Answer.objects.filter(question=self.question_id).filter(position__gt=self.position)
+        if next_answers:
+            return True
+        else:
+            return False
 
 
 class UserAnswer(models.Model):

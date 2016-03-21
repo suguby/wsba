@@ -12,7 +12,6 @@
                <table class="table">
                    <thead>
                        <tr>
-                           <th>#</th>
                            <th>Вопрос</th>
                            <th>Тип</th>
                            <th>Действия</th>
@@ -21,7 +20,6 @@
                    <tbody>
                    {% for object in object_list %}
                        <tr>
-                           <th scope="row">{{ object.number }}</th>
                            <td><a href="{% url 'cms:questions-detail' organisation.slug object.pk %}">{{ object.text }}</a></td>
                            <td>
                                <span class="label label-info">{{ object.get_answers_type_display }}</span>

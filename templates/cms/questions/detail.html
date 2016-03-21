@@ -13,10 +13,11 @@
          <span class="label label-warning m-l-xs">Общий</span>
         {% endif %}
     </div>
+
     <ul class="list-group">
         {% if answers_list %}
          {% for answer in answers_list %}
-        <li class="list-group-item">
+        <li class="list-group-item" id="answer_{{ answer.id }}">
             {{ answer.text }}
             {% if answer.is_right %}
             <span class="label label-success m-l-xs">Правильный</span>
@@ -25,7 +26,23 @@
             <span class="label label-primary m-l-xs">С комментарием</span>
             {% endif %}
             <div class="pull-right">
-            <a href="{% url 'cms:answers-edit' organisation.slug object.pk answer.pk %}" class=""><i class="fa fa-pencil"></i></a>
+            {% if answer.has_previous %}
+            <form id="answer_{{ answer.pk }}_up" action='{% url 'cms:answers-up' organisation.slug object.pk answer.pk %}' method='post'>
+            {% csrf_token %}
+             </form>
+            {% endif %}
+            {% if answer.has_next %}
+            <form id="answer_{{ answer.pk }}_down" action='{% url 'cms:answers-down' organisation.slug object.pk answer.pk %}' method='post'>
+            {% csrf_token %}
+            </form>
+            {% endif %}
+            {% if answer.has_previous %}
+            <a href="" class="m-l-xs" onClick="document.getElementById('answer_{{ answer.pk }}_up').submit(); return false;"><i class="fa fa-arrow-up"></i></a>
+            {% endif %}
+            {% if answer.has_next %}
+            <a href="" class="m-l-xs" onClick="document.getElementById('answer_{{ answer.pk }}_down').submit(); return false;"><i class="fa fa-arrow-down"></i></a>
+            {% endif %}
+            <a href="{% url 'cms:answers-edit' organisation.slug object.pk answer.pk %}" class="m-l-xs"><i class="fa fa-pencil"></i></a>
             <a href="" class="m-l-xs" data-toggle="modal" data-target=".bs-example-modal-sm" onClick='obj_delete("{{ answer.text }}",
                                         "{% url 'cms:answers-delete' organisation.slug object.pk answer.pk %}");'><i class="fa fa-times"></i></a>
             </div>
@@ -35,6 +52,7 @@
         <li class="list-group-item">Нет ответов</li>
     {% endif %}
     </ul>
+
  </div>
 </div>
 {% endblock content %}

@@ -56,7 +56,7 @@ class BaseAnswerView(ContextMixin, View):
             context['question'] = \
                 Question.objects.get(pk=self.kwargs['question'])
             context['answers_list'] = \
-                Answer.objects.filter(question=self.kwargs['question']).order_by('variant_number')
+                Answer.objects.filter(question=self.kwargs['question'])
         return context
 
     def get_success_url(self):
