@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from django.views.generic.base import ContextMixin, View
-from presentations.models import Organisation, Question, Answer, Presentation
+from presentations.models import Organisation, Question, Answer, Presentation, CoreSlide
 from django.core.urlresolvers import reverse
 
 
@@ -63,6 +63,29 @@ class BaseAnswerView(ContextMixin, View):
         return reverse('cms:questions-detail', kwargs={'organisation': self.kwargs['organisation'],
                                                        'question': self.kwargs['question']})
 
+
+class BaseSlideView(ContextMixin, View):
+
+    def __init__(self):
+        self.model = CoreSlide
+        self.pk_url_kwarg = 'slide'
+        self.tab = 'tab_presentation'
+
+    def get_context_data(self, **kwargs):
+        context = super(BaseSlideView, self).get_context_data(**kwargs)
+        if 'organisation' in self.kwargs:
+            context['organisation'] = \
+                Organisation.objects.get(slug=self.kwargs['organisation'])
+        if 'presentation' in self.kwargs:
+            context['presentation'] = \
+                Presentation.objects.get(pk=self.kwargs['presentation'])
+            context['slide_list'] = \
+                CoreSlide.objects.filter(presentation=self.kwargs['presentation'])
+        return context
+
+    def get_success_url(self):
+        return reverse('cms:questions-detail', kwargs={'organisation': self.kwargs['organisation'],
+                                                       'question': self.kwargs['question']})
 
 class BackBtnToListQuestion(ContextMixin, View):
 
@@ -168,10 +191,19 @@ class PresentationDelBtn(ContextMixin, View):
         return context
 
 
-# class SlideAddBtn(ContextMixin, View):
-#
-#     def get_context_data(self, **kwargs):
-#         context = super(SlideAddBtn, self).get_context_data(**kwargs)
-#         context['add_button'] = reverse('cms:answers-add', kwargs={'organisation': self.kwargs['organisation'],
-#                                         'question': self.kwargs['question']})
-#         return context
+class SlideAddBtn(ContextMixin, View):
+
+    def get_context_data(self, **kwargs):
+        context = super(SlideAddBtn, self).get_context_data(**kwargs)
+        context['add_button'] = reverse('cms:slides-add', kwargs={'organisation': self.kwargs['organisation'],
+                                        'presentation': self.kwargs['presentation']})
+        return context
+
+
+class SlideDelBtn(ContextMixin, View):
+
+    def get_context_data(self, **kwargs):
+        context = super(SlideDelBtn, self).get_context_data(**kwargs)
+        context['del_button'] = reverse('cms:slides-delete', kwargs={'organisation': self.kwargs['organisation'],
+                                        'presentation': self.kwargs['presentation'], 'slide': self.kwargs['slide']})
+        return context

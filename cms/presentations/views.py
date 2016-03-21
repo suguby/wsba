@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 
 from cms.views import BasePresentationsView
 from cms.views import PresentationAddBtn, BackBtnToListPresentation, BackBtnToPresentation, PresentationEditBtn, \
-    PresentationDelBtn
+    PresentationDelBtn, SlideAddBtn
 from presentations.models import Presentation, Organisation, CoreSlide
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from django.conf import settings
@@ -31,7 +31,7 @@ class PresentationListView(ListView, BasePresentationsView, PresentationAddBtn):
 
 
 class PresentationDetailView(DetailView, BasePresentationsView, BackBtnToListPresentation,
-                             PresentationEditBtn, PresentationDelBtn):
+                             PresentationEditBtn, PresentationDelBtn, SlideAddBtn):
     """
     Представление для презентации
     """
