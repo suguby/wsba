@@ -7,11 +7,17 @@ from presentations.managers import AnswerManager
 from user_interface.models import ProjectUser
 
 
-class Organisation(models.Model):
-    name = models.CharField(verbose_name='Название организации', max_length=64)
-    slug = models.SlugField(verbose_name='Слаг', null=True, blank=True)
+class ChangeAbstractModel(models.Model):
     created_at = models.DateTimeField(verbose_name='Создано', auto_now_add=True, null=True)
     modified_at = models.DateTimeField(verbose_name='Изменено', auto_now=True, null=True)
+
+    class Meta:
+        abstract = True
+
+
+class Organisation(ChangeAbstractModel):
+    name = models.CharField(verbose_name='Название организации', max_length=64)
+    slug = models.SlugField(verbose_name='Слаг', null=True, blank=True)
 
     class Meta:
         db_table = 'organisations'
@@ -22,13 +28,11 @@ class Organisation(models.Model):
         return self.name
 
 
-class Presentation(models.Model):
+class Presentation(ChangeAbstractModel):
     organisation = models.ForeignKey(Organisation)
     name = models.CharField(verbose_name='Название презентации', max_length=64)
     slug = models.SlugField(verbose_name='Слаг', null=True, blank=True)
     position = models.IntegerField(verbose_name='Позиция', default=0)
-    created_at = models.DateTimeField(verbose_name='Создано', auto_now_add=True, null=True)
-    modified_at = models.DateTimeField(verbose_name='Изменено', auto_now=True, null=True)
 
     class Meta:
         db_table = 'presentations'
@@ -36,15 +40,13 @@ class Presentation(models.Model):
         verbose_name_plural = 'презентации'
 
 
-class CoreSlide(models.Model):
+class CoreSlide(ChangeAbstractModel):
     presentation = models.ForeignKey(Presentation, verbose_name='Презентация')
     question = models.ForeignKey('Question', null=True, blank=True)
     image = models.ImageField()
     description = models.TextField()
     slug = models.SlugField(verbose_name='Слаг', null=True, blank=True)
     position = models.IntegerField(verbose_name='Позиция', default=0)
-    created_at = models.DateTimeField(verbose_name='Создано', auto_now_add=True, null=True)
-    modified_at = models.DateTimeField(verbose_name='Изменено', auto_now=True, null=True)
 
     class Meta:
         db_table = 'slides'
