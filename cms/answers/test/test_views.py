@@ -6,7 +6,6 @@ from presentations.models import Question, Answer
 
 
 class AnswerEditViewTests(BaseTests):
-
     def get_param_list(self):
         """
         Инициализация основных параметров, возвращает список get_response, question, answer, url
@@ -36,7 +35,7 @@ class AnswerEditViewTests(BaseTests):
         Тестируем вывод страницы списка вопросов авторизованным пользователем
         с определенными правами(в дальнейшем)
         """
-        response= self.get_param_list()[0]
+        response = self.get_param_list()[0]
         self.assertEquals(response.status_code, 200)
 
     def test_template(self):
@@ -162,7 +161,6 @@ class AnswerEditViewTests(BaseTests):
 
 
 class AnswerAddViewTests(BaseTests):
-
     def get_param_list(self):
         """
         Инициализация основных параметров, возвращает список get_response, question, url
@@ -192,7 +190,7 @@ class AnswerAddViewTests(BaseTests):
         Тестируем вывод страницы списка вопросов авторизованным пользователем
         с определенными правами(в дальнейшем)
         """
-        response= self.get_param_list()[0]
+        response = self.get_param_list()[0]
         self.assertEquals(response.status_code, 200)
 
     def test_template(self):
@@ -311,7 +309,6 @@ class AnswerAddViewTests(BaseTests):
 
 
 class AnswerDeleteViewTests(BaseTests):
-
     def get_param_list(self):
         """
         Инициализация основных параметров, возвращает список response(post), question, answer, url
@@ -354,3 +351,37 @@ class AnswerDeleteViewTests(BaseTests):
         question = self.get_param_list()[1]
         self.assertEqual(Answer.objects.filter(question=question).count(), 1)
         self.assertEqual(Answer.objects.filter(position=2, question=question).count(), 0)
+
+
+class PositionAnswerTest(BaseTests):
+        """
+        Проверяем функции изминения позиции ответа
+        """
+
+        def setUp(self):
+            super(PositionAnswerTest, self).setUp()
+            self.question = Question.objects.create(text='test?', answers_type='single')
+            self.answer_1 = Answer.objects.create(question=self.question, text='1',
+                                                  is_right=True, has_comment=True)
+            self.answer_2 = Answer.objects.create(question=self.question, text='2',
+                                                  is_right=True, has_comment=True)
+            self.answer_3 = Answer.objects.create(question=self.question, text='3',
+                                                  is_right=True, has_comment=True)
+
+        def test_up_position(self):
+            url = reverse('cms:answers-up', kwargs={'organisation': self.organisation.slug,
+                                                    'question': self.question.id, 'answer': self.answer_2.id})
+            self.client.post(url)
+            answer_text_list =[]
+            for answer in Answer.objects.all():
+                answer_text_list.append(answer.text)
+            self.assertEqual(answer_text_list, ['2', '1', '3'])
+
+        def test_down_position(self):
+            url = reverse('cms:answers-down', kwargs={'organisation': self.organisation.slug,
+                                                      'question': self.question.id, 'answer': self.answer_2.id})
+            self.client.post(url)
+            answer_text_list = []
+            for answer in Answer.objects.all():
+                answer_text_list.append(answer.text)
+            self.assertEqual(answer_text_list, ['1', '3', '2'])

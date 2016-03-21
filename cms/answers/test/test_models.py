@@ -36,3 +36,15 @@ class AnswerTest(TestCase):
     def test_next_and_previous(self):
         self.assertEqual(self.answer_2.get_next, self.answer_3)
         self.assertEqual(self.answer_3.get_previous, self.answer_2)
+
+    def test_save(self):
+        answer = Answer.objects.create(question=self.question, text='4',
+                                       is_right=False, has_comment=False)
+        self.assertEqual(answer.position, 4)
+
+    def test_delete(self):
+        self.answer_1.delete()
+        position_list = []
+        for answer in Answer.objects.all():
+            position_list.append(answer.position)
+        self.assertEqual(position_list, [1, 2])
