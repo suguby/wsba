@@ -112,6 +112,15 @@ class Answer(models.Model):
             self.position = Answer.objects.filter(question=self.question_id).count() + 1
         return super().save(*args, **kwargs)
 
+    def delete(self, using=None, keep_parents=False):
+        super().delete()
+        i = 1
+        answer_list = Answer.objects.filter(question=self.question_id)
+        for answer in answer_list:
+            answer.position = i
+            answer.save()
+            i += 1
+
 
 class UserAnswer(models.Model):
     """
