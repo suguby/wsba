@@ -87,6 +87,7 @@ class BaseSlideView(ContextMixin, View):
         return reverse('cms:questions-detail', kwargs={'organisation': self.kwargs['organisation'],
                                                        'question': self.kwargs['question']})
 
+
 class BackBtnToListQuestion(ContextMixin, View):
 
     def get_context_data(self, **kwargs):
