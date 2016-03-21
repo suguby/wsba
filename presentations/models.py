@@ -2,7 +2,8 @@
 
 from django.db import models
 from django.db.models import CharField, TextField
-
+from django.utils.text import slugify
+from unidecode import unidecode
 from presentations.managers import SorterManager
 from user_interface.models import ProjectUser
 
@@ -32,7 +33,7 @@ class Presentation(ChangeAbstractModel):
     organisation = models.ForeignKey(Organisation, verbose_name='Организация')
     name = models.CharField(verbose_name='Название презентации', max_length=64)
     slug = models.SlugField(verbose_name='Слаг', null=True, blank=True)
-    position = models.IntegerField(verbose_name='Позиция', default=0)
+    position = models.IntegerField(verbose_name='Позиция', default=0, editable=False)
 
     objects = SorterManager()
 
@@ -45,6 +46,8 @@ class Presentation(ChangeAbstractModel):
         return self.name
 
     def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(unidecode(self.name))
         if self.position == 0:
             self.position = Presentation.objects.filter(organisation=self.organisation).count() + 1
         return super().save(*args, **kwargs)

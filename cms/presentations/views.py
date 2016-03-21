@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 from cms.views import BasePresentationsView
 from cms.views import PresentationAddBtn
 from presentations.models import Question, Presentation, Organisation
-from django.views.generic import ListView, FormView
+from django.views.generic import ListView, FormView, CreateView
 from django.conf import settings
 from .forms import PresentationForm
 
@@ -29,7 +29,7 @@ class PresentationListView(ListView, BasePresentationsView, PresentationAddBtn):
         return context
 
 
-class PresentationCreateView(FormView, BasePresentationsView):
+class PresentationCreateView(CreateView, BasePresentationsView):
     """
     Создание презентации
     """

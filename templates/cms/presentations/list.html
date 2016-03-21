@@ -1,5 +1,5 @@
 {% extends 'cms/layout.html' %}
-{% load bootstrap_pagination %}
+{#{% load bootstrap_pagination %}#}
 
 {% block content %}
 
@@ -44,11 +44,11 @@
                    </tbody>
                 </table>
             </div>
-        {% if is_paginated %}
-            <nav class="text-center">
+{#        {% if is_paginated %}#}
+{#            <nav class="text-center">#}
 {#                {% bootstrap_paginate page_obj url_view_name="cms:questions-list-paginated" url_extra_kwargs=page_kwargs %}#}
-            </nav>
-        {% endif %}
+{#            </nav>#}
+{#        {% endif %}#}
         </div>
     </div>
 </div>
