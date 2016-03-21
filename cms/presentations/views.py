@@ -70,16 +70,8 @@ class PresentationUpdateView(UpdateView, BasePresentationsView, BackBtnToPresent
     """
     form_class = PresentationForm
     template_name = "cms/presentations/edit.html"
-    title = 'Редактирование вопроса'
+    title = 'Редактирование презентации'
     mode = 'Обновить'
-
-    # def form_valid(self, form):
-    #     if not form.cleaned_data['common']:
-    #         del form.cleaned_data['common']
-    #         obj = Question.objects.create(**form.cleaned_data)
-    #         obj.organisation = Organisation.objects.get(slug=self.kwargs['organisation'])
-    #         obj.save()
-    #     return super(PresentationUpdateView, self).form_valid(form)
 
     def get_success_url(self):
         return reverse('cms:presentations-detail', kwargs={'organisation': self.kwargs['organisation'],
