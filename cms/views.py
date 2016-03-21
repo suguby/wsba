@@ -133,9 +133,45 @@ class BackBtnToListPresentation(ContextMixin, View):
         return context
 
 
+class BackBtnToPresentation(ContextMixin, View):
+
+    def get_context_data(self, **kwargs):
+        context = super(BackBtnToPresentation, self).get_context_data(**kwargs)
+        context['back_button'] = reverse('cms:presentations-detail', kwargs={'organisation': self.kwargs['organisation'],
+                                         'presentation': self.kwargs['presentation']})
+        return context
+
+
 class PresentationAddBtn(ContextMixin, View):
 
     def get_context_data(self, **kwargs):
         context = super(PresentationAddBtn, self).get_context_data(**kwargs)
         context['add_button'] = reverse('cms:presentations-add', kwargs={'organisation': self.kwargs['organisation']})
         return context
+
+
+class PresentationEditBtn(ContextMixin, View):
+
+    def get_context_data(self, **kwargs):
+        context = super(PresentationEditBtn, self).get_context_data(**kwargs)
+        context['edit_button'] = reverse('cms:presentations-edit', kwargs={'organisation': self.kwargs['organisation'],
+                                         'presentation': self.kwargs['presentation']})
+        return context
+
+
+class PresentationDelBtn(ContextMixin, View):
+
+    def get_context_data(self, **kwargs):
+        context = super(PresentationDelBtn, self).get_context_data(**kwargs)
+        context['del_button'] = reverse('cms:presentations-delete', kwargs={'organisation': self.kwargs['organisation'],
+                                        'presentation': self.kwargs['presentation']})
+        return context
+
+
+# class SlideAddBtn(ContextMixin, View):
+#
+#     def get_context_data(self, **kwargs):
+#         context = super(SlideAddBtn, self).get_context_data(**kwargs)
+#         context['add_button'] = reverse('cms:answers-add', kwargs={'organisation': self.kwargs['organisation'],
+#                                         'question': self.kwargs['question']})
+#         return context

@@ -1,5 +1,5 @@
 {% extends 'cms/layout.html' %}
-{#{% load bootstrap_pagination %}#}
+{% load bootstrap_pagination %}
 
 {% block content %}
 
@@ -29,11 +29,11 @@
                                     Выбрать <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="">Открыть</a></li>
-                                    <li><a href="">Редактировать</a></li>
+                                    <li><a href="{% url 'cms:presentations-detail' organisation.slug object.pk %}">Открыть</a></li>
+                                    <li><a href="{% url 'cms:presentations-edit' organisation.slug object.pk %}">Редактировать</a></li>
                                     <li class="divider"></li>
                                     <li><a href="" data-toggle="modal" data-target=".bs-example-modal-sm" onClick='obj_delete("{{ object.text }}",
-                                        "#");'>Удалить</a></li>
+                                        "{% url 'cms:presentations-delete' organisation.slug object.pk %}");'>Удалить</a></li>
                                 </ul>
                                 </div>
                            </td>
@@ -42,11 +42,11 @@
                    </tbody>
                 </table>
             </div>
-{#        {% if is_paginated %}#}
-{#            <nav class="text-center">#}
-{#                {% bootstrap_paginate page_obj url_view_name="cms:questions-list-paginated" url_extra_kwargs=page_kwargs %}#}
-{#            </nav>#}
-{#        {% endif %}#}
+        {% if is_paginated %}
+            <nav class="text-center">
+                {% bootstrap_paginate page_obj url_view_name="cms:presentations-list-paginated" url_extra_kwargs=page_kwargs %}
+            </nav>
+        {% endif %}
         </div>
     </div>
 </div>

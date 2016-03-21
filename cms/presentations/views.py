@@ -4,9 +4,10 @@
 from django.core.urlresolvers import reverse
 
 from cms.views import BasePresentationsView
-from cms.views import PresentationAddBtn, BackBtnToListPresentation
+from cms.views import PresentationAddBtn, BackBtnToListPresentation, BackBtnToPresentation, PresentationEditBtn, \
+    PresentationDelBtn
 from presentations.models import Presentation, Organisation, CoreSlide
-from django.views.generic import ListView, CreateView, DetailView
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from django.conf import settings
 from .forms import PresentationForm
 
@@ -29,7 +30,8 @@ class PresentationListView(ListView, BasePresentationsView, PresentationAddBtn):
         return context
 
 
-class PresentationDetailView(DetailView, BasePresentationsView, BackBtnToListPresentation):
+class PresentationDetailView(DetailView, BasePresentationsView, BackBtnToListPresentation,
+                             PresentationEditBtn, PresentationDelBtn):
     """
     Представление для презентации
     """
@@ -58,5 +60,35 @@ class PresentationCreateView(CreateView, BasePresentationsView, BackBtnToListPre
         initial_new['organisation'] = Organisation.objects.get(slug=self.kwargs['organisation'])
         return initial_new
 
+    def get_success_url(self):
+        return reverse('cms:presentations-list', kwargs={'organisation': self.kwargs['organisation']})
+
+
+class PresentationUpdateView(UpdateView, BasePresentationsView, BackBtnToPresentation):
+    """
+    Изменение презентации
+    """
+    form_class = PresentationForm
+    template_name = "cms/presentations/edit.html"
+    title = 'Редактирование вопроса'
+    mode = 'Обновить'
+
+    # def form_valid(self, form):
+    #     if not form.cleaned_data['common']:
+    #         del form.cleaned_data['common']
+    #         obj = Question.objects.create(**form.cleaned_data)
+    #         obj.organisation = Organisation.objects.get(slug=self.kwargs['organisation'])
+    #         obj.save()
+    #     return super(PresentationUpdateView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('cms:presentations-detail', kwargs={'organisation': self.kwargs['organisation'],
+                                                           'presentation': self.kwargs['presentation']})
+
+
+class PresentationDeleteView(DeleteView, BasePresentationsView):
+    """
+    Удаление презентации
+    """
     def get_success_url(self):
         return reverse('cms:presentations-list', kwargs={'organisation': self.kwargs['organisation']})

@@ -11,11 +11,9 @@
         {{ object.name }}
     </div>
 </div>
-
+{% if slide_list %}
 <div class="sortable ui-sortable">
 {% for slide in slide_list %}
-
-
     <div class="panel panel-white ui-sortable-handle">
         <div class="panel-heading">
             <h3 class="panel-title"><a href="">Слайд {{ slide.position }}</a></h3>
@@ -32,6 +30,14 @@
 
 {% endfor %}
 </div>
+{% else %}
+  <div class="panel">
+    <div class="panel-body">
+        В данной презентации еще нет слайдов. <a href="">Добавить</a>
+    </div>
+</div>
+
+{% endif %}
 
 </div>
 
