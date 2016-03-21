@@ -55,11 +55,11 @@ class Presentation(ChangeAbstractModel):
 
 class CoreSlide(ChangeAbstractModel):
     presentation = models.ForeignKey(Presentation, verbose_name='Презентация')
-    question = models.ForeignKey('Question', null=True, blank=True)
-    image = models.ImageField()
-    description = models.TextField()
+    question = models.ForeignKey('Question', null=True, blank=True, verbose_name='Вопрос')
+    image = models.ImageField(verbose_name='Изображение')
+    description = models.TextField(verbose_name='Описание')
     slug = models.SlugField(verbose_name='Слаг', null=True, blank=True)
-    position = models.IntegerField(verbose_name='Позиция', default=0)
+    position = models.IntegerField(verbose_name='Позиция', default=0, editable=False)
 
     objects = SorterManager()
 

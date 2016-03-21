@@ -1,0 +1,38 @@
+{% extends 'cms/layout.html' %}
+{% load bootstrap_pagination %}
+
+{% block content %}
+
+{% include 'cms/_modal_delete.html' %}
+
+<div class="col-lg-12 col-md-12">
+  <div class="panel">
+    <div class="panel-body">
+        {{ object.name }}
+    </div>
+</div>
+
+<div class="sortable ui-sortable">
+{% for slide in slide_list %}
+
+
+    <div class="panel panel-white ui-sortable-handle">
+        <div class="panel-heading">
+            <h3 class="panel-title"><a href="">Слайд {{ slide.position }}</a></h3>
+            <div class="panel-control">
+                <a href="javascript:void(0);"><i class="icon-arrow-up"></i></a>
+                <a href="javascript:void(0);"><i class="icon-arrow-down"></i></a>
+                <a href="javascript:void(0);"><i class="icon-close"></i></a>
+            </div>
+        </div>
+        <div class="panel-body">
+            {{ slide.description }}
+        </div>
+     </div>
+
+{% endfor %}
+</div>
+
+</div>
+
+{% endblock content %}

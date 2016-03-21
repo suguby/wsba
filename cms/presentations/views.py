@@ -4,9 +4,9 @@
 from django.core.urlresolvers import reverse
 
 from cms.views import BasePresentationsView
-from cms.views import PresentationAddBtn
-from presentations.models import Question, Presentation, Organisation
-from django.views.generic import ListView, FormView, CreateView
+from cms.views import PresentationAddBtn, BackBtnToListPresentation
+from presentations.models import Presentation, Organisation, CoreSlide
+from django.views.generic import ListView, CreateView, DetailView
 from django.conf import settings
 from .forms import PresentationForm
 
@@ -29,7 +29,21 @@ class PresentationListView(ListView, BasePresentationsView, PresentationAddBtn):
         return context
 
 
-class PresentationCreateView(CreateView, BasePresentationsView):
+class PresentationDetailView(DetailView, BasePresentationsView, BackBtnToListPresentation):
+    """
+    Представление для презентации
+    """
+    template_name = 'cms/presentations/detail.html'
+    title = 'Презентация'
+
+    def get_context_data(self, **kwargs):
+        context = super(PresentationDetailView, self).get_context_data(**kwargs)
+        context['slide_list'] = \
+            CoreSlide.objects.filter(presentation=self.kwargs['presentation'])
+        return context
+
+
+class PresentationCreateView(CreateView, BasePresentationsView, BackBtnToListPresentation):
     """
     Создание презентации
     """

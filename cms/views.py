@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from django.views.generic.base import ContextMixin, View
-from presentations.models import Organisation, Question, Answer
+from presentations.models import Organisation, Question, Answer, Presentation
 from django.core.urlresolvers import reverse
 
 
@@ -28,7 +28,7 @@ class BaseQuestionView(ContextMixin, View):
 class BasePresentationsView(ContextMixin, View):
 
     def __init__(self):
-        self.model = Question
+        self.model = Presentation
         self.pk_url_kwarg = 'presentation'
         self.tab = 'tab_presentations'
 

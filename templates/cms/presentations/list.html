@@ -21,9 +21,7 @@
                    {% for object in object_list %}
                        <tr>
                            <th scope="row">{{ object.position }}</th>
-                           <td><a href="">{{ object.name }}</a></td>
-
-
+                           <td><a href="{% url 'cms:presentations-detail' organisation.slug object.pk %}">{{ object.name }}</a></td>
                            <td>
                                <div class="btn-group">
                                 <button type="button" class="btn btn-success btn-xs dropdown-toggle"
