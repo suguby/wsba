@@ -10,7 +10,7 @@ class QuestionViewTests(TestCase):
     def test_view(self):
         organisation = Organisation.objects.create(name='ldsfl')
         presentation = Presentation.objects.create(organisation=organisation)
-        question = Question.objects.create(number=1, text='dsfds')
+        question = Question.objects.create(text='dsfds')
         slide = CoreSlide.objects.create(question=question, presentation=presentation)
 
         response = self.client.get(reverse('slide_view', kwargs={'slide': slide.id}))
