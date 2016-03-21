@@ -39,6 +39,14 @@ class Presentation(ChangeAbstractModel):
         verbose_name = 'Презентация'
         verbose_name_plural = 'презентации'
 
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if self.position == 0:
+            self.position = Presentation.objects.filter(organisation=self.organisation).count() + 1
+        return super().save(*args, **kwargs)
+
 
 class CoreSlide(ChangeAbstractModel):
     presentation = models.ForeignKey(Presentation, verbose_name='Презентация')
