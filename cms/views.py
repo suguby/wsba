@@ -123,3 +123,19 @@ class AnswerDelBtn(ContextMixin, View):
         context['del_button'] = reverse('cms:answers-delete', kwargs={'organisation': self.kwargs['organisation'],
                                         'question': self.kwargs['question'], 'answer': self.kwargs['answer']})
         return context
+
+
+class BackBtnToListPresentation(ContextMixin, View):
+
+    def get_context_data(self, **kwargs):
+        context = super(BackBtnToListPresentation, self).get_context_data(**kwargs)
+        context['back_button'] = reverse('cms:presentations-list', kwargs={'organisation': self.kwargs['organisation']})
+        return context
+
+
+class PresentationAddBtn(ContextMixin, View):
+
+    def get_context_data(self, **kwargs):
+        context = super(PresentationAddBtn, self).get_context_data(**kwargs)
+        context['add_button'] = reverse('cms:presentations-add', kwargs={'organisation': self.kwargs['organisation']})
+        return context

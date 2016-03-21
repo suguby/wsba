@@ -3,7 +3,7 @@
 from django.db import models
 from django.db.models import CharField, TextField
 
-from presentations.managers import AnswerManager
+from presentations.managers import SorterManager
 from user_interface.models import ProjectUser
 
 
@@ -29,10 +29,12 @@ class Organisation(ChangeAbstractModel):
 
 
 class Presentation(ChangeAbstractModel):
-    organisation = models.ForeignKey(Organisation)
+    organisation = models.ForeignKey(Organisation, verbose_name='Организация')
     name = models.CharField(verbose_name='Название презентации', max_length=64)
     slug = models.SlugField(verbose_name='Слаг', null=True, blank=True)
     position = models.IntegerField(verbose_name='Позиция', default=0)
+
+    objects = SorterManager()
 
     class Meta:
         db_table = 'presentations'
@@ -55,6 +57,8 @@ class CoreSlide(ChangeAbstractModel):
     description = models.TextField()
     slug = models.SlugField(verbose_name='Слаг', null=True, blank=True)
     position = models.IntegerField(verbose_name='Позиция', default=0)
+
+    objects = SorterManager()
 
     class Meta:
         db_table = 'slides'
@@ -91,7 +95,7 @@ class Answer(models.Model):
     is_right = models.BooleanField(verbose_name='Является правильным ответом')
     has_comment = models.BooleanField(verbose_name="Ответ с комментарием")
 
-    objects = AnswerManager()
+    objects = SorterManager()
 
     def __str__(self):
         return self.text

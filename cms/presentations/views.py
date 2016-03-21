@@ -1,14 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 from django.core.urlresolvers import reverse
 
 from cms.views import BasePresentationsView
+from cms.views import PresentationAddBtn
 from presentations.models import Question, Presentation, Organisation
-from django.views.generic import ListView
+from django.views.generic import ListView, FormView
 from django.conf import settings
+from .forms import PresentationForm
 
 
-class PresentationListView(ListView, BasePresentationsView):
+class PresentationListView(ListView, BasePresentationsView, PresentationAddBtn):
     """
     Представление для списка презентаций
     """
@@ -24,3 +27,22 @@ class PresentationListView(ListView, BasePresentationsView):
         context = super(PresentationListView, self).get_context_data(**kwargs)
         context['page_kwargs'] = {'organisation': self.kwargs['organisation']}
         return context
+
+
+class PresentationCreateView(FormView, BasePresentationsView):
+    """
+    Создание презентации
+    """
+    form_class = PresentationForm
+    template_name = "cms/presentations/edit.html"
+    title = 'Добавление презентации'
+    mode = 'Создать'
+
+    def get_initial(self):
+        initial = super(PresentationCreateView, self).get_initial()
+        initial_new = initial.copy()
+        initial_new['organisation'] = Organisation.objects.get(slug=self.kwargs['organisation'])
+        return initial_new
+
+    def get_success_url(self):
+        return reverse('cms:presentations-list', kwargs={'organisation': self.kwargs['organisation']})
