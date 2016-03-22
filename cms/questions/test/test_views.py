@@ -4,14 +4,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.test import TestCase
 from presentations.models import Organisation, Question
-
-
-class BaseTests(TestCase):
-
-    def setUp(self):
-        User.objects.create_user('admin', 'admin@example.com', 'admin')
-        self.client.login(username='admin', password='admin')
-        self.organisation = Organisation.objects.create(name='test', slug='test')
+from cms.test import BaseTests
 
 
 class QuestionListViewTests(BaseTests):
@@ -174,21 +167,24 @@ class QuestionEditViewTests(BaseTests):
 
     def test_post_status_valid(self):
         question = Question.objects.create(text='test update', answers_type='single')
-        url = reverse('cms:questions-edit', kwargs={'organisation': self.organisation.slug, 'question': question.id})
+        url = reverse('cms:questions-edit', kwargs={'organisation': self.organisation.slug,
+                                                    'question': question.id})
         response = self.client.post(url, {'text': 'edit question', 'answers_type': 'multi'})
         self.assertEquals(response.status_code, 302)
 
     def test_post_status_invalid(self):
         question = Question.objects.create(text='test update', answers_type='single')
-        url = reverse('cms:questions-edit', kwargs={'organisation': self.organisation.slug, 'question': question.id})
+        url = reverse('cms:questions-edit', kwargs={'organisation': self.organisation.slug,
+                                                    'question': question.id})
         response = self.client.post(url, {'text': '1'})
         self.assertNotEquals(response.status_code, 302)
 
     def test_post_edit_object(self):
-        Question.objects.create(text='test update', answers_type='single')
-        url = reverse('cms:questions-add', kwargs={'organisation': self.organisation.slug})
+        question = Question.objects.create(text='testing', answers_type='single')
+        url = reverse('cms:questions-edit', kwargs={'organisation': self.organisation.slug,
+                                                    'question': question.id})
         self.client.post(url, {'text': 'edit question', 'answers_type': 'multi'})
-        self.assertEqual(Question.objects.filter(answers_type='test update').count(), 0)
+        self.assertEqual(Question.objects.filter(text='testing').count(), 0)
 
 
 class QuestionDeleteViewTests(BaseTests):

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from django.core.urlresolvers import reverse
 
-from cms.questions.test.test_view import BaseTests
+from cms.questions.test.test_views import BaseTests
 from presentations.models import Question, Answer
 
 
