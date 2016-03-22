@@ -55,6 +55,7 @@ class QuestionListViewTests(BaseTests):
         self.assertTemplateUsed(response, 'cms/questions/list.html')
 
     def test_objects_in_context(self):
+        # TODO обьедененить с test_template
         """
         Тестируем наличие объектов в контексте
         Отправка их в контекст ответа на рендер страницы

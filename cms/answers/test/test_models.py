@@ -37,12 +37,12 @@ class AnswerTest(TestCase):
         self.assertEqual(self.answer_2.get_next, self.answer_3)
         self.assertEqual(self.answer_3.get_previous, self.answer_2)
 
-    def test_save(self):
+    def test_auto_last_position(self):
         answer = Answer.objects.create(question=self.question, text='4',
                                        is_right=False, has_comment=False)
         self.assertEqual(answer.position, 4)
 
-    def test_delete(self):
+    def test_change_position_after_delete(self):
         self.answer_1.delete()
         position_list = []
         for answer in Answer.objects.all():
