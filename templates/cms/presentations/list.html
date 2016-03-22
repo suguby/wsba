@@ -32,7 +32,7 @@
                                     <li><a href="{% url 'cms:presentations-detail' organisation.slug object.pk %}">Открыть</a></li>
                                     <li><a href="{% url 'cms:presentations-edit' organisation.slug object.pk %}">Редактировать</a></li>
                                     <li class="divider"></li>
-                                    <li><a href="" data-toggle="modal" data-target=".bs-example-modal-sm" onClick='obj_delete("{{ object.text }}",
+                                    <li><a href="" data-toggle="modal" data-target=".bs-example-modal-sm" onClick='obj_delete("{{ object.name }}",
                                         "{% url 'cms:presentations-delete' organisation.slug object.pk %}");'>Удалить</a></li>
                                 </ul>
                                 </div>
