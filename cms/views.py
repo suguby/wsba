@@ -19,11 +19,6 @@ class BaseQuestionView(ContextMixin, View):
                 Organisation.objects.get(slug=self.kwargs['organisation'])
         return context
 
-    # ?не наследуется
-
-    # def get_success_url(self):
-    #     return reverse('cms:questions-list', kwargs={'organisation': self.kwargs['organisation']})
-
 
 class BasePresentationsView(ContextMixin, View):
 

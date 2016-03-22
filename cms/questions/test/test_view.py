@@ -46,68 +46,28 @@ class QuestionListViewTests(BaseTests):
 
         self.assertEquals(response.status_code, 200)
 
-    def test_template(self):
-        """
-        Тестируем использование вьюхой нужного нам шаблона
-        """
-        response = self.get_response()
-
-        self.assertTemplateUsed(response, 'cms/questions/list.html')
-
     def test_objects_in_context(self):
-        # TODO обьедененить с test_template
         """
         Тестируем наличие объектов в контексте
         Отправка их в контекст ответа на рендер страницы
         """
         Question.objects.create(text='test', answers_type='single')
         Question.objects.create(text='test2', answers_type='single')
-        Question.objects.create(text='test3', answers_type='single')
+        question = Question.objects.create(text='test3', answers_type='single')
         questions = Question.objects.all()
+        success_url = reverse('cms:questions-add', kwargs={'organisation': self.organisation.slug})
         response = self.get_response()
 
+        self.assertTemplateUsed(response, 'cms/questions/list.html')
         self.assertEqual(len(questions), len(response.context['object_list']))
-
-    def test_html(self):
-        """
-        Тестируем вывод наших данных в шаблоне
-        """
-        url = reverse('cms:questions-list', kwargs={'organisation': self.organisation.slug})
-        question = Question.objects.create(text='test', answers_type='single')
-        response = self.client.get(url)
-
         self.assertContains(response, question.text, status_code=200)
-
-    def test_nav_button_in_context(self):
-        """
-        Тестируем вывод навигационных кнопок
-        Отправка их в контекст ответа на рендер страницы
-        """
-        response = self.get_response()
 
         self.assertNotIn('back_button', response.context)
         self.assertIn('add_button', response.context)
         self.assertNotIn('edit_button', response.context)
         self.assertNotIn('del_button', response.context)
 
-    def test_nav_button_url_in_context(self):
-        """
-        Тестируем вывод навигационных кнопок
-        Отправка их в контекст ответа на рендер страницы
-        """
-        url = reverse('cms:questions-list', kwargs={'organisation': self.organisation.slug})
-        success_url = reverse('cms:questions-add', kwargs={'organisation': self.organisation.slug})
-        response = self.client.get(url)
-
         self.assertEqual(success_url, response.context['add_button'])
-
-    def test_nav_button_in_html(self):
-        """
-        Тестируем вывод навигационных кнопок
-        Отрисовка кнопок в шаблоне
-        """
-        response = self.get_response()
-
         self.assertContains(response, 'id="add_button"', status_code=200)
 
 
@@ -147,60 +107,12 @@ class QuestionDetailViewTests(BaseTests):
 
         self.assertEqual(response_404.status_code, 404)
 
-    def test_template(self):
-        """
-        Тестируем использование вьюхой нужного нам шаблона
-        """
-        question, response = self.get_response_and_question()
-        self.assertTemplateUsed(response, 'cms/questions/detail.html')
-
     def test_object_in_context(self):
         """
         Тестируем наличие вопроса в контексте
         """
         question, response = self.get_response_and_question()
-        self.assertEqual(question, response.context['object'])
 
-    def test_object_in_html(self):
-        """
-        Тестируем вывод вопроса в шаблон
-        """
-        question, response = self.get_response_and_question()
-        self.assertContains(response, question.text, status_code=200)
-
-    def test_nav_button_in_context(self):
-        """
-        Тестируем вывод навигационных кнопок
-        Отправка их в контекст ответа на рендер страницы
-
-        В контексте должны быть все навигационные кнопки
-        Назад, Добавить, Редактировать, Удалить
-        """
-        question, response = self.get_response_and_question()
-
-        self.assertIn('back_button', response.context)
-        self.assertIn('add_button', response.context)
-        self.assertIn('edit_button', response.context)
-        self.assertIn('del_button', response.context)
-
-    def test_nav_button_url_in_context(self):
-        """
-        Тестируем вывод правильных юрлов навигационных кнопок
-        Отправка их в контекст ответа на рендер страницы
-
-        Назад -> к списку вопросов, url_back
-        /organisation_slug/questions/
-
-        Добавить -> добавить ответ, url_add
-        /organisation_slug/questions/new
-
-        Редактировать -> редактировать ответ, url_edit
-        /organisation_slug/questions/question_id/edit
-
-        Удалить -> удалить ответ, url_delete
-        /organisation_slug/questions/question_id/delete
-        """
-        question, response = self.get_response_and_question()
         url_back = reverse('cms:questions-list', kwargs={'organisation': self.organisation.slug})
         url_add = reverse('cms:answers-add', kwargs={'organisation': self.organisation.slug,
                                                      'question': question.id})
@@ -208,17 +120,25 @@ class QuestionDetailViewTests(BaseTests):
                                                          'question': question.id})
         url_delete = reverse('cms:questions-delete', kwargs={'organisation': self.organisation.slug,
                                                              'question': question.id})
+
+        self.assertEqual(url_back, response.context['back_button'])
+        self.assertEqual(url_add, response.context['add_button'])
+        self.assertEqual(url_edit, response.context['edit_button'])
+        self.assertEqual(url_delete, response.context['del_button'])
+        self.assertEqual(question, response.context['object'])
+        self.assertTemplateUsed(response, 'cms/questions/detail.html')
+        self.assertContains(response, question.text, status_code=200)
+
+        self.assertIn('back_button', response.context)
+        self.assertIn('add_button', response.context)
+        self.assertIn('edit_button', response.context)
+        self.assertIn('del_button', response.context)
+
         self.assertEqual(url_back, response.context['back_button'])
         self.assertEqual(url_add, response.context['add_button'])
         self.assertEqual(url_edit, response.context['edit_button'])
         self.assertEqual(url_delete, response.context['del_button'])
 
-    def test_nav_button_in_html(self):
-        """
-        Тестируем вывод навигационных кнопок
-        Отрисовка кнопок в шаблоне
-        """
-        question, response = self.get_response_and_question()
         self.assertContains(response, 'id="back_button"', status_code=200)
         self.assertContains(response, 'id="add_button"', status_code=200)
         self.assertContains(response, 'id="edit_button"', status_code=200)
@@ -250,19 +170,25 @@ class QuestionCreateViewTests(BaseTests):
         response = self.get_response()
         self.assertEquals(response.status_code, 200)
 
-    def test_template(self):
-        """
-        Тестируем использование вьюхой нужного нам шаблона
-        """
-        response = self.get_response()
-        self.assertTemplateUsed(response, 'cms/questions/edit.html')
-
     def test_object_in_context(self):
         """
         Тестируем наличие объектов в контексте
         """
         response = self.get_response()
+        url_back = reverse('cms:questions-list', kwargs={'organisation': self.organisation.slug})
         self.assertIn('form', response.context)
+        self.assertTemplateUsed(response, 'cms/questions/edit.html')
+        self.assertContains(response, 'Создать', status_code=200)
+        self.assertContains(response, 'Добавление вопроса', status_code=200)
+
+        self.assertIn('back_button', response.context)
+        self.assertNotIn('add_button', response.context)
+        self.assertNotIn('edit_button', response.context)
+        self.assertNotIn('del_button', response.context)
+
+        self.assertEqual(url_back, response.context['back_button'])
+
+        self.assertContains(response, 'id="back_button"', status_code=200)
 
     def test_post_status_valid(self):
         """
@@ -299,49 +225,6 @@ class QuestionCreateViewTests(BaseTests):
         self.assertEqual(Question.objects.count(), 2)
         self.assertEqual(Question.objects.filter(text='new_question').count(), 1)
 
-    def test_name_form_btn_mode_html(self):
-        """
-        Проверяем верные надписи на форме в шаблоне
-        """
-        response = self.get_response()
-        self.assertContains(response, 'Создать', status_code=200)
-        self.assertContains(response, 'Добавление вопроса', status_code=200)
-
-    def test_nav_button_in_context(self):
-        """
-        Тестируем вывод навигационных кнопок
-        Отправка их в контекст ответа на рендер страницы
-
-        В контексте должны быть следующие навигационные кнопки
-        Назад
-        """
-        response = self.get_response()
-        self.assertIn('back_button', response.context)
-        self.assertNotIn('add_button', response.context)
-        self.assertNotIn('edit_button', response.context)
-        self.assertNotIn('del_button', response.context)
-
-    def test_nav_button_url_in_context(self):
-        """
-        Тестируем вывод правильных юрлов навигационных кнопок
-        Отправка их в контекст ответа на рендер страницы
-
-        Назад -> к списку вопросов, url_back
-        /organisation_slug/questions/
-
-        """
-        response = self.get_response()
-        url_back = reverse('cms:questions-list', kwargs={'organisation': self.organisation.slug})
-        self.assertEqual(url_back, response.context['back_button'])
-
-    def test_nav_button_in_html(self):
-        """
-        Тестируем вывод навигационных кнопок
-        Отрисовка кнопок в шаблоне
-        """
-        response = self.get_response()
-        self.assertContains(response, 'id="back_button"', status_code=200)
-
 
 class QuestionEditViewTests(BaseTests):
 
@@ -368,20 +251,28 @@ class QuestionEditViewTests(BaseTests):
         question, response = self.get_response_and_question()
         self.assertEquals(response.status_code, 200)
 
-    def test_template(self):
-        """
-        Тестируем использование вьюхой нужного нам шаблона
-        """
-        question, response = self.get_response_and_question()
-
-        self.assertTemplateUsed(response, 'cms/questions/edit.html')
-
     def test_object_in_context(self):
         """
         Тестируем наличие объектов в контексте
         """
         question, response = self.get_response_and_question()
         self.assertEqual(question.id, response.context['object'].id)
+        self.assertTemplateUsed(response, 'cms/questions/edit.html')
+        self.assertContains(response, 'Обновить', status_code=200)
+        self.assertContains(response, 'Редактирование вопроса', status_code=200)
+
+        self.assertContains(response, question.text, status_code=200)
+        self.assertContains(response, question.answers_type, status_code=200)
+
+        self.assertIn('back_button', response.context)
+        self.assertNotIn('add_button', response.context)
+        self.assertNotIn('edit_button', response.context)
+        self.assertNotIn('del_button', response.context)
+
+        back_url = reverse('cms:questions-detail', kwargs={'organisation': self.organisation.slug,
+                                                           'question': question.id})
+        self.assertEqual(back_url, response.context['back_button'])
+        self.assertContains(response, 'id="back_button"', status_code=200)
 
     def test_post_status_valid(self):
         """
@@ -415,60 +306,6 @@ class QuestionEditViewTests(BaseTests):
         url = reverse('cms:questions-add', kwargs={'organisation': self.organisation.slug})
         self.client.post(url, {'text': 'edit question', 'answers_type': 'multi'})
         self.assertEqual(Question.objects.filter(answers_type='test update').count(), 0)
-
-    def test_name_form_btn_mode_html(self):
-        """
-        Проверяем верные надписи на форме в шаблоне
-        """
-        question, response = self.get_response_and_question()
-        self.assertContains(response, 'Обновить', status_code=200)
-        self.assertContains(response, 'Редактирование вопроса', status_code=200)
-
-    def test_object_in_html(self):
-        """
-        Проверяем отображение объекта в шаблоне
-        """
-        question, response = self.get_response_and_question()
-        self.assertContains(response, question.text, status_code=200)
-        self.assertContains(response, question.answers_type, status_code=200)
-
-    def test_nav_button_in_context(self):
-        """
-        Тестируем вывод навигационных кнопок
-        Отправка их в контекст ответа на рендер страницы
-
-        В контексте должны быть следующие навигационные кнопки
-        Назад
-        """
-        question, response = self.get_response_and_question()
-        self.assertIn('back_button', response.context)
-        self.assertNotIn('add_button', response.context)
-        self.assertNotIn('edit_button', response.context)
-        self.assertNotIn('del_button', response.context)
-
-    def test_nav_button_url_in_context(self):
-        """
-        Тестируем вывод правильных юрлов навигационных кнопок
-        Отправка их в контекст ответа на рендер страницы
-
-        Назад -> к вопросу, url_back
-        /organisation_slug/questions/questions_id/
-
-        """
-        question = Question.objects.create(text='test update', answers_type='single')
-        url = reverse('cms:questions-edit', kwargs={'organisation': self.organisation.slug, 'question': question.id})
-        back_url = reverse('cms:questions-detail', kwargs={'organisation': self.organisation.slug,
-                                                           'question': question.id})
-        response = self.client.get(url)
-        self.assertEqual(back_url, response.context['back_button'])
-
-    def test_nav_button_in_html(self):
-        """
-        Тестируем вывод навигационных кнопок
-        Отрисовка кнопок в шаблоне
-        """
-        question, response = self.get_response_and_question()
-        self.assertContains(response, 'id="back_button"', status_code=200)
 
 
 class QuestionDeleteViewTests(BaseTests):
