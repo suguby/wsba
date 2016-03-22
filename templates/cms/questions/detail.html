@@ -19,28 +19,30 @@
          {% for answer in answers_list %}
         <li position="{{ answer.position }}" class="list-group-item" id="answer_{{ answer.id }}">
 
-            {% if answer.get_previous %}
+            {% if answer.previous_answer %}
             <form id="answer_{{ answer.pk }}_up" action='{% url 'cms:answers-up' organisation.slug object.pk answer.pk %}' method='post'>
             {% csrf_token %}
              </form>
             {% endif %}
 
-            {% if answer.get_next %}
+            {% if answer.next_answer %}
             <form id="answer_{{ answer.pk }}_down" action='{% url 'cms:answers-down' organisation.slug object.pk answer.pk %}' method='post'>
             {% csrf_token %}
             </form>
             {% endif %}
 
-            {% if answer.get_previous %}
+            {% if answer.previous_answer %}
             <a href="" class="m-l-xs" onClick="document.getElementById('answer_{{ answer.pk }}_up').submit(); return false;"><i class="fa fa-arrow-up"></i></a>
             {% else %}
                 <i class="fa fa-arrow-up m-l-xs"></i>
             {% endif %}
-            {% if answer.get_next %}
+
+            {% if answer.next_answer %}
             <a href="" class="m-l-xs m-r-xs" onClick="document.getElementById('answer_{{ answer.pk }}_down').submit(); return false;"><i class="fa fa-arrow-down"></i></a>
             {% else %}
                 <i class="fa fa-arrow-down m-l-xs m-r-xs"></i>
             {% endif %}
+
             {{ answer.text }}
             {% if answer.is_right %}
             <span class="label label-success m-l-xs">Правильный</span>

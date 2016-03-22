@@ -76,6 +76,24 @@ class CoreSlide(ChangeAbstractModel):
         verbose_name = 'Слайд'
         verbose_name_plural = 'слайды'
 
+    @property
+    def previous_slide(self):
+        prev_slides = CoreSlide.objects.filter(presentation=self.presentation_id).\
+            filter(position__lt=self.position)
+        if prev_slides:
+            return prev_slides.last()
+        else:
+            return False
+
+    @property
+    def next_slide(self):
+        next_slides = CoreSlide.objects.filter(presentation=self.presentation_id).\
+            filter(position__gt=self.position)
+        if next_slides:
+            return next_slides.first()
+        else:
+            return False
+
     def save(self, *args, **kwargs):
         if self.position == 0:
             self.position = CoreSlide.objects.filter(presentation=self.presentation).count() + 1
@@ -122,17 +140,15 @@ class Answer(models.Model):
         verbose_name_plural = 'ответы'
 
     @property
-    def get_previous(self):
-        # TODO проперти не называются как глаголы - просто previous_answer
-        previous_answers = Answer.objects.filter(question=self.question_id).filter(position__lt=self.position)
-        if previous_answers:
-            return previous_answers.last()
+    def previous_answer(self):
+        prev_answers = Answer.objects.filter(question=self.question_id).filter(position__lt=self.position)
+        if prev_answers:
+            return prev_answers.last()
         else:
             return False
 
     @property
-    def get_next(self):
-        # TODO проперти не называются как глаголы - просто next_answer
+    def next_answer(self):
         next_answers = Answer.objects.filter(question=self.question_id).filter(position__gt=self.position)
         if next_answers:
             return next_answers.first()

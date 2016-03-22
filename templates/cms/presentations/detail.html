@@ -16,11 +16,35 @@
 {% for slide in slide_list %}
     <div class="panel panel-white ui-sortable-handle">
         <div class="panel-heading">
-            <h3 class="panel-title"><a href="{% url 'cms:slides-edit' organisation.slug object.pk slide.pk %}">Слайд {{ slide.position }}</a></h3>
-            <div class="panel-control pull-left">
-                <a href="javascript:void(0);"><i class="icon-arrow-up"></i></a>
-                <a href="javascript:void(0);"><i class="icon-arrow-down"></i></a>
+            <h3 class="panel-title">
+                <a class="m-r-xs" href="{% url 'cms:slides-edit' organisation.slug object.pk slide.pk %}">Слайд {{ slide.position }}</a>
+            </h3>
+
+            {% if slide.previous_slide %}
+            <form id="slide_{{ slide.pk }}_up" action='{% url 'cms:slides-up' organisation.slug object.pk slide.pk %}' method='post'>
+            {% csrf_token %}
+             </form>
+            {% endif %}
+
+            {% if slide.next_slide %}
+            <form id="slide_{{ slide.pk }}_down" action='{% url 'cms:slides-down' organisation.slug object.pk slide.pk %}' method='post'>
+            {% csrf_token %}
+            </form>
+            {% endif %}
+             <div class="panel-control pull-left">
+            {% if slide.previous_slide %}
+            <a href="" class="m-r-xs" onClick="document.getElementById('slide_{{ slide.pk }}_up').submit(); return false;"><i class="icon-arrow-up"></i></a>
+            {% else %}
+                <i class="icon-arrow-up m-r-xs" style="color: white;"></i>
+            {% endif %}
+
+            {% if slide.next_slide %}
+            <a href="" class="m-r-xs m-r-xs" onClick="document.getElementById('slide_{{ slide.pk }}_down').submit(); return false;"><i class="icon-arrow-down"></i></a>
+            {% else %}
+                <i class="icon-arrow-down m-r-xs    " style="color: white;"></i>
+            {% endif %}
             </div>
+
             <div class="panel-control">
                 <a href="{% url 'cms:slides-edit' organisation.slug object.pk slide.pk %}"><i class="icon-pencil"></i></a>
                 <a href="javascript:void(0);" data-toggle="modal" data-target=".bs-example-modal-sm" onClick='obj_delete("Слайд {{ slide.position }}",

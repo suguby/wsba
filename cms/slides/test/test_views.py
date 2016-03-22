@@ -114,7 +114,7 @@ class CoreSlideDeleteViewTests(BaseTests):
     def setUp(self):
         super(CoreSlideDeleteViewTests, self).setUp()
         self.presentation = Presentation.objects.create(name='p1', organisation=self.organisation)
-        self.slide = CoreSlide.objects.create(presentation=self.presentation, description='test')
+        self.slide = CoreSlide.objects.create(presentation=self.presentation, description='test1')
         self.slide_2 = CoreSlide.objects.create(presentation=self.presentation, description='test2')
         self.url = reverse('cms:slides-delete', kwargs={'organisation': self.organisation.slug,
                                                         'presentation': self.presentation.id,
@@ -135,3 +135,32 @@ class CoreSlideDeleteViewTests(BaseTests):
     def test_delete_object(self):
         self.assertEqual(CoreSlide.objects.filter(presentation=self.presentation).count(), 1)
         self.assertEqual(CoreSlide.objects.filter(position=2, description='test1').count(), 0)
+
+
+class PositionSlideTest(BaseTests):
+
+    def setUp(self):
+        super(PositionSlideTest, self).setUp()
+        self.presentation = Presentation.objects.create(name='p1', organisation=self.organisation)
+        self.slide = CoreSlide.objects.create(presentation=self.presentation, description='test1')
+        self.slide_2 = CoreSlide.objects.create(presentation=self.presentation, description='test2')
+
+    def test_up_position(self):
+        url = reverse('cms:slides-up', kwargs={'organisation': self.organisation.slug,
+                                               'presentation': self.presentation.id,
+                                               'slide': self.slide_2.id})
+        self.client.post(url)
+        slides_list = []
+        for slide in CoreSlide.objects.all():
+            slides_list.append(slide.description)
+        self.assertEqual(slides_list, ['test2', 'test1'])
+
+    def test_down_position(self):
+        url = reverse('cms:slides-up', kwargs={'organisation': self.organisation.slug,
+                                               'presentation': self.presentation.id,
+                                               'slide': self.slide_2.id})
+        self.client.post(url)
+        slides_list = []
+        for slide in CoreSlide.objects.all():
+            slides_list.append(slide.description)
+        self.assertEqual(slides_list, ['test2', 'test1'])

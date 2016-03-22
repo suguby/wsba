@@ -42,7 +42,7 @@ class AnswerDeleteView(BaseAnswerView, DeleteView):
 @require_POST
 def answer_up(request, **kwargs):
     answer = Answer.objects.get(id=kwargs['answer'])
-    previous = answer.get_previous
+    previous = answer.previous_answer
     if previous:
         previous.position += 1
         answer.position -= 1
@@ -55,7 +55,7 @@ def answer_up(request, **kwargs):
 @require_POST
 def answer_down(request, **kwargs):
     answer = Answer.objects.get(id=kwargs['answer'])
-    next = answer.get_next
+    next = answer.next_answer
     if next:
         next.position -= 1
         answer.position += 1

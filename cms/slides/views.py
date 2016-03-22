@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+from django.http import HttpResponseRedirect
+from presentations.models import CoreSlide
 from presentations.models import Presentation
 from django.views.generic import CreateView, DeleteView, UpdateView
 from cms.slides.forms import SlideForm
 from cms.views import BaseSlideView
-# from cms.views import BackBtnToPresentation, SlideDelBtn
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
+from django.core.urlresolvers import reverse
 
 
 class SlideCreateView(BaseSlideView, CreateView):
@@ -34,4 +37,31 @@ class SlideUpdateView(BaseSlideView, UpdateView):
 class SlideDeleteView(BaseSlideView, DeleteView):
     pass
 
+
+@login_required
+@require_POST
+def slide_up(request, **kwargs):
+    slide = CoreSlide.objects.get(id=kwargs['slide'])
+    previous = slide.previous_slide
+    if previous:
+        previous.position += 1
+        slide.position -= 1
+        previous.save()
+        slide.save()
+    return HttpResponseRedirect(reverse('cms:presentations-detail', args=[kwargs['organisation'],
+                                                                          kwargs['presentation']]))
+
+
+@login_required
+@require_POST
+def slide_down(request, **kwargs):
+    slide = CoreSlide.objects.get(id=kwargs['slide'])
+    next = slide.next_slide
+    if next:
+        next.position -= 1
+        slide.position += 1
+        next.save()
+        slide.save()
+    return HttpResponseRedirect(reverse('cms:presentations-detail', args=[kwargs['organisation'],
+                                                                          kwargs['presentation']]))
 
