@@ -6,6 +6,7 @@ from presentations.models import Answer, Question
 
 
 class AnswerTest(TestCase):
+
     def setUp(self):
         self.question = Question.objects.create(text='test question', answers_type='single')
         self.answer_1 = Answer.objects.create(question=self.question, position=1, text='test1',

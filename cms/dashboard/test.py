@@ -16,44 +16,17 @@ class BaseTests(TestCase):
 
 class DashboardViewTests(BaseTests):
 
-    def get_response(self):
-        # TODO тоже можно в setUp преобразовать
-        url = reverse('cms:main', kwargs={'organisation': self.organisation.slug})
-        response = self.client.get(url)
-        return response
+    def setUp(self):
+        super(DashboardViewTests, self).setUp()
+        self.url = reverse('cms:main', kwargs={'organisation': self.organisation.slug})
+        self.response = self.client.get(self.url)
 
-    def test_user_is_anonymous(self):
-        """
-        Тестирует посещение страницы входа неавторизованного пользователя
-        проверяем что отправляет на страницу авторизации
-        """
+    def test_access(self):
         self.client.logout()
-        response = self.get_response()
-
+        response = self.client.get(self.url)
         self.assertEqual(response.status_code, 302)
-
-    def test_user_is_authenticated(self):
-        """
-        Тестируем вывод страницы списка вопросов авторизованным пользователем
-        с определенными правами(в дальнейшем)
-        """
-        response = self.get_response()
-
-        self.assertEquals(response.status_code, 200)
+        self.assertEquals(self.response.status_code, 200)
 
     def test_template(self):
-        """
-        Тестируем использование вьюхой нужного нам шаблона
-        """
-        response = self.get_response()
-
-        self.assertTemplateUsed(response, 'cms/dashboard/index.html')
-
-    def test_objects_in_context(self):
-        """
-        Тестируем наличие объектов в контексте
-        Отправка их в контекст ответа на рендер страницы
-        """
-        response = self.get_response()
-
-        self.assertEqual(self.organisation, response.context['organisation'])
+        self.assertTemplateUsed(self.response, 'cms/dashboard/index.html')
+        self.assertEqual(self.organisation, self.response.context['organisation'])
