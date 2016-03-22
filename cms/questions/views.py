@@ -2,59 +2,44 @@
 # -*- coding: utf-8 -*-
 from django.core.urlresolvers import reverse
 
-from presentations.models import Question, Answer, Organisation
+from presentations.models import Question, Organisation
 from django.views.generic import ListView, DetailView, FormView, UpdateView, DeleteView
 from cms.questions.forms import QuestionForm
 from cms.views import BaseQuestionView
-from cms.views import BackBtnToListQuestion, BackBtnToQuestion
-from cms.views import QuestionEditBtn, QuestionAddBtn, QuestionDelBtn
-from cms.views import AnswerAddBtn
 from django.conf import settings
 from django.db.models import Q
 
 
-class QuestionListView(ListView, BaseQuestionView, QuestionAddBtn):
-    """
-    Представление для списка вопросов
-    """
+class QuestionListView(ListView, BaseQuestionView):
+
     template_name = 'cms/questions/list.html'
     tab = 'question'
     title = 'Вопросы'
     paginate_by = settings.PAGINATE
+    has_question_add_btn = True
 
     def get_queryset(self):
         organisation = Organisation.objects.get(slug=self.kwargs['organisation']) or None
         return Question.objects.filter(Q(organisation=organisation) | Q(organisation=None))
 
-    def get_context_data(self, **kwargs):
-        context = super(QuestionListView, self).get_context_data(**kwargs)
-        context['page_kwargs'] = {'organisation': self.kwargs['organisation']}
-        return context
 
+class QuestionDetailView(DetailView, BaseQuestionView):
 
-class QuestionDetailView(DetailView, BaseQuestionView, BackBtnToListQuestion,
-                         QuestionEditBtn, QuestionDelBtn, AnswerAddBtn):
-    """
-    Представление для одного вопроса
-    """
     template_name = 'cms/questions/detail.html'
     title = 'Вопрос'
-
-    def get_context_data(self, **kwargs):
-        context = super(QuestionDetailView, self).get_context_data(**kwargs)
-        context['answers_list'] = \
-            Answer.objects.filter(question=self.kwargs['question'])
-        return context
+    has_back_to_question_list = True
+    has_question_edit_btn = True
+    has_question_delete_btn = True
+    has_answer_add_btn = True
 
 
-class QuestionCreateView(FormView, BaseQuestionView, BackBtnToListQuestion):
-    """
-    Создание вопроса
-    """
+class QuestionCreateView(FormView, BaseQuestionView):
+
     form_class = QuestionForm
     template_name = "cms/questions/edit.html"
     title = 'Добавление вопроса'
     mode = 'Создать'
+    has_back_to_question_list = True
 
     def get_success_url(self):
         return reverse('cms:questions-list', kwargs={'organisation': self.kwargs['organisation']})
@@ -68,14 +53,13 @@ class QuestionCreateView(FormView, BaseQuestionView, BackBtnToListQuestion):
         return super(QuestionCreateView, self).form_valid(form)
 
 
-class QuestionUpdateView(UpdateView, BaseQuestionView, BackBtnToQuestion):
-    """
-    Изменение вопроса
-    """
+class QuestionUpdateView(UpdateView, BaseQuestionView):
+
     form_class = QuestionForm
     template_name = "cms/questions/edit.html"
     title = 'Редактирование вопроса'
     mode = 'Обновить'
+    has_back_to_question = True
 
     def form_valid(self, form):
         if not form.cleaned_data['common']:
@@ -91,8 +75,6 @@ class QuestionUpdateView(UpdateView, BaseQuestionView, BackBtnToQuestion):
 
 
 class QuestionDeleteView(DeleteView, BaseQuestionView):
-    """
-    Удаление вопроса
-    """
+
     def get_success_url(self):
         return reverse('cms:questions-list', kwargs={'organisation': self.kwargs['organisation']})

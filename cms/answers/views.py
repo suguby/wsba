@@ -7,16 +7,16 @@ from presentations.models import Question, Answer
 from django.views.generic import CreateView, DeleteView, UpdateView
 from cms.answers.forms import AnswerForm
 from cms.views import BaseAnswerView
-from cms.views import BackBtnToQuestion, AnswerDelBtn
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 
 
-class AnswerCreateView(BaseAnswerView, CreateView, BackBtnToQuestion):
+class AnswerCreateView(BaseAnswerView, CreateView):
     form_class = AnswerForm
     template_name = "cms/answers/edit.html"
     title = 'Добавление ответа'
     mode = 'Создать'
+    has_back_to_question = True
 
     def get_initial(self):
         initial = super(AnswerCreateView, self).get_initial()
@@ -25,11 +25,13 @@ class AnswerCreateView(BaseAnswerView, CreateView, BackBtnToQuestion):
         return initial_new
 
 
-class AnswerUpdateView(BaseAnswerView, UpdateView, BackBtnToQuestion, AnswerDelBtn):
+class AnswerUpdateView(BaseAnswerView, UpdateView):
     form_class = AnswerForm
     template_name = "cms/answers/edit.html"
     title = 'Редактирование ответа'
     mode = 'Обновить'
+    has_back_to_question = True
+    has_answer_delete_btn = True
 
 
 class AnswerDeleteView(BaseAnswerView, DeleteView):
