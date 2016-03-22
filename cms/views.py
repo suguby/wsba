@@ -84,8 +84,8 @@ class BaseSlideView(ContextMixin, View):
         return context
 
     def get_success_url(self):
-        return reverse('cms:questions-detail', kwargs={'organisation': self.kwargs['organisation'],
-                                                       'question': self.kwargs['question']})
+        return reverse('cms:presentations-detail', kwargs={'organisation': self.kwargs['organisation'],
+                                                           'presentation': self.kwargs['presentation']})
 
 
 class BackBtnToListQuestion(ContextMixin, View):

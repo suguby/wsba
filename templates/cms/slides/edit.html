@@ -6,34 +6,16 @@
     {% include 'cms/_modal_delete.html' %}
 
 <div class="col-lg-12 col-md-12">
-<div class="panel panel-white">
-
-        <div class="panel-body">
+<div class="panel panel-green">
+     <div class="panel-body">
             {{ presentation }}
         </div>
-    <ul class="list-group">
-        {% if answers_list %}
-         {% for answer in answers_list %}
-        <li class="list-group-item">
-            {{ answer.text }}
-            {% if answer.is_right %}
-            <span class="label label-success m-l-xs">Правильный</span>
-            {% endif %}
-            {% if answer.has_comment %}
-            <span class="label label-primary m-l-xs">С комментарием</span>
-            {% endif %}
-        </li>
-         {% endfor %}
-         {% else %}
-        <li class="list-group-item">Нет ответов</li>
-    {% endif %}
-    </ul>
-    </div>
+     </div>
 
 <div class="panel panel-white">
 
         <div class="panel-body">
-            <form class='form' method="POST" action="">
+            <form class='form' method="POST" action="" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form | bootstrap }}
                 <button type="submit" class="btn btn-success waves-effect waves-classic">{{ view.mode }}</button>

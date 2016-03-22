@@ -53,10 +53,18 @@ class Presentation(ChangeAbstractModel):
         return super().save(*args, **kwargs)
 
 
+def get_upload_path(instance, filename):
+    return "{organisation}/{presentation}/{slide_id}/{file}".format(
+        organisation=instance.presentation.organisation.slug,
+        presentation=instance.presentation.slug,
+        slide_id=instance.presentation.id,
+        file=filename)
+
+
 class CoreSlide(ChangeAbstractModel):
     presentation = models.ForeignKey(Presentation, verbose_name='Презентация')
     question = models.ForeignKey('Question', null=True, blank=True, verbose_name='Вопрос')
-    image = models.ImageField(verbose_name='Изображение')
+    image = models.ImageField(verbose_name='Изображение', blank=True, null=True, upload_to=get_upload_path)
     description = models.TextField(verbose_name='Описание')
     slug = models.SlugField(verbose_name='Слаг', null=True, blank=True)
     position = models.IntegerField(verbose_name='Позиция', default=0, editable=False)
@@ -67,6 +75,11 @@ class CoreSlide(ChangeAbstractModel):
         db_table = 'slides'
         verbose_name = 'Слайд'
         verbose_name_plural = 'слайды'
+
+    def save(self, *args, **kwargs):
+        if self.position == 0:
+            self.position = CoreSlide.objects.filter(presentation=self.presentation).count() + 1
+        return super().save(*args, **kwargs)
 
 
 class Question(models.Model):

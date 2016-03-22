@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 from django.forms.widgets import HiddenInput
 from django.forms import ModelForm, ModelChoiceField, SlugField
-
+from presentations.models import Presentation
 from presentations.models import CoreSlide
 
 
 class SlideForm(ModelForm):
-    # question = ModelChoiceField(label="Вопрос", queryset=Question.objects.all(), widget=HiddenInput())
-    # slug = SlugField()
+    presentation = ModelChoiceField(label="Организация", queryset=Presentation.objects.all(), widget=HiddenInput())
+    slug = SlugField(label='Код', widget=HiddenInput(), required=False)
 
     class Meta:
         model = CoreSlide
-        fields = '__all__'
+        fields = ['presentation', 'slug', 'image', 'description', 'question']
