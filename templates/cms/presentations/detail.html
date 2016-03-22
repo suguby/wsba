@@ -1,5 +1,5 @@
 {% extends 'cms/layout.html' %}
-{% load bootstrap_pagination %}
+{% load bootstrap_pagination static %}
 
 {% block content %}
 
@@ -16,15 +16,27 @@
 {% for slide in slide_list %}
     <div class="panel panel-white ui-sortable-handle">
         <div class="panel-heading">
-            <h3 class="panel-title"><a href="">Слайд {{ slide.position }}</a></h3>
+            <h3 class="panel-title"><a href="{% url 'cms:slides-edit' organisation.slug object.pk slide.pk %}">Слайд {{ slide.position }}</a></h3>
             <div class="panel-control">
                 <a href="javascript:void(0);"><i class="icon-arrow-up"></i></a>
                 <a href="javascript:void(0);"><i class="icon-arrow-down"></i></a>
-                <a href="javascript:void(0);"><i class="icon-close"></i></a>
+                <a href="javascript:void(0);" data-toggle="modal" data-target=".bs-example-modal-sm" onClick='obj_delete("Слайд {{ slide.position }}",
+                                        "{% url 'cms:slides-delete' organisation.slug object.pk slide.pk %}");'><i class="icon-close"></i></a>
             </div>
         </div>
         <div class="panel-body">
-            {{ slide.description }}
+            <div class="row">
+                <div class="col-md-3 col-xs-3">
+                    {% if slide.image %}
+                <img class="img-thumbnail" width="200" src="{{ slide.image.url }}" alt="Слайд {{ slide.position }}">
+                    {% else %}
+                <img class="img-thumbnail" width="200" src="{% static 'img/no-image.png' %}" alt="Слайд {{ slide.position }}">
+                    {% endif %}
+                </div>
+                <div class="col-md-9">
+                    {{ slide.description }}
+                </div>
+            </div>
         </div>
      </div>
 
