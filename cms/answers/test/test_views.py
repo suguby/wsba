@@ -19,6 +19,9 @@ class AnswerEditViewTests(BaseTests):
         url = reverse('cms:answers-edit', kwargs={'organisation': self.organisation.slug,
                                                   'question': question.id, 'answer': answer.id})
         response = self.client.get(url)
+        # TODO тут лучше все в setUp сделать и к self привязать,
+        # все равно у тебя get_param_list в каждом методе вызывается
+        # или не возвращать значения а к self привязать
         return response, question, answer, url
 
     def test_user_is_anonymous(self):
@@ -46,6 +49,7 @@ class AnswerEditViewTests(BaseTests):
         self.assertTemplateUsed(response, 'cms/answers/edit.html')
 
     def test_object_in_context(self):
+        # TODO обьедененить с test_template
         """
         Тестируем наличие объектов в контексте
         """
@@ -53,6 +57,7 @@ class AnswerEditViewTests(BaseTests):
         self.assertIn('form', response.context)
 
     def test_init_form_in_html(self):
+        # TODO обьедененить с test_template
         """
         Тестируем инициализацию скрытых значений формы,
         наличие объектов на отрендеренной страничке
@@ -97,6 +102,7 @@ class AnswerEditViewTests(BaseTests):
         self.assertEqual(Answer.objects.filter(text='test edit').count(), 1)
 
     def test_name_form_btn_mode_html(self):
+        # TODO обьедененить с test_template
         """
         Проверяем верные надписи на форме в шаблоне
         """
@@ -105,6 +111,7 @@ class AnswerEditViewTests(BaseTests):
         self.assertContains(response, 'Редактирование ответа', status_code=200)
 
     def test_object_in_html(self):
+        # TODO обьедененить с test_template
         """
         Проверяем отображение объекта в шаблоне
         """
@@ -116,6 +123,7 @@ class AnswerEditViewTests(BaseTests):
         self.assertContains(response, 'С комментарием', status_code=200)
 
     def test_nav_button_in_context(self):
+        # TODO обьедененить с test_template
         """
         Тестируем вывод навигационных кнопок
         Отправка их в контекст ответа на рендер страницы
@@ -130,6 +138,7 @@ class AnswerEditViewTests(BaseTests):
         self.assertIn('del_button', response.context)
 
     def test_nav_button_url_in_context(self):
+        # TODO обьедененить с test_template
         """
         Тестируем вывод правильных юрлов навигационных кнопок
         Отправка их в контекст ответа на рендер страницы
@@ -150,6 +159,7 @@ class AnswerEditViewTests(BaseTests):
         self.assertEqual(del_url, response.context['del_button'])
 
     def test_nav_button_in_html(self):
+        # TODO обьедененить с test_template
         """
         Тестируем вывод навигационных кнопок
         Отрисовка кнопок в шаблоне
@@ -200,6 +210,7 @@ class AnswerAddViewTests(BaseTests):
         self.assertTemplateUsed(response, 'cms/answers/edit.html')
 
     def test_object_in_context(self):
+        # TODO обьедененить с test_template
         """
         Тестируем наличие объектов в контексте
         """
@@ -207,6 +218,7 @@ class AnswerAddViewTests(BaseTests):
         self.assertIn('form', response.context)
 
     def test_init_form_in_html(self):
+        # TODO обьедененить с test_template
         """
         Тестируем инициализацию скрытых значений формы,
         наличие объектов на отрендеренной страничке
@@ -216,6 +228,7 @@ class AnswerAddViewTests(BaseTests):
         self.assertInHTML(needle=hidden_input, haystack=response.rendered_content)
 
     def test_init_form_in_context(self):
+        # TODO обьедененить с test_template
         """
         Тестируем наличие вопроса в контексте
         """
@@ -254,6 +267,7 @@ class AnswerAddViewTests(BaseTests):
         self.assertEqual(Answer.objects.get(text='new').is_right, True)
 
     def test_name_form_btn_mode_html(self):
+        # TODO обьедененить с test_template
         """
         Проверяем верные надписи на форме в шаблоне
         """
@@ -262,6 +276,7 @@ class AnswerAddViewTests(BaseTests):
         self.assertContains(response, 'Добавление ответа', status_code=200)
 
     def test_object_in_html(self):
+        # TODO обьедененить с test_template
         """
         Проверяем отображение объекта в шаблоне
         """
@@ -270,6 +285,7 @@ class AnswerAddViewTests(BaseTests):
         self.assertContains(response, 'С комментарием', status_code=200)
 
     def test_nav_button_in_context(self):
+        # TODO обьедененить с test_template
         """
         Тестируем вывод навигационных кнопок
         Отправка их в контекст ответа на рендер страницы
@@ -284,6 +300,7 @@ class AnswerAddViewTests(BaseTests):
         self.assertNotIn('del_button', response.context)
 
     def test_nav_button_url_in_context(self):
+        # TODO обьедененить с test_template
         """
         Тестируем вывод правильных юрлов навигационных кнопок
         Отправка их в контекст ответа на рендер страницы
@@ -298,6 +315,7 @@ class AnswerAddViewTests(BaseTests):
         self.assertEqual(url_back, response.context['back_button'])
 
     def test_nav_button_in_html(self):
+        # TODO обьедененить с test_template
         """
         Тестируем вывод навигационных кнопок
         Отрисовка кнопок в шаблоне

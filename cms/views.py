@@ -88,6 +88,23 @@ class BaseSlideView(ContextMixin, View):
                                                        'question': self.kwargs['question']})
 
 
+# TODO не нравится что много копипасты - меняются только названия параметров
+# может сделать так
+class FillContextMixin(ContextMixin, View):
+    has_back_to_question_list = False
+    has_question_add_btn = False
+
+    def get_context_data(self, **kwargs):
+        context = super(FillContextMixin, self).get_context_data(**kwargs)
+        kwargs = {'organisation': self.kwargs['organisation']}
+        if self.has_back_to_question_list:
+            context['back_button'] = reverse('cms:questions-list', kwargs=kwargs)
+        if self.has_question_add_btn:
+            context['add_button'] = reverse('cms:questions-add', kwargs=kwargs)
+# тогда будет одно место, где мы заполняем контекст нужными значениями
+# а тесты помогут сохранить целостность при рефакторе :)
+
+
 class BackBtnToListQuestion(ContextMixin, View):
 
     def get_context_data(self, **kwargs):

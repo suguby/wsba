@@ -17,6 +17,7 @@ class BaseTests(TestCase):
 class DashboardViewTests(BaseTests):
 
     def get_response(self):
+        # TODO тоже можно в setUp преобразовать
         url = reverse('cms:main', kwargs={'organisation': self.organisation.slug})
         response = self.client.get(url)
         return response

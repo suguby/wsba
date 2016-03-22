@@ -110,6 +110,7 @@ class Answer(models.Model):
 
     @property
     def get_previous(self):
+        # TODO проперти не называются как глаголы - просто previous_answer
         previous_answers = Answer.objects.filter(question=self.question_id).filter(position__lt=self.position)
         if previous_answers:
             return previous_answers.last()
@@ -118,6 +119,7 @@ class Answer(models.Model):
 
     @property
     def get_next(self):
+        # TODO проперти не называются как глаголы - просто next_answer
         next_answers = Answer.objects.filter(question=self.question_id).filter(position__gt=self.position)
         if next_answers:
             return next_answers.first()
