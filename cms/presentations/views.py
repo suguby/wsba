@@ -4,21 +4,18 @@
 from django.core.urlresolvers import reverse
 
 from cms.views import BasePresentationsView
-from cms.views import PresentationAddBtn, BackBtnToListPresentation, BackBtnToPresentation, PresentationEditBtn, \
-    PresentationDelBtn, SlideAddBtn
 from presentations.models import Presentation, Organisation, CoreSlide
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from django.conf import settings
 from .forms import PresentationForm
 
 
-class PresentationListView(ListView, BasePresentationsView, PresentationAddBtn):
-    """
-    Представление для списка презентаций
-    """
+class PresentationListView(ListView, BasePresentationsView):
+
     template_name = 'cms/presentations/list.html'
     title = 'Презентации'
     paginate_by = settings.PAGINATE
+    has_presentation_add_btn = True
 
     def get_queryset(self):
         organisation = Organisation.objects.get(slug=self.kwargs['organisation']) or None
@@ -30,13 +27,14 @@ class PresentationListView(ListView, BasePresentationsView, PresentationAddBtn):
         return context
 
 
-class PresentationDetailView(DetailView, BasePresentationsView, BackBtnToListPresentation,
-                             PresentationEditBtn, PresentationDelBtn, SlideAddBtn):
-    """
-    Представление для презентации
-    """
+class PresentationDetailView(DetailView, BasePresentationsView):
+
     template_name = 'cms/presentations/detail.html'
     title = 'Презентация'
+    has_back_to_presentation_list = True
+    has_presentation_edit_btn = True
+    has_presentation_delete_btn = True
+    has_slide_add_btn = True
 
     def get_context_data(self, **kwargs):
         context = super(PresentationDetailView, self).get_context_data(**kwargs)
@@ -45,14 +43,13 @@ class PresentationDetailView(DetailView, BasePresentationsView, BackBtnToListPre
         return context
 
 
-class PresentationCreateView(CreateView, BasePresentationsView, BackBtnToListPresentation):
-    """
-    Создание презентации
-    """
+class PresentationCreateView(CreateView, BasePresentationsView):
+
     form_class = PresentationForm
     template_name = "cms/presentations/edit.html"
     title = 'Добавление презентации'
     mode = 'Создать'
+    has_back_to_presentation_list = True
 
     def get_initial(self):
         initial = super(PresentationCreateView, self).get_initial()
@@ -64,14 +61,13 @@ class PresentationCreateView(CreateView, BasePresentationsView, BackBtnToListPre
         return reverse('cms:presentations-list', kwargs={'organisation': self.kwargs['organisation']})
 
 
-class PresentationUpdateView(UpdateView, BasePresentationsView, BackBtnToPresentation):
-    """
-    Изменение презентации
-    """
+class PresentationUpdateView(UpdateView, BasePresentationsView):
+
     form_class = PresentationForm
     template_name = "cms/presentations/edit.html"
     title = 'Редактирование презентации'
     mode = 'Обновить'
+    has_back_to_presentation = True
 
     def get_success_url(self):
         return reverse('cms:presentations-detail', kwargs={'organisation': self.kwargs['organisation'],
@@ -79,8 +75,6 @@ class PresentationUpdateView(UpdateView, BasePresentationsView, BackBtnToPresent
 
 
 class PresentationDeleteView(DeleteView, BasePresentationsView):
-    """
-    Удаление презентации
-    """
+
     def get_success_url(self):
         return reverse('cms:presentations-list', kwargs={'organisation': self.kwargs['organisation']})

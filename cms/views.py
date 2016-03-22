@@ -17,6 +17,16 @@ class FillContextMixin(ContextMixin, View):
     has_answer_edit_btn = False
     has_answer_delete_btn = False
 
+    has_back_to_presentation_list = False
+    has_presentation_add_btn = False
+    has_presentation_edit_btn = False
+    has_presentation_delete_btn = False
+
+    has_back_to_presentation = False
+    has_slide_add_btn = False
+    has_slide_edit_btn = False
+    has_slide_delete_btn = False
+
     def get_context_data(self, **kwargs):
         context = super(FillContextMixin, self).get_context_data(**kwargs)
         if 'organisation' in self.kwargs:
@@ -48,6 +58,19 @@ class FillContextMixin(ContextMixin, View):
         else:
             kwargs_answer = None
 
+        if 'presentation' in self.kwargs:
+            kwargs_presentation = {'organisation': self.kwargs['organisation'],
+                                   'presentation': self.kwargs['presentation']}
+        else:
+            kwargs_presentation = None
+
+        if 'slide' in self.kwargs:
+            kwargs_slide = {'organisation': self.kwargs['organisation'],
+                            'presentation': self.kwargs['presentation'],
+                            'slide': self.kwargs['slide']}
+        else:
+            kwargs_slide = None
+
         if self.has_back_to_question_list:
             context['back_button'] = reverse('cms:questions-list', kwargs=kwargs)
         if self.has_question_add_btn:
@@ -56,6 +79,7 @@ class FillContextMixin(ContextMixin, View):
             context['edit_button'] = reverse('cms:questions-edit', kwargs=kwargs_question)
         if self.has_question_delete_btn:
             context['del_button'] = reverse('cms:questions-delete', kwargs=kwargs_question)
+
         if self.has_back_to_question:
             context['back_button'] = reverse('cms:questions-detail', kwargs=kwargs_question)
         if self.has_answer_add_btn:
@@ -64,6 +88,25 @@ class FillContextMixin(ContextMixin, View):
             context['edit_button'] = reverse('cms:answers-edit', kwargs=kwargs_answer)
         if self.has_answer_delete_btn:
             context['del_button'] = reverse('cms:answers-delete', kwargs=kwargs_answer)
+
+        if self.has_back_to_presentation_list:
+            context['back_button'] = reverse('cms:presentations-list', kwargs=kwargs)
+        if self.has_presentation_add_btn:
+            context['add_button'] = reverse('cms:presentations-add', kwargs=kwargs)
+        if self.has_presentation_edit_btn:
+            context['edit_button'] = reverse('cms:presentations-edit', kwargs=kwargs_presentation)
+        if self.has_presentation_delete_btn:
+            context['del_button'] = reverse('cms:presentations-delete', kwargs=kwargs_presentation)
+
+        if self.has_back_to_presentation:
+            context['back_button'] = reverse('cms:presentations-detail', kwargs=kwargs_presentation)
+        if self.has_slide_add_btn:
+            context['add_button'] = reverse('cms:slides-add', kwargs=kwargs_presentation)
+        if self.has_slide_edit_btn:
+            context['edit_button'] = reverse('cms:slides-edit', kwargs=kwargs_slide)
+        if self.has_slide_delete_btn:
+            context['del_button'] = reverse('cms:slides-delete', kwargs=kwargs_slide)
+
         return context
 
 
@@ -109,64 +152,3 @@ class BaseSlideView(FillContextMixin):
     def get_success_url(self):
         return reverse('cms:presentations-detail', kwargs={'organisation': self.kwargs['organisation'],
                                                            'presentation': self.kwargs['presentation']})
-
-
-class BackBtnToListPresentation(ContextMixin, View):
-
-    def get_context_data(self, **kwargs):
-        context = super(BackBtnToListPresentation, self).get_context_data(**kwargs)
-        context['back_button'] = reverse('cms:presentations-list', kwargs={'organisation': self.kwargs['organisation']})
-        return context
-
-
-class BackBtnToPresentation(ContextMixin, View):
-
-    def get_context_data(self, **kwargs):
-        context = super(BackBtnToPresentation, self).get_context_data(**kwargs)
-        context['back_button'] = reverse('cms:presentations-detail', kwargs={'organisation': self.kwargs['organisation'],
-                                         'presentation': self.kwargs['presentation']})
-        return context
-
-
-class PresentationAddBtn(ContextMixin, View):
-
-    def get_context_data(self, **kwargs):
-        context = super(PresentationAddBtn, self).get_context_data(**kwargs)
-        context['add_button'] = reverse('cms:presentations-add', kwargs={'organisation': self.kwargs['organisation']})
-        return context
-
-
-class PresentationEditBtn(ContextMixin, View):
-
-    def get_context_data(self, **kwargs):
-        context = super(PresentationEditBtn, self).get_context_data(**kwargs)
-        context['edit_button'] = reverse('cms:presentations-edit', kwargs={'organisation': self.kwargs['organisation'],
-                                         'presentation': self.kwargs['presentation']})
-        return context
-
-
-class PresentationDelBtn(ContextMixin, View):
-
-    def get_context_data(self, **kwargs):
-        context = super(PresentationDelBtn, self).get_context_data(**kwargs)
-        context['del_button'] = reverse('cms:presentations-delete', kwargs={'organisation': self.kwargs['organisation'],
-                                        'presentation': self.kwargs['presentation']})
-        return context
-
-
-class SlideAddBtn(ContextMixin, View):
-
-    def get_context_data(self, **kwargs):
-        context = super(SlideAddBtn, self).get_context_data(**kwargs)
-        context['add_button'] = reverse('cms:slides-add', kwargs={'organisation': self.kwargs['organisation'],
-                                        'presentation': self.kwargs['presentation']})
-        return context
-
-
-class SlideDelBtn(ContextMixin, View):
-
-    def get_context_data(self, **kwargs):
-        context = super(SlideDelBtn, self).get_context_data(**kwargs)
-        context['del_button'] = reverse('cms:slides-delete', kwargs={'organisation': self.kwargs['organisation'],
-                                        'presentation': self.kwargs['presentation'], 'slide': self.kwargs['slide']})
-        return context
