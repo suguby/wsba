@@ -13,7 +13,6 @@ from django.db.models import Q
 class QuestionListView(ListView, BaseQuestionView):
 
     template_name = 'cms/questions/list.html'
-    tab = 'question'
     title = 'Вопросы'
     paginate_by = settings.PAGINATE
     has_question_add_btn = True
