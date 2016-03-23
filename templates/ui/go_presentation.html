@@ -10,7 +10,10 @@
                     <h3 class="panel-title">{{ presentation.name }} | Слайд {{ slide.position }} из {{ len }}</h3>
                 </div>
                 <div class="panel-body">{{ slide.description }}</div>
-
+                <hr>
+                {% if slide.image %}
+                <div class="panel-body"><img src="{{ slide.image.url }}"></div>
+                {% endif %}
             </div>
 
             {% if previous_url %}

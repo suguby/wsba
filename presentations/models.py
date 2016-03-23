@@ -11,6 +11,11 @@ class Organisation(models.Model):
 
     class Meta:
         db_table = 'organisations'
+        verbose_name = "Организация"
+        verbose_name_plural = "Организации"
+
+    def __str__(self):
+        return self.name
 
 
 class Presentation(models.Model):
@@ -26,12 +31,12 @@ class Presentation(models.Model):
         db_table = 'presentations'
 
     def __str__(self):
-        return 'presentation: {name}, id: {id}'.format(name=self.name, id=self.id)
+        return '{name}, ({company})'.format(name=self.name, company=self.organisation)
 
 
 class CoreSlide(models.Model):
     presentation = models.ForeignKey(Presentation)
-    image = models.ImageField()
+    image = models.ImageField(upload_to='cores_images')
     description = models.TextField()
     slug = models.SlugField(verbose_name='Слаг', null=True, blank=True)
     position = models.IntegerField(verbose_name='Позиция', default=0)
@@ -42,3 +47,6 @@ class CoreSlide(models.Model):
         db_table = 'slides'
         verbose_name = "Слайд"
         verbose_name_plural = "Слайды"
+
+    def __str__(self):
+        return '{presentation} - {position}'.format(presentation=self.presentation, position=self.position)
