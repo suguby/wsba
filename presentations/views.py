@@ -23,10 +23,11 @@ class SlideView(TemplateView):
             user_saved_answers = {a.answer_id: a for a in user_saved_answers}
             answers = Answer.objects.filter(question=question)
             count = 0
-            for answer in answers:
-                if answer.has_comment:
-                    answer.comment = user_saved_answers[answer.id].comment
-                    count += 1
+            if len(user_saved_answers):
+                for answer in answers:
+                    if answer.has_comment:
+                        answer.comment = user_saved_answers[answer.id].comment
+                        count += 1
             context['answers'] = answers
             context['user_saved_answers'] = user_saved_answers
             context['question'] = question
@@ -43,7 +44,8 @@ class SlideView(TemplateView):
         answers = Answer.objects.filter(question=question)
         user_old_answers = UserAnswer.objects.filter(answer__question=question, user_id=1)
         user_old_answers.delete()
-        count = 0
+        count = 0 # Запись комментов в базу сделана криво, работае только если комменты ко всем вар.ответа
+        # как правильно -- не приходит в голову
         for answer in answers:
             if str(answer.id) in request.POST.getlist('group1'):
                 us = UserAnswer(answer_id=answer.id, user_id=1, comment=request.POST.getlist('comment')[count])

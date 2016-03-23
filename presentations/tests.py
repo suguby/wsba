@@ -126,6 +126,7 @@ class QuestionViewTests(TestCase):
 #                 >Yes<br>
     # TODO тут надо бы какой-нить парсер HTML заюзать, например BeautifulSoup, и сравнивать содержимое тэгов
     # помнишь я сетовал, что захардкоженный HTML в тестах/исходниках - гемор и содом
+    # --- Я не понял зачем парсер? Всё работает, просто показал реальны хтмл, думал будут баги, но всё ок
 
     def test_view_old_multi_answer(self):
         self.question = Question.objects.create(number=1, text='Кто виноват?', answers_type='multi')
@@ -152,5 +153,4 @@ class QuestionViewTests(TestCase):
         response = self.client.get(reverse('slide_view', kwargs={'slide': self.slide.id}))
         self.assertInHTML(needle='<input type="radio" name="group1" value="1" checked="1">'.format(answer1.id),
                           haystack=response.rendered_content)
-        # TODO тест падает - наверно надо как предыдущий сделать - искать элемент на странице
         self.assertContains(response, "Это комментарий!")
