@@ -19,10 +19,16 @@ class SlideView(TemplateView):
         context = super(SlideView, self).get_context_data(**kwargs)
         context['slide'] = slide
         if question:
-            user_old_answers = UserAnswer.objects.filter(answer__question=question, user_id=1)
-            user_old_answers = {a.answer_id: a for a in user_old_answers}
-            context['answers'] = Answer.objects.filter(question=question)
-            context['user_old_answers'] = user_old_answers
+            user_saved_answers = UserAnswer.objects.filter(answer__question=question, user_id=1)
+            user_saved_answers = {a.answer_id: a for a in user_saved_answers}
+            answers = Answer.objects.filter(question=question)
+            count = 0
+            for answer in answers:
+                if answer.has_comment:
+                    answer.comment = user_saved_answers[answer.id].comment
+                    count += 1
+            context['answers'] = answers
+            context['user_saved_answers'] = user_saved_answers
             context['question'] = question
         else:
             context['question'] = None
@@ -37,9 +43,11 @@ class SlideView(TemplateView):
         answers = Answer.objects.filter(question=question)
         user_old_answers = UserAnswer.objects.filter(answer__question=question, user_id=1)
         user_old_answers.delete()
+        count = 0
         for answer in answers:
-            if str(answer.id) in request.POST.get('group1'):
-                us = UserAnswer(answer_id=answer.id, user_id=1, comment=request.POST.get('comment'))
+            if str(answer.id) in request.POST.getlist('group1'):
+                us = UserAnswer(answer_id=answer.id, user_id=1, comment=request.POST.getlist('comment')[count])
+                count += 1
                 us.save()
         return redirect(reverse('slide_view', kwargs=kwargs))
 

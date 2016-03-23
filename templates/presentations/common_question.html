@@ -11,21 +11,21 @@
 
             {% if question.answers_type == 'single' %}
                 <input type="radio" name="group1" value="{{ answer.id }}"
-                       {% if answer.id in user_old_answers %}
+                       {% if answer.id in user_saved_answers %}
                            checked="1"
                        {% endif %}
                 >{{ answer }}<br>
             {% endif %}
             {% if question.answers_type == 'multi' %}
                 <input type="checkbox" name="group1" value="{{ answer.id }}"
-                       {% if answer.id in user_old_answers %}
+                       {% if answer.id in user_saved_answers %}
                            checked="1"
                        {% endif %}
                 >{{ answer }}<br>
             {% endif %}
             {% if answer.has_comment %}
                 Комментарий:<br>
-                <input type="text" name="comment" value=""><br>
+                <input type="text" name="comment" value="{{ answer.comment }}"><br>
             {% endif %}
         {% endfor %}
         <input type="submit" value="Далее">
