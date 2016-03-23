@@ -16,7 +16,7 @@ class QuestionViewTests(TestCase):
         response = self.client.get(reverse('slide_view', kwargs={'slide': self.slide.id}))
         self.assertInHTML(needle='<form method="post" action="">', haystack=response.rendered_content, count=0)
 
-    def test_view(self):
+    def test_has_question(self):
         self.question = Question.objects.create(number=1, text='Кто виноват?', answers_type='single')
         self.slide = CoreSlide.objects.create(question=self.question, presentation=self.presentation)
 
@@ -49,7 +49,7 @@ class QuestionViewTests(TestCase):
                           haystack=response.rendered_content)
         self.assertInHTML(needle='<input type="radio" name="group1" value="{}">'.format(answer2.id),
                           haystack=response.rendered_content)
-        self.assertContains(response, "Комментарий:")
+        self.assertContains(response, "Комментарий:")  # тоже хрупко - вдруг в шаблоне поменяется слово? я бы html-элемент искал поле для воода комментария с определенным именем
 
     def test_multi_answer(self):
         self.question = Question.objects.create(number=1, text='Кто виноват?', answers_type='multi')
@@ -87,9 +87,9 @@ class QuestionViewTests(TestCase):
         answer2 = Answer.objects.create(question_id=self.question.id, variant_number=2, text='No', has_comment=False)
 
         url = reverse('slide_view', kwargs={'slide': self.slide.id})
-        response = self.client.post(url, {'group1': ['2'],})
+        response = self.client.post(url, {'group1': [answer2.id],})  # TODO тут надо сделать как буд-то узер выбрал несколько ответов
         self.assertEqual(response.status_code, 302)
-        answers = UserAnswer.objects.filter(user_id=1, answer_id=2)
+        answers = UserAnswer.objects.filter(user_id=1, answer_id=answer2.id)  # TODO переделай везде таким образом
         self.assertEqual(len(answers), 1)
 
     def test_single_answer_commented_saving(self):
@@ -124,6 +124,8 @@ class QuestionViewTests(TestCase):
 #                            checked="1"
 #
 #                 >Yes<br>
+    # TODO тут надо бы какой-нить парсер HTML заюзать, например BeautifulSoup, и сравнивать содержимое тэгов
+    # помнишь я сетовал, что захардкоженный HTML в тестах/исходниках - гемор и содом
 
     def test_view_old_multi_answer(self):
         self.question = Question.objects.create(number=1, text='Кто виноват?', answers_type='multi')
@@ -150,4 +152,5 @@ class QuestionViewTests(TestCase):
         response = self.client.get(reverse('slide_view', kwargs={'slide': self.slide.id}))
         self.assertInHTML(needle='<input type="radio" name="group1" value="1" checked="1">'.format(answer1.id),
                           haystack=response.rendered_content)
+        # TODO тест падает - наверно надо как предыдущий сделать - искать элемент на странице
         self.assertContains(response, "Это комментарий!")
