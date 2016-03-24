@@ -7,23 +7,23 @@
 <hr>
 Презентаций: <strong>{{ presentations|length }}</strong>
 <br><br>
-<table border="1">
-  <tr>
-    <td><strong>Название</strong></td> <td><strong>Дата создания<strong></td> <td><strong>Дата изменения<strong></td>
-    <td><strong>Пройти</strong></td>
-  </tr>
+<table class="table table-striped">
+    <thead>
+    <th>Название</th>
+    <th>Дата создания</th>
+    <th>Дата изменения</th>
+    <th>Пройти</th>
+    </thead>
     {% for presentation in presentations %}
          <tr>
     <td>{{ presentation.name }}</td>
     <td>{{ presentation.created_at }}</td>
     <td>{{ presentation.modified_at }}</td>
-    <td><a href="{% url 'show_presentation' organisation.slug presentation.id %}">посмотреть</a> </td>
-
-
+    <td><a href="{% url 'show_presentation' organisation.slug presentation.id %}">посмотреть</a></td>
         </tr>
 {% endfor %}
 </table>
-<hr>
+
 <!--Польвователи текущей организации:-->
 <!--<ul>-->
 <!--{% for i in test.organisation.all %}-->
