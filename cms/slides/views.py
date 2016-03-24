@@ -12,7 +12,7 @@ from django.views.decorators.http import require_POST
 from django.core.urlresolvers import reverse
 
 
-class SlideCreateView(BaseSlideView, CreateView, LoginRequiredMixin):
+class SlideCreateView(LoginRequiredMixin, BaseSlideView, CreateView):
     form_class = SlideForm
     template_name = "cms/slides/edit.html"
     title = 'Добавление слайда'
@@ -26,7 +26,7 @@ class SlideCreateView(BaseSlideView, CreateView, LoginRequiredMixin):
         return initial_new
 
 
-class SlideUpdateView(BaseSlideView, UpdateView, LoginRequiredMixin):
+class SlideUpdateView(LoginRequiredMixin, BaseSlideView, UpdateView):
     form_class = SlideForm
     template_name = "cms/slides/edit.html"
     title = 'Редактирование слайда'
@@ -35,7 +35,7 @@ class SlideUpdateView(BaseSlideView, UpdateView, LoginRequiredMixin):
     has_slide_delete_btn = True
 
 
-class SlideDeleteView(BaseSlideView, DeleteView, LoginRequiredMixin):
+class SlideDeleteView(LoginRequiredMixin, BaseSlideView, DeleteView):
     pass
 
 
