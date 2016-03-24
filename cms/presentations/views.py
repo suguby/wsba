@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
 
 from cms.views import BasePresentationsView
@@ -10,7 +10,7 @@ from django.conf import settings
 from .forms import PresentationForm
 
 
-class PresentationListView(ListView, BasePresentationsView):
+class PresentationListView(LoginRequiredMixin, ListView, BasePresentationsView):
 
     template_name = 'cms/presentations/list.html'
     title = 'Презентации'
@@ -27,7 +27,7 @@ class PresentationListView(ListView, BasePresentationsView):
         return context
 
 
-class PresentationDetailView(DetailView, BasePresentationsView):
+class PresentationDetailView(LoginRequiredMixin, DetailView, BasePresentationsView):
 
     template_name = 'cms/presentations/detail.html'
     title = 'Презентация'
@@ -43,7 +43,7 @@ class PresentationDetailView(DetailView, BasePresentationsView):
         return context
 
 
-class PresentationCreateView(CreateView, BasePresentationsView):
+class PresentationCreateView(LoginRequiredMixin, CreateView, BasePresentationsView):
 
     form_class = PresentationForm
     template_name = "cms/presentations/edit.html"
@@ -61,7 +61,7 @@ class PresentationCreateView(CreateView, BasePresentationsView):
         return reverse('cms:presentations_list', kwargs={'organisation': self.kwargs['organisation']})
 
 
-class PresentationUpdateView(UpdateView, BasePresentationsView):
+class PresentationUpdateView(LoginRequiredMixin, UpdateView, BasePresentationsView):
 
     form_class = PresentationForm
     template_name = "cms/presentations/edit.html"
@@ -74,7 +74,7 @@ class PresentationUpdateView(UpdateView, BasePresentationsView):
                                                            'presentation': self.kwargs['presentation']})
 
 
-class PresentationDeleteView(DeleteView, BasePresentationsView):
+class PresentationDeleteView(LoginRequiredMixin, DeleteView, BasePresentationsView):
 
     def get_success_url(self):
         return reverse('cms:presentations_list', kwargs={'organisation': self.kwargs['organisation']})

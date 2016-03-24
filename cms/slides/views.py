@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from presentations.models import CoreSlide
 from presentations.models import Presentation
@@ -11,7 +12,7 @@ from django.views.decorators.http import require_POST
 from django.core.urlresolvers import reverse
 
 
-class SlideCreateView(BaseSlideView, CreateView):
+class SlideCreateView(BaseSlideView, CreateView, LoginRequiredMixin):
     form_class = SlideForm
     template_name = "cms/slides/edit.html"
     title = 'Добавление слайда'
@@ -25,7 +26,7 @@ class SlideCreateView(BaseSlideView, CreateView):
         return initial_new
 
 
-class SlideUpdateView(BaseSlideView, UpdateView):
+class SlideUpdateView(BaseSlideView, UpdateView, LoginRequiredMixin):
     form_class = SlideForm
     template_name = "cms/slides/edit.html"
     title = 'Редактирование слайда'
@@ -34,7 +35,7 @@ class SlideUpdateView(BaseSlideView, UpdateView):
     has_slide_delete_btn = True
 
 
-class SlideDeleteView(BaseSlideView, DeleteView):
+class SlideDeleteView(BaseSlideView, DeleteView, LoginRequiredMixin):
     pass
 
 

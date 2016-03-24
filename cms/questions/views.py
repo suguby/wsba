@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
 
 from presentations.models import Question, Organisation
@@ -10,7 +11,7 @@ from django.conf import settings
 from django.db.models import Q
 
 
-class QuestionListView(ListView, BaseQuestionView):
+class QuestionListView(LoginRequiredMixin, ListView, BaseQuestionView):
 
     template_name = 'cms/questions/list.html'
     title = 'Вопросы'
@@ -22,7 +23,7 @@ class QuestionListView(ListView, BaseQuestionView):
         return Question.objects.filter(Q(organisation=organisation) | Q(organisation=None))
 
 
-class QuestionDetailView(DetailView, BaseQuestionView):
+class QuestionDetailView(LoginRequiredMixin, DetailView, BaseQuestionView):
 
     template_name = 'cms/questions/detail.html'
     title = 'Вопрос'
@@ -32,7 +33,7 @@ class QuestionDetailView(DetailView, BaseQuestionView):
     has_answer_add_btn = True
 
 
-class QuestionCreateView(FormView, BaseQuestionView):
+class QuestionCreateView(LoginRequiredMixin, FormView, BaseQuestionView):
 
     form_class = QuestionForm
     template_name = "cms/questions/edit.html"
@@ -52,7 +53,7 @@ class QuestionCreateView(FormView, BaseQuestionView):
         return super(QuestionCreateView, self).form_valid(form)
 
 
-class QuestionUpdateView(UpdateView, BaseQuestionView):
+class QuestionUpdateView(LoginRequiredMixin, UpdateView, BaseQuestionView):
 
     form_class = QuestionForm
     template_name = "cms/questions/edit.html"
@@ -73,7 +74,7 @@ class QuestionUpdateView(UpdateView, BaseQuestionView):
                                                        'question': self.kwargs['question']})
 
 
-class QuestionDeleteView(DeleteView, BaseQuestionView):
+class QuestionDeleteView(LoginRequiredMixin, DeleteView, BaseQuestionView):
 
     def get_success_url(self):
         return reverse('cms:questions_list', kwargs={'organisation': self.kwargs['organisation']})

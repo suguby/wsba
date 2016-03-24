@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 
@@ -11,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 
 
-class AnswerCreateView(BaseAnswerView, CreateView):
+class AnswerCreateView(LoginRequiredMixin, BaseAnswerView, CreateView):
     form_class = AnswerForm
     template_name = "cms/answers/edit.html"
     title = 'Добавление ответа'
@@ -25,7 +26,7 @@ class AnswerCreateView(BaseAnswerView, CreateView):
         return initial_new
 
 
-class AnswerUpdateView(BaseAnswerView, UpdateView):
+class AnswerUpdateView(LoginRequiredMixin, BaseAnswerView, UpdateView):
     form_class = AnswerForm
     template_name = "cms/answers/edit.html"
     title = 'Редактирование ответа'
@@ -34,7 +35,7 @@ class AnswerUpdateView(BaseAnswerView, UpdateView):
     has_answer_delete_btn = True
 
 
-class AnswerDeleteView(BaseAnswerView, DeleteView):
+class AnswerDeleteView(LoginRequiredMixin, BaseAnswerView, DeleteView):
     pass
 
 
