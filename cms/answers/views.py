@@ -48,7 +48,7 @@ def answer_up(request, **kwargs):
         answer.position -= 1
         previous.save()
         answer.save()
-    return HttpResponseRedirect(reverse('cms:questions-detail', args=[kwargs['organisation'], kwargs['question']]))
+    return HttpResponseRedirect(reverse('cms:questions_detail', args=[kwargs['organisation'], kwargs['question']]))
 
 
 @login_required
@@ -61,4 +61,4 @@ def answer_down(request, **kwargs):
         answer.position += 1
         next.save()
         answer.save()
-    return HttpResponseRedirect(reverse('cms:questions-detail', args=[kwargs['organisation'], kwargs['question']]))
+    return HttpResponseRedirect(reverse('cms:questions_detail', args=[kwargs['organisation'], kwargs['question']]))

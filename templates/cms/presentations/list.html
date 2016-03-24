@@ -21,7 +21,7 @@
                    {% for object in object_list %}
                        <tr>
                            <th scope="row">{{ object.position }}</th>
-                           <td><a href="{% url 'cms:presentations-detail' organisation.slug object.pk %}">{{ object.name }}</a></td>
+                           <td><a href="{% url 'cms:presentations_detail' organisation.slug object.pk %}">{{ object.name }}</a></td>
                            <td>
                                <div class="btn-group">
                                 <button type="button" class="btn btn-success btn-xs dropdown-toggle"
@@ -29,11 +29,11 @@
                                     Выбрать <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{% url 'cms:presentations-detail' organisation.slug object.pk %}">Открыть</a></li>
-                                    <li><a href="{% url 'cms:presentations-edit' organisation.slug object.pk %}">Редактировать</a></li>
+                                    <li><a href="{% url 'cms:presentations_detail' organisation.slug object.pk %}">Открыть</a></li>
+                                    <li><a href="{% url 'cms:presentations_edit' organisation.slug object.pk %}">Редактировать</a></li>
                                     <li class="divider"></li>
                                     <li><a href="" data-toggle="modal" data-target=".bs-example-modal-sm" onClick='obj_delete("{{ object.name }}",
-                                        "{% url 'cms:presentations-delete' organisation.slug object.pk %}");'>Удалить</a></li>
+                                        "{% url 'cms:presentations_delete' organisation.slug object.pk %}");'>Удалить</a></li>
                                 </ul>
                                 </div>
                            </td>
@@ -44,7 +44,7 @@
             </div>
         {% if is_paginated %}
             <nav class="text-center">
-                {% bootstrap_paginate page_obj url_view_name="cms:presentations-list-paginated" url_extra_kwargs=page_kwargs %}
+                {% bootstrap_paginate page_obj url_view_name="cms:presentations_list_paginated" url_extra_kwargs=page_kwargs %}
             </nav>
         {% endif %}
         </div>

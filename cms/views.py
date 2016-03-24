@@ -72,40 +72,40 @@ class FillContextMixin(ContextMixin, View):
             kwargs_slide = None
 
         if self.has_back_to_question_list:
-            context['back_button'] = reverse('cms:questions-list', kwargs=kwargs)
+            context['back_button'] = reverse('cms:questions_list', kwargs=kwargs)
         if self.has_question_add_btn:
-            context['add_button'] = reverse('cms:questions-add', kwargs=kwargs)
+            context['add_button'] = reverse('cms:questions_add', kwargs=kwargs)
         if self.has_question_edit_btn:
-            context['edit_button'] = reverse('cms:questions-edit', kwargs=kwargs_question)
+            context['edit_button'] = reverse('cms:questions_edit', kwargs=kwargs_question)
         if self.has_question_delete_btn:
-            context['del_button'] = reverse('cms:questions-delete', kwargs=kwargs_question)
+            context['del_button'] = reverse('cms:questions_delete', kwargs=kwargs_question)
 
         if self.has_back_to_question:
-            context['back_button'] = reverse('cms:questions-detail', kwargs=kwargs_question)
+            context['back_button'] = reverse('cms:questions_detail', kwargs=kwargs_question)
         if self.has_answer_add_btn:
-            context['add_button'] = reverse('cms:answers-add', kwargs=kwargs_question)
+            context['add_button'] = reverse('cms:answers_add', kwargs=kwargs_question)
         if self.has_answer_edit_btn:
-            context['edit_button'] = reverse('cms:answers-edit', kwargs=kwargs_answer)
+            context['edit_button'] = reverse('cms:answers_edit', kwargs=kwargs_answer)
         if self.has_answer_delete_btn:
-            context['del_button'] = reverse('cms:answers-delete', kwargs=kwargs_answer)
+            context['del_button'] = reverse('cms:answers_delete', kwargs=kwargs_answer)
 
         if self.has_back_to_presentation_list:
-            context['back_button'] = reverse('cms:presentations-list', kwargs=kwargs)
+            context['back_button'] = reverse('cms:presentations_list', kwargs=kwargs)
         if self.has_presentation_add_btn:
-            context['add_button'] = reverse('cms:presentations-add', kwargs=kwargs)
+            context['add_button'] = reverse('cms:presentations_add', kwargs=kwargs)
         if self.has_presentation_edit_btn:
-            context['edit_button'] = reverse('cms:presentations-edit', kwargs=kwargs_presentation)
+            context['edit_button'] = reverse('cms:presentations_edit', kwargs=kwargs_presentation)
         if self.has_presentation_delete_btn:
-            context['del_button'] = reverse('cms:presentations-delete', kwargs=kwargs_presentation)
+            context['del_button'] = reverse('cms:presentations_delete', kwargs=kwargs_presentation)
 
         if self.has_back_to_presentation:
-            context['back_button'] = reverse('cms:presentations-detail', kwargs=kwargs_presentation)
+            context['back_button'] = reverse('cms:presentations_detail', kwargs=kwargs_presentation)
         if self.has_slide_add_btn:
-            context['add_button'] = reverse('cms:slides-add', kwargs=kwargs_presentation)
+            context['add_button'] = reverse('cms:slides_add', kwargs=kwargs_presentation)
         if self.has_slide_edit_btn:
-            context['edit_button'] = reverse('cms:slides-edit', kwargs=kwargs_slide)
+            context['edit_button'] = reverse('cms:slides_edit', kwargs=kwargs_slide)
         if self.has_slide_delete_btn:
-            context['del_button'] = reverse('cms:slides-delete', kwargs=kwargs_slide)
+            context['del_button'] = reverse('cms:slides_delete', kwargs=kwargs_slide)
 
         return context
 
@@ -128,7 +128,7 @@ class BaseAnswerView(FillContextMixin):
         self.tab = 'tab_questions'
 
     def get_success_url(self):
-        return reverse('cms:questions-detail', kwargs={'organisation': self.kwargs['organisation'],
+        return reverse('cms:questions_detail', kwargs={'organisation': self.kwargs['organisation'],
                                                        'question': self.kwargs['question']})
 
 
@@ -150,5 +150,5 @@ class BaseSlideView(FillContextMixin):
         self.tab = 'tab_presentations'
 
     def get_success_url(self):
-        return reverse('cms:presentations-detail', kwargs={'organisation': self.kwargs['organisation'],
+        return reverse('cms:presentations_detail', kwargs={'organisation': self.kwargs['organisation'],
                                                            'presentation': self.kwargs['presentation']})

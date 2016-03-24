@@ -20,7 +20,7 @@
                    <tbody>
                    {% for object in object_list %}
                        <tr>
-                           <td><a href="{% url 'cms:questions-detail' organisation.slug object.pk %}">{{ object.text }}</a></td>
+                           <td><a href="{% url 'cms:questions_detail' organisation.slug object.pk %}">{{ object.text }}</a></td>
                            <td>
                                <span class="label label-info">{{ object.get_answers_type_display }}</span>
                                {% if not object.organisation %}<br/>
@@ -35,12 +35,12 @@
                                     Выбрать <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{% url 'cms:questions-detail' organisation.slug object.pk %}">Открыть</a></li>
-                                    <li><a href="{% url 'cms:questions-edit' organisation.slug object.pk %}">Редактировать</a></li>
+                                    <li><a href="{% url 'cms:questions_detail' organisation.slug object.pk %}">Открыть</a></li>
+                                    <li><a href="{% url 'cms:questions_edit' organisation.slug object.pk %}">Редактировать</a></li>
                                     <li><a href="#">Копировать</a></li>
                                     <li class="divider"></li>
                                     <li><a href="" data-toggle="modal" data-target=".bs-example-modal-sm" onClick='obj_delete("{{ object.text }}",
-                                        "{% url 'cms:questions-delete' organisation.slug object.pk %}");'>Удалить</a></li>
+                                        "{% url 'cms:questions_delete' organisation.slug object.pk %}");'>Удалить</a></li>
                                 </ul>
                                 </div>
                            </td>
@@ -51,7 +51,7 @@
             </div>
         {% if is_paginated %}
             <nav class="text-center">
-                {% bootstrap_paginate page_obj url_view_name="cms:questions-list-paginated" url_extra_kwargs=page_kwargs %}
+                {% bootstrap_paginate page_obj url_view_name="cms:questions_list_paginated" url_extra_kwargs=page_kwargs %}
             </nav>
         {% endif %}
         </div>

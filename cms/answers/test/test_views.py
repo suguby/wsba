@@ -15,15 +15,15 @@ class AnswerEditViewTests(BaseTests):
                                             is_right=True, has_comment=True)
         self.answer_2 = Answer.objects.create(question=self.question, text='test',
                                               is_right=False, has_comment=False)
-        self.url = reverse('cms:answers-edit', kwargs={'organisation': self.organisation.slug,
+        self.url = reverse('cms:answers_edit', kwargs={'organisation': self.organisation.slug,
                                                        'question': self.question.id, 'answer': self.answer.id})
         self.response = self.client.get(self.url)
 
     def test_template(self):
         hidden_input = '<input id="id_question" name="question" type="hidden" value="{}" />'.format(self.question.id)
-        back_url = reverse('cms:questions-detail', kwargs={'organisation': self.organisation.slug,
+        back_url = reverse('cms:questions_detail', kwargs={'organisation': self.organisation.slug,
                                                            'question': self.question.id})
-        del_url = reverse('cms:answers-delete', kwargs={'organisation': self.organisation.slug,
+        del_url = reverse('cms:answers_delete', kwargs={'organisation': self.organisation.slug,
                                                         'question': self.question.id, 'answer': self.answer.id})
         self.assertTemplateUsed(self.response, 'cms/answers/edit.html')
         self.assertIn('form', self.response.context)
@@ -44,14 +44,14 @@ class AnswerEditViewTests(BaseTests):
         self.assertContains(self.response, 'id="del_button"', status_code=200)
 
     def test_post_status_valid(self):
-        url = reverse('cms:answers-edit', kwargs={'organisation': self.organisation.slug,
+        url = reverse('cms:answers_edit', kwargs={'organisation': self.organisation.slug,
                                                   'question': self.question.id, 'answer': self.answer.id})
         response = self.client.post(url, {'text': 'test edit',
                                           'is_right': True, 'has_comment': True, 'question': self.question.id})
         self.assertEquals(response.status_code, 302)
 
     def test_post_status_invalid(self):
-        url = reverse('cms:answers-edit', kwargs={'organisation': self.organisation.slug,
+        url = reverse('cms:answers_edit', kwargs={'organisation': self.organisation.slug,
                                                   'question': self.question.id, 'answer': self.answer.id})
         response = self.client.post(url, {'text': 'test edit',
                                           'is_right': True, 'has_comment': True})
@@ -72,13 +72,13 @@ class AnswerAddViewTests(BaseTests):
                                             is_right=False, has_comment=True)
         self.answer_2 = Answer.objects.create(question=self.question, text='test2',
                                               is_right=False, has_comment=False)
-        self.url = reverse('cms:answers-add', kwargs={'organisation': self.organisation.slug,
+        self.url = reverse('cms:answers_add', kwargs={'organisation': self.organisation.slug,
                                                       'question': self.question.id})
         self.response = self.client.get(self.url)
 
     def test_template(self):
         hidden_input = '<input id="id_question" name="question" type="hidden" value="{}" />'.format(self.question.id)
-        url_back = reverse('cms:questions-detail', kwargs={'organisation': self.organisation.slug,
+        url_back = reverse('cms:questions_detail', kwargs={'organisation': self.organisation.slug,
                                                            'question': self.question.id})
 
         self.assertTemplateUsed(self.response, 'cms/answers/edit.html')
@@ -121,7 +121,7 @@ class AnswerDeleteViewTests(BaseTests):
                                             is_right=False, has_comment=True)
         self.answer_2 = Answer.objects.create(question=self.question, text='test2',
                                               is_right=False, has_comment=False)
-        self.url = reverse('cms:answers-delete', kwargs={'organisation': self.organisation.slug,
+        self.url = reverse('cms:answers_delete', kwargs={'organisation': self.organisation.slug,
                                                          'question': self.question.id, 'answer': self.answer.id})
         self.response = self.client.post(self.url, {'position': 3, 'text': 'new',
                                                     'is_right': True, 'has_comment': True,
@@ -131,7 +131,7 @@ class AnswerDeleteViewTests(BaseTests):
         self.assertEquals(self.response.status_code, 302)
 
     def test_post_status_invalid(self):
-        url = reverse('cms:answers-delete', kwargs={'organisation': self.organisation.slug,
+        url = reverse('cms:answers_delete', kwargs={'organisation': self.organisation.slug,
                                                     'question': self.question.id, 'answer': 100})
         response = self.client.post(url)
         self.assertNotEquals(response.status_code, 302)
@@ -154,7 +154,7 @@ class PositionAnswerTest(BaseTests):
                                                   is_right=True, has_comment=True)
 
         def test_up_position(self):
-            url = reverse('cms:answers-up', kwargs={'organisation': self.organisation.slug,
+            url = reverse('cms:answers_up', kwargs={'organisation': self.organisation.slug,
                                                     'question': self.question.id, 'answer': self.answer_2.id})
             self.client.post(url)
             answer_text_list =[]
@@ -163,7 +163,7 @@ class PositionAnswerTest(BaseTests):
             self.assertEqual(answer_text_list, ['2', '1', '3'])
 
         def test_down_position(self):
-            url = reverse('cms:answers-down', kwargs={'organisation': self.organisation.slug,
+            url = reverse('cms:answers_down', kwargs={'organisation': self.organisation.slug,
                                                       'question': self.question.id, 'answer': self.answer_2.id})
             self.client.post(url)
             answer_text_list = []

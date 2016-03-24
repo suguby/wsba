@@ -41,7 +41,7 @@ class QuestionCreateView(FormView, BaseQuestionView):
     has_back_to_question_list = True
 
     def get_success_url(self):
-        return reverse('cms:questions-list', kwargs={'organisation': self.kwargs['organisation']})
+        return reverse('cms:questions_list', kwargs={'organisation': self.kwargs['organisation']})
 
     def form_valid(self, form):
         if not form.cleaned_data['common']:
@@ -69,11 +69,11 @@ class QuestionUpdateView(UpdateView, BaseQuestionView):
         return super(QuestionUpdateView, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('cms:questions-detail', kwargs={'organisation': self.kwargs['organisation'],
+        return reverse('cms:questions_detail', kwargs={'organisation': self.kwargs['organisation'],
                                                        'question': self.kwargs['question']})
 
 
 class QuestionDeleteView(DeleteView, BaseQuestionView):
 
     def get_success_url(self):
-        return reverse('cms:questions-list', kwargs={'organisation': self.kwargs['organisation']})
+        return reverse('cms:questions_list', kwargs={'organisation': self.kwargs['organisation']})

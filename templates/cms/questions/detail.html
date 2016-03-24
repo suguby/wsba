@@ -20,13 +20,13 @@
         <li position="{{ answer.position }}" class="list-group-item" id="answer_{{ answer.id }}">
 
             {% if answer.previous_answer %}
-            <form id="answer_{{ answer.pk }}_up" action='{% url 'cms:answers-up' organisation.slug object.pk answer.pk %}' method='post'>
+            <form id="answer_{{ answer.pk }}_up" action='{% url 'cms:answers_up' organisation.slug object.pk answer.pk %}' method='post'>
             {% csrf_token %}
              </form>
             {% endif %}
 
             {% if answer.next_answer %}
-            <form id="answer_{{ answer.pk }}_down" action='{% url 'cms:answers-down' organisation.slug object.pk answer.pk %}' method='post'>
+            <form id="answer_{{ answer.pk }}_down" action='{% url 'cms:answers_down' organisation.slug object.pk answer.pk %}' method='post'>
             {% csrf_token %}
             </form>
             {% endif %}
@@ -51,9 +51,9 @@
             <span class="label label-primary m-l-xs">С комментарием</span>
             {% endif %}
             <div class="pull-right">
-            <a href="{% url 'cms:answers-edit' organisation.slug object.pk answer.pk %}" class="m-l-xs"><i class="fa fa-pencil"></i></a>
+            <a href="{% url 'cms:answers_edit' organisation.slug object.pk answer.pk %}" class="m-l-xs"><i class="fa fa-pencil"></i></a>
             <a href="" class="m-l-xs" data-toggle="modal" data-target=".bs-example-modal-sm" onClick='obj_delete("{{ answer.text }}",
-                                        "{% url 'cms:answers-delete' organisation.slug object.pk answer.pk %}");'><i class="fa fa-times"></i></a>
+                                        "{% url 'cms:answers_delete' organisation.slug object.pk answer.pk %}");'><i class="fa fa-times"></i></a>
             </div>
         </li>
          {% endfor %}

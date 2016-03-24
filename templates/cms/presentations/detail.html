@@ -17,17 +17,17 @@
     <div class="panel panel-white ui-sortable-handle">
         <div class="panel-heading">
             <h3 class="panel-title">
-                <a class="m-r-xs" href="{% url 'cms:slides-edit' organisation.slug object.pk slide.pk %}">Слайд {{ slide.position }}</a>
+                <a class="m-r-xs" href="{% url 'cms:slides_edit' organisation.slug object.pk slide.pk %}">Слайд {{ slide.position }}</a>
             </h3>
 
             {% if slide.previous_slide %}
-            <form id="slide_{{ slide.pk }}_up" action='{% url 'cms:slides-up' organisation.slug object.pk slide.pk %}' method='post'>
+            <form id="slide_{{ slide.pk }}_up" action='{% url 'cms:slides_up' organisation.slug object.pk slide.pk %}' method='post'>
             {% csrf_token %}
              </form>
             {% endif %}
 
             {% if slide.next_slide %}
-            <form id="slide_{{ slide.pk }}_down" action='{% url 'cms:slides-down' organisation.slug object.pk slide.pk %}' method='post'>
+            <form id="slide_{{ slide.pk }}_down" action='{% url 'cms:slides_down' organisation.slug object.pk slide.pk %}' method='post'>
             {% csrf_token %}
             </form>
             {% endif %}
@@ -46,9 +46,9 @@
             </div>
 
             <div class="panel-control">
-                <a href="{% url 'cms:slides-edit' organisation.slug object.pk slide.pk %}"><i class="icon-pencil"></i></a>
+                <a href="{% url 'cms:slides_edit' organisation.slug object.pk slide.pk %}"><i class="icon-pencil"></i></a>
                 <a href="javascript:void(0);" data-toggle="modal" data-target=".bs-example-modal-sm" onClick='obj_delete("Слайд {{ slide.position }}",
-                                        "{% url 'cms:slides-delete' organisation.slug object.pk slide.pk %}");'><i class="icon-close"></i></a>
+                                        "{% url 'cms:slides_delete' organisation.slug object.pk slide.pk %}");'><i class="icon-close"></i></a>
             </div>
         </div>
         <div class="panel-body">
@@ -76,7 +76,7 @@
 {% else %}
   <div class="panel">
     <div class="panel-body">
-        В данной презентации еще нет слайдов. <a href="{% url 'cms:slides-add' organisation.slug object.pk %}">Добавить</a>
+        В данной презентации еще нет слайдов. <a href="{% url 'cms:slides_add' organisation.slug object.pk %}">Добавить</a>
     </div>
 </div>
 

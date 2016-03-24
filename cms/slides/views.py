@@ -48,7 +48,7 @@ def slide_up(request, **kwargs):
         slide.position -= 1
         previous.save()
         slide.save()
-    return HttpResponseRedirect(reverse('cms:presentations-detail', args=[kwargs['organisation'],
+    return HttpResponseRedirect(reverse('cms:presentations_detail', args=[kwargs['organisation'],
                                                                           kwargs['presentation']]))
 
 
@@ -62,6 +62,6 @@ def slide_down(request, **kwargs):
         slide.position += 1
         next.save()
         slide.save()
-    return HttpResponseRedirect(reverse('cms:presentations-detail', args=[kwargs['organisation'],
+    return HttpResponseRedirect(reverse('cms:presentations_detail', args=[kwargs['organisation'],
                                                                           kwargs['presentation']]))
 

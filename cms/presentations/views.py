@@ -58,7 +58,7 @@ class PresentationCreateView(CreateView, BasePresentationsView):
         return initial_new
 
     def get_success_url(self):
-        return reverse('cms:presentations-list', kwargs={'organisation': self.kwargs['organisation']})
+        return reverse('cms:presentations_list', kwargs={'organisation': self.kwargs['organisation']})
 
 
 class PresentationUpdateView(UpdateView, BasePresentationsView):
@@ -70,11 +70,11 @@ class PresentationUpdateView(UpdateView, BasePresentationsView):
     has_back_to_presentation = True
 
     def get_success_url(self):
-        return reverse('cms:presentations-detail', kwargs={'organisation': self.kwargs['organisation'],
+        return reverse('cms:presentations_detail', kwargs={'organisation': self.kwargs['organisation'],
                                                            'presentation': self.kwargs['presentation']})
 
 
 class PresentationDeleteView(DeleteView, BasePresentationsView):
 
     def get_success_url(self):
-        return reverse('cms:presentations-list', kwargs={'organisation': self.kwargs['organisation']})
+        return reverse('cms:presentations_list', kwargs={'organisation': self.kwargs['organisation']})

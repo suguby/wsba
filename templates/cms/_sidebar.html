@@ -1,4 +1,4 @@
-{% url "cms:questions-list" organisation.slug as url_question_list %}
+{% url "cms:questions_list" organisation.slug as url_question_list %}
 
 <div class="page-sidebar sidebar">
 
@@ -13,13 +13,13 @@
                 </a>
             </li>
             <li {% if view.tab == 'tab_presentations' %}class="active"{% endif %}>
-                <a href="{% url "cms:presentations-list" organisation.slug %}" class="waves-effect waves-button">
+                <a href="{% url "cms:presentations_list" organisation.slug %}" class="waves-effect waves-button">
                     <span class="menu-icon glyphicon glyphicon-list-alt"></span>
                     <p>Презентации</p>
                 </a>
             </li>
             <li {% if view.tab == 'tab_questions' %}class="active"{% endif %}>
-                <a href="{% url "cms:questions-list" organisation.slug %}" class="waves-effect waves-button">
+                <a href="{% url "cms:questions_list" organisation.slug %}" class="waves-effect waves-button">
                     <span class="menu-icon glyphicon glyphicon-question-sign"></span>
                     <p>Вопросы</p>
                 </a>

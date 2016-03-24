@@ -13,7 +13,7 @@ class SlideEditViewTests(BaseTests):
         self.presentation = Presentation.objects.create(name='p1', organisation=self.organisation)
         self.slide = CoreSlide.objects.create(presentation=self.presentation, description='test')
         self.slide_2 = CoreSlide.objects.create(presentation=self.presentation, description='test')
-        self.url = reverse('cms:slides-edit', kwargs={'organisation': self.organisation.slug,
+        self.url = reverse('cms:slides_edit', kwargs={'organisation': self.organisation.slug,
                                                       'presentation': self.presentation.id,
                                                       'slide': self.slide.id})
         self.response = self.client.get(self.url)
@@ -21,9 +21,9 @@ class SlideEditViewTests(BaseTests):
     def test_template(self):
         hidden_input = '<input id="id_presentation" name="presentation" type="hidden" value="{}" />'.\
             format(self.presentation.id)
-        back_url = reverse('cms:presentations-detail', kwargs={'organisation': self.organisation.slug,
+        back_url = reverse('cms:presentations_detail', kwargs={'organisation': self.organisation.slug,
                                                                'presentation': self.presentation.id})
-        del_url = reverse('cms:slides-delete', kwargs={'organisation': self.organisation.slug,
+        del_url = reverse('cms:slides_delete', kwargs={'organisation': self.organisation.slug,
                                                        'presentation': self.presentation.id, 
                                                        'slide': self.slide.id})
         self.assertTemplateUsed(self.response, 'cms/slides/edit.html')
@@ -43,7 +43,7 @@ class SlideEditViewTests(BaseTests):
         self.assertContains(self.response, 'id="del_button"', status_code=200)
 
     def test_post_status_valid(self):
-        url = reverse('cms:slides-edit', kwargs={'organisation': self.organisation.slug,
+        url = reverse('cms:slides_edit', kwargs={'organisation': self.organisation.slug,
                                                  'presentation': self.presentation.id,
                                                  'slide': self.slide.id})
         response = self.client.post(url, {'description': 'description',
@@ -51,7 +51,7 @@ class SlideEditViewTests(BaseTests):
         self.assertEquals(response.status_code, 302)
 
     def test_post_status_invalid(self):
-        url = reverse('cms:slides-edit', kwargs={'organisation': self.organisation.slug,
+        url = reverse('cms:slides_edit', kwargs={'organisation': self.organisation.slug,
                                                  'presentation': self.presentation.id,
                                                  'slide': self.slide.id})
         response = self.client.post(url, {'description': 'test edit'})
@@ -70,14 +70,14 @@ class CoreSlideAddViewTests(BaseTests):
         self.presentation = Presentation.objects.create(name='p1', organisation=self.organisation)
         self.slide = CoreSlide.objects.create(presentation=self.presentation, description='test')
         self.slide_2 = CoreSlide.objects.create(presentation=self.presentation, description='test2')
-        self.url = reverse('cms:slides-add', kwargs={'organisation': self.organisation.slug,
+        self.url = reverse('cms:slides_add', kwargs={'organisation': self.organisation.slug,
                                                      'presentation': self.presentation.id})
         self.response = self.client.get(self.url)
 
     def test_template(self):
         hidden_input = '<input id="id_presentation" name="presentation" type="hidden" value="{}" />'.\
             format(self.presentation.id)
-        url_back = reverse('cms:presentations-detail', kwargs={'organisation': self.organisation.slug,
+        url_back = reverse('cms:presentations_detail', kwargs={'organisation': self.organisation.slug,
                                                                'presentation': self.presentation.id})
 
         self.assertTemplateUsed(self.response, 'cms/slides/edit.html')
@@ -116,7 +116,7 @@ class CoreSlideDeleteViewTests(BaseTests):
         self.presentation = Presentation.objects.create(name='p1', organisation=self.organisation)
         self.slide = CoreSlide.objects.create(presentation=self.presentation, description='test1')
         self.slide_2 = CoreSlide.objects.create(presentation=self.presentation, description='test2')
-        self.url = reverse('cms:slides-delete', kwargs={'organisation': self.organisation.slug,
+        self.url = reverse('cms:slides_delete', kwargs={'organisation': self.organisation.slug,
                                                         'presentation': self.presentation.id,
                                                         'slide': self.slide.id})
         self.response = self.client.post(self.url, {'position': 2, 'description': 'test2',
@@ -126,7 +126,7 @@ class CoreSlideDeleteViewTests(BaseTests):
         self.assertEquals(self.response.status_code, 302)
 
     def test_post_status_invalid(self):
-        url = reverse('cms:slides-delete', kwargs={'organisation': self.organisation.slug,
+        url = reverse('cms:slides_delete', kwargs={'organisation': self.organisation.slug,
                                                    'presentation': self.presentation.id,
                                                    'slide': 100})
         response = self.client.post(url)
@@ -146,7 +146,7 @@ class PositionSlideTest(BaseTests):
         self.slide_2 = CoreSlide.objects.create(presentation=self.presentation, description='test2')
 
     def test_up_position(self):
-        url = reverse('cms:slides-up', kwargs={'organisation': self.organisation.slug,
+        url = reverse('cms:slides_up', kwargs={'organisation': self.organisation.slug,
                                                'presentation': self.presentation.id,
                                                'slide': self.slide_2.id})
         self.client.post(url)
@@ -156,7 +156,7 @@ class PositionSlideTest(BaseTests):
         self.assertEqual(slides_list, ['test2', 'test1'])
 
     def test_down_position(self):
-        url = reverse('cms:slides-up', kwargs={'organisation': self.organisation.slug,
+        url = reverse('cms:slides_up', kwargs={'organisation': self.organisation.slug,
                                                'presentation': self.presentation.id,
                                                'slide': self.slide_2.id})
         self.client.post(url)
