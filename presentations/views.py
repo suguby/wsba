@@ -45,8 +45,6 @@ class SlideView(TemplateView):
         user_old_answers = UserAnswer.objects.filter(answer__question=question, user_id=1)
         user_old_answers.delete()
         count = 0
-        # Запись комментов в базу сделана криво, работае только если комменты ко всем вар.ответа
-        # как правильно -- не приходит в голову
         for answer in answers:
             if str(answer.id) in request.POST.getlist('group1'):
                 if answer.has_comment:
