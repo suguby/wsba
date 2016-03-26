@@ -133,10 +133,12 @@ STATIC_URL = '/static/'
 try:
     from .local_settings import *
 except ImportError as e:
-    print (e)
+    print('WARNING! No local_settings - use only base...')
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
 STATIC_ROOT = os.path.join(BASE_DIR, 'extra', 'static')
 
+MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'extra', 'media')
