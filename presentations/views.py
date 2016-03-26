@@ -10,10 +10,7 @@ class SlideView(TemplateView):
     template_name = 'presentations/common_question.html'
 
     def get_context_data(self, **kwargs):
-        for slide in CoreSlide.objects.filter(id=kwargs['slide']):
-            break
-        else:
-            raise Exception('Нет такого слайда!!!')
+        slide = self._get_slide(kwargs)
         question = slide.question
 
         context = super(SlideView, self).get_context_data(**kwargs)
@@ -36,10 +33,7 @@ class SlideView(TemplateView):
         return context
 
     def post(self, request, *args, **kwargs):
-        for slide in CoreSlide.objects.filter(id=kwargs['slide']).select_related('question'):
-            break
-        else:
-            raise Exception('Нет такого слайда!!!')
+        slide = self._get_slide(kwargs)
         question = slide.question
         answers = Answer.objects.filter(question=question)
         user_old_answers = UserAnswer.objects.filter(answer__question=question, user_id=1)
@@ -56,5 +50,12 @@ class SlideView(TemplateView):
 
                 us.save()
         return redirect(reverse('slide_view', kwargs=kwargs))
+
+    def _get_slide(self, kwargs):
+        for slide in CoreSlide.objects.filter(id=kwargs['slide']).select_related('question'):
+            break
+        else:
+            raise Exception('Нет такого слайда!!!')
+        return slide
 
 
