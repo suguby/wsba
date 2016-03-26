@@ -47,6 +47,7 @@ class PresentationBeginView(OrganisationTemplateView):
             presentation = Presentation.objects.get(id=presentation_id)
         except Organisation.DoesNotExist:
             raise Http404()
+        # TODO здесь падает если у презентации нету слайдов
         start_slide = CoreSlide.objects.filter(presentation_id=presentation_id).order_by('position')[0]
         context.update(
                 presentation=presentation,
