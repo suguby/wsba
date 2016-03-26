@@ -26,31 +26,28 @@ class OrganisationIndexView(OrganisationTemplateView):
     template_name = 'ui/index.html'
 
     def get_context_data(self, **kwargs):
-        context = super(OrganisationIndexView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         project_user = ProjectUser.objects.get(name='tester')
         org = project_user.organisation
         context.update({
             'user': project_user,
-            'presentations': Presentation.objects.filter(
-                    organisation=project_user.organisation
-            ),
+            'presentations': Presentation.objects.filter(organisation=project_user.organisation),
             'test': org,
-        })
-
+            })
         return context
 
 
-class ShowPresentation(OrganisationTemplateView):
+class PresentationBeginView(OrganisationTemplateView):
     template_name = 'ui/presentation.html'
 
     def get_context_data(self, **kwargs):
-        context = super(ShowPresentation, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         presentation_id = kwargs.get('pk', '')
-        start_slide = CoreSlide.objects.filter(presentation_id=presentation_id).order_by('position')[0]
         try:
             presentation = Presentation.objects.get(id=presentation_id)
         except Organisation.DoesNotExist:
             raise Http404()
+        start_slide = CoreSlide.objects.filter(presentation_id=presentation_id).order_by('position')[0]
         context.update(
                 presentation=presentation,
                 start_slide=start_slide,
@@ -58,11 +55,11 @@ class ShowPresentation(OrganisationTemplateView):
         return context
 
 
-class GoPresentation(OrganisationTemplateView):
-    template_name = 'ui/go_presentation.html'
+class PresentationSlideView(OrganisationTemplateView):
+    template_name = 'ui/presentation_slide.html'
 
     def get_context_data(self, **kwargs):
-        context = super(GoPresentation, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         presentation_id = kwargs.get('presentation_id', '')
         slide_id = kwargs.get('slide_id', '')
 

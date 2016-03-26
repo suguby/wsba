@@ -19,7 +19,7 @@
     <td>{{ presentation.name }}</td>
     <td>{{ presentation.created_at }}</td>
     <td>{{ presentation.modified_at }}</td>
-    <td><a href="{% url 'show_presentation' organisation.slug presentation.id %}">посмотреть</a></td>
+    <td><a href="{% url 'presentation_begin' organisation.slug presentation.id %}">посмотреть</a></td>
         </tr>
 {% endfor %}
 </table>
