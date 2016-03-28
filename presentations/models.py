@@ -99,6 +99,15 @@ class CoreSlide(ChangeAbstractModel):
             self.position = CoreSlide.objects.filter(presentation=self.presentation).count() + 1
         return super().save(*args, **kwargs)
 
+    def delete(self, using=None, keep_parents=False):
+        super().delete()
+        i = 1
+        slide_list = CoreSlide.objects.filter(presentation=self.presentation)
+        for slide in slide_list:
+            slide.position = i
+            slide.save()
+            i += 1
+
 
 class Question(models.Model):
     ANSWER_TYPE = (
