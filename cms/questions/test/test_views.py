@@ -184,6 +184,7 @@ class QuestionEditViewTests(BaseTests):
         url = reverse('cms:questions_edit', kwargs={'organisation': self.organisation.slug,
                                                     'question': question.id})
         self.client.post(url, {'text': 'edit question', 'answers_type': 'multi'})
+        self.assertEqual(Question.objects.count(), 2)
         self.assertEqual(Question.objects.filter(text='testing').count(), 0)
 
 
