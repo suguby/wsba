@@ -1,9 +1,42 @@
 # -*- coding: utf-8 -*-
 from django.core.urlresolvers import reverse
+from django.forms import Form
+from django import forms
 from django.shortcuts import redirect
 from django.views.generic import DetailView, TemplateView
 
 from presentations.models import Question, Answer, CoreSlide, UserAnswer
+
+
+class SlideView_new(TemplateView):
+    template_name = 'presentations/single_question.html'
+    form = Form()
+
+    def _get_slide(self, kwargs):
+        for slide in CoreSlide.objects.filter(id=kwargs['slide']).select_related('question'):
+            break
+        else:
+            raise Exception('Нет такого слайда!!!')
+        return slide
+
+    def get_context_data(self, **kwargs):
+        slide = self._get_slide(kwargs)
+        question = slide.question
+
+        context = super(SlideView, self).get_context_data(**kwargs)
+        context['slide'] = slide
+        answers = Answer.objects.filter(question=question)
+        for answer in answers:
+            self.form.fields = forms.CharField(label=answer.text, max_length=100)
+
+        '''
+            context['answers'] = answers
+            context['user_saved_answers'] = user_saved_answers
+            context['question'] = question
+        else:
+            context['question'] = None'''
+
+        return context
 
 
 class SlideView(TemplateView):

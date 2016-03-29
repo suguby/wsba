@@ -2,7 +2,7 @@
 
 {% block container%}
     <img src="{{ slide.image }}">
-    <p>{{ slide.decription }}</p>
+    <p>{{ slide.description }}</p>
     {% if question %}
     <form method="post" action="">
         {% csrf_token %}
