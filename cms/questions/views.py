@@ -53,7 +53,7 @@ class QuestionCreateView(LoginRequiredMixin, FormView, BaseQuestionView):
         return super(QuestionCreateView, self).form_valid(form)
 
 
-class QuestionUpdateView(LoginRequiredMixin, UpdateView, BaseQuestionView):
+class QuestionUpdateView(LoginRequiredMixin, FormView, BaseQuestionView):
 
     form_class = QuestionForm
     template_name = "cms/questions/edit.html"
@@ -61,12 +61,28 @@ class QuestionUpdateView(LoginRequiredMixin, UpdateView, BaseQuestionView):
     mode = 'Обновить'
     has_back_to_question = True
 
+    def get_form(self, form_class=None):
+        form = super().get_form()
+        if 'question' in self.kwargs:
+            question = Question.objects.get(id=self.kwargs['question'])
+            form.fields['text'].initial = question.text
+            form.fields['answers_type'].initial = question.answers_type
+            if question.organisation:
+                form.fields['common'].initial = False
+            else:
+                form.fields['common'].initial = True
+        return form
+
     def form_valid(self, form):
-        if not form.cleaned_data['common']:
-            del form.cleaned_data['common']
-            obj = Question.objects.create(**form.cleaned_data)
-            obj.organisation = Organisation.objects.get(slug=self.kwargs['organisation'])
-            obj.save()
+        question = Question.objects.get(id=self.kwargs['question'])
+        question.text = form.cleaned_data['text']
+        question.answers_type = form.cleaned_data['answers_type']
+        if form.cleaned_data['common']:
+            question.organisation = None
+        else:
+            question.organisation = \
+                Organisation.objects.get(slug=self.kwargs['organisation'])
+        question.save()
         return super(QuestionUpdateView, self).form_valid(form)
 
     def get_success_url(self):
