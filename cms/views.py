@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 
 
 class FillContextMixin(ContextMixin, View):
-
+    # TODO ты все внес в один миксин, по хорошему все относящееся к вопросам - в базовый для вопросов и т.д.
     has_back_to_question_list = False
     has_question_add_btn = False
     has_question_edit_btn = False
@@ -43,7 +43,7 @@ class FillContextMixin(ContextMixin, View):
             context['slide_list'] = \
                 CoreSlide.objects.filter(presentation=self.kwargs['presentation'])
 
-        kwargs = {'organisation': self.kwargs['organisation']}
+        url_kwargs = {'organisation': self.kwargs['organisation']}
 
         if 'question' in self.kwargs:
             kwargs_question = {'organisation': self.kwargs['organisation'],
@@ -72,9 +72,9 @@ class FillContextMixin(ContextMixin, View):
             kwargs_slide = None
 
         if self.has_back_to_question_list:
-            context['back_button'] = reverse('cms:questions_list', kwargs=kwargs)
+            context['back_button'] = reverse('cms:questions_list', kwargs=url_kwargs)
         if self.has_question_add_btn:
-            context['add_button'] = reverse('cms:questions_add', kwargs=kwargs)
+            context['add_button'] = reverse('cms:questions_add', kwargs=url_kwargs)
         if self.has_question_edit_btn:
             context['edit_button'] = reverse('cms:questions_edit', kwargs=kwargs_question)
         if self.has_question_delete_btn:
@@ -90,9 +90,9 @@ class FillContextMixin(ContextMixin, View):
             context['del_button'] = reverse('cms:answers_delete', kwargs=kwargs_answer)
 
         if self.has_back_to_presentation_list:
-            context['back_button'] = reverse('cms:presentations_list', kwargs=kwargs)
+            context['back_button'] = reverse('cms:presentations_list', kwargs=url_kwargs)
         if self.has_presentation_add_btn:
-            context['add_button'] = reverse('cms:presentations_add', kwargs=kwargs)
+            context['add_button'] = reverse('cms:presentations_add', kwargs=url_kwargs)
         if self.has_presentation_edit_btn:
             context['edit_button'] = reverse('cms:presentations_edit', kwargs=kwargs_presentation)
         if self.has_presentation_delete_btn:
