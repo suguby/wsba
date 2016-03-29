@@ -7,10 +7,10 @@ from django.core.urlresolvers import reverse
 
 class FillContextMixin(ContextMixin, View):
     # TODO ты все внес в один миксин, по хорошему все относящееся к вопросам - в базовый для вопросов и т.д.
-    has_back_to_question_list = False
-    has_question_add_btn = False
-    has_question_edit_btn = False
-    has_question_delete_btn = False
+    # has_back_to_question_list = False
+    # has_question_add_btn = False
+    # has_question_edit_btn = False
+    # has_question_delete_btn = False
 
     has_back_to_question = False
     has_answer_add_btn = False
@@ -71,14 +71,14 @@ class FillContextMixin(ContextMixin, View):
         else:
             kwargs_slide = None
 
-        if self.has_back_to_question_list:
-            context['back_button'] = reverse('cms:questions_list', kwargs=url_kwargs)
-        if self.has_question_add_btn:
-            context['add_button'] = reverse('cms:questions_add', kwargs=url_kwargs)
-        if self.has_question_edit_btn:
-            context['edit_button'] = reverse('cms:questions_edit', kwargs=kwargs_question)
-        if self.has_question_delete_btn:
-            context['del_button'] = reverse('cms:questions_delete', kwargs=kwargs_question)
+        # if self.has_back_to_question_list:
+        #     context['back_button'] = reverse('cms:questions_list', kwargs=url_kwargs)
+        # if self.has_question_add_btn:
+        #     context['add_button'] = reverse('cms:questions_add', kwargs=url_kwargs)
+        # if self.has_question_edit_btn:
+        #     context['edit_button'] = reverse('cms:questions_edit', kwargs=kwargs_question)
+        # if self.has_question_delete_btn:
+        #     context['del_button'] = reverse('cms:questions_delete', kwargs=kwargs_question)
 
         if self.has_back_to_question:
             context['back_button'] = reverse('cms:questions_detail', kwargs=kwargs_question)
@@ -110,13 +110,58 @@ class FillContextMixin(ContextMixin, View):
         return context
 
 
-class BaseQuestionView(FillContextMixin):
+class BaseCmsWithContextView(ContextMixin, View):
+
+    def get_context_data(self, **kwargs):
+        # TODO тут нужно включить все переменные и контекст, которые будут использоваться во всех наследниках
+        context = super().get_context_data(**kwargs)
+        if 'organisation' in self.kwargs:
+            context['organisation'] = \
+                Organisation.objects.get(slug=self.kwargs['organisation'])
+        if 'question' in self.kwargs:
+            context['question'] = \
+                Question.objects.get(pk=self.kwargs['question'])
+            context['answers_list'] = \
+                Answer.objects.filter(question=self.kwargs['question'])
+        if 'presentation' in self.kwargs:
+            context['presentation'] = \
+                Presentation.objects.get(pk=self.kwargs['presentation'])
+            context['slide_list'] = \
+                CoreSlide.objects.filter(presentation=self.kwargs['presentation'])
+        self.url_kwargs = {'organisation': self.kwargs['organisation']}
+        return context
+
+
+class BaseQuestionView(BaseCmsWithContextView):
+    has_back_to_question_list = False
+    has_question_add_btn = False
+    has_question_edit_btn = False
+    has_question_delete_btn = False
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.model = Question
         self.pk_url_kwarg = 'question'
         self.tab = 'tab_questions'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if 'question' in self.kwargs:
+            kwargs_question = {'organisation': self.kwargs['organisation'],
+                               'question': self.kwargs['question']}
+        else:
+            kwargs_question = None
+
+        if self.has_back_to_question_list:
+            context['back_button'] = reverse('cms:questions_list', kwargs=self.url_kwargs)
+        if self.has_question_add_btn:
+            context['add_button'] = reverse('cms:questions_add', kwargs=self.url_kwargs)
+        if self.has_question_edit_btn:
+            context['edit_button'] = reverse('cms:questions_edit', kwargs=kwargs_question)
+        if self.has_question_delete_btn:
+            context['del_button'] = reverse('cms:questions_delete', kwargs=kwargs_question)
+        return context
 
 
 class BaseAnswerView(FillContextMixin):
