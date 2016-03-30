@@ -111,9 +111,6 @@ class CoreSlide(ChangeAbstractModel):
 
 class Question(models.Model):
     ANSWER_TYPE = (
-        # эти данные потом в БД хранить, и это могут быть миллионы дублей multi/single
-        # это экономия на спичках - вопросов будет не миллион, а порядка 1000, пять лишних байт,
-        # 1000 * 5 = 5000 байт ~ 5Кб ;) даже на миллионе ~ 5Мб...
         ('multi', 'Множественный выбор'),
         ('single', 'Единичный выбор'),
     )
@@ -135,13 +132,13 @@ class Answer(models.Model):
     question = models.ForeignKey(Question)
     position = models.IntegerField(default=0, editable=False)
     text = CharField(verbose_name='Текст ответа', max_length=64)
-    is_right = models.BooleanField(verbose_name='Является правильным ответом')
-    has_comment = models.BooleanField(verbose_name="Ответ с комментарием")
+    is_right = models.BooleanField(verbose_name='Является правильным ответом', default=False)
+    has_comment = models.BooleanField(verbose_name="Ответ с комментарием", default=False)
 
     objects = SorterManager()
 
     def __str__(self):
-        return self.text
+        return  self.text
 
     class Meta:
         db_table = 'answers'
