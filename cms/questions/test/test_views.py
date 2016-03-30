@@ -150,7 +150,6 @@ class QuestionEditViewTests(BaseTests):
         self.assertEquals(self.response.status_code, 200)
 
     def test_template(self):
-        self.assertEqual(self.question.id, self.response.context['object'].id)
         self.assertTemplateUsed(self.response, 'cms/questions/edit.html')
         self.assertContains(self.response, 'Обновить', status_code=200)
         self.assertContains(self.response, 'Редактирование вопроса', status_code=200)

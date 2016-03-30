@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
 
 from presentations.models import Question, Organisation
-from django.views.generic import ListView, DetailView, FormView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, FormView, DeleteView
 from cms.questions.forms import QuestionForm
 from cms.views import BaseQuestionView
 from django.conf import settings
