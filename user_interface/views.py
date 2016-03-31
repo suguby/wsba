@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 from django.http import Http404
 from django.views.generic import TemplateView
-from user_interface.models import ProjectUser
+from user_interface.models import ProjectUser, UserPresentation
 from presentations.models import Presentation, CoreSlide, Organisation
 from django.http import HttpResponse
 from datetime import datetime, timedelta
+from django.contrib.auth.models import User
 
 
 class OrganisationTemplateView(TemplateView):
@@ -15,7 +16,11 @@ class OrganisationTemplateView(TemplateView):
             organisation = Organisation.objects.get(slug=org_slug)
         except Organisation.DoesNotExist:
             raise Http404()
-        context.update(organisation=organisation)
+        self.request.session['user'] = ProjectUser.objects.get(name='tester').name
+        context.update(
+                organisation=organisation,
+                project_user=ProjectUser.objects.get(name='tester')
+        )
         return context
 
 
@@ -26,13 +31,11 @@ class OrganisationIndexView(OrganisationTemplateView):
         context = super().get_context_data(**kwargs)
         project_user = ProjectUser.objects.get(name='tester')
 
-
-
         context.update({
             'user': project_user,
             'presentations': Presentation.objects.filter(organisation=project_user.organisation),
 
-            })
+        })
         return context
 
 
@@ -42,7 +45,6 @@ class PresentationBeginView(OrganisationTemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         presentation_id = kwargs.get('pk', '')
-
 
         try:
             presentation = Presentation.objects.get(id=presentation_id)
@@ -105,15 +107,21 @@ class PresentationDoneView(OrganisationTemplateView):
         if not self.request.session['time_finish']:
             self.request.session['time_finish'] = datetime.strftime(datetime.now(), "%H:%M:%S")
 
-        st = datetime.strptime(self.request.session['time_start'], "%H:%M:%S")
-        fn = datetime.strptime(self.request.session['time_finish'], "%H:%M:%S")
-        res = str(fn-st)
+        res = str(
+                datetime.strptime(self.request.session['time_finish'], "%H:%M:%S") - datetime.strptime(
+                        self.request.session['time_start'], "%H:%M:%S")
+        )
 
         try:
             presentation = Presentation.objects.get(id=presentation_id)
         except Organisation.DoesNotExist:
             raise Http404()
 
+        done = UserPresentation.objects.create(
+                user=ProjectUser.objects.get(name=self.request.session['user']),
+                presentation=presentation,
+                passage_time=res,
+        )
         context.update(
                 presentation=presentation,
                 st=res,
