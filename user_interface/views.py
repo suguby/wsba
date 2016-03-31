@@ -9,6 +9,12 @@ from django.contrib.auth.models import User
 
 
 class OrganisationTemplateView(TemplateView):
+
+    def render_to_response(self, context, **response_kwargs):
+        response = super(OrganisationTemplateView, self).render_to_response(context, **response_kwargs)
+        response.set_cookie("success","success")
+        return response
+
     def get_context_data(self, **kwargs):
         context = super(OrganisationTemplateView, self).get_context_data(**kwargs)
         org_slug = kwargs.get('organisation', '')
@@ -17,6 +23,7 @@ class OrganisationTemplateView(TemplateView):
         except Organisation.DoesNotExist:
             raise Http404()
         self.request.session['user'] = ProjectUser.objects.get(name='tester').name
+
         context.update(
                 organisation=organisation,
                 project_user=ProjectUser.objects.get(name='tester')
