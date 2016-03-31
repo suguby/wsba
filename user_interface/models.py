@@ -22,9 +22,15 @@ class UserPresentation(models.Model):
     """
     user = models.ForeignKey(ProjectUser)
     presentation = models.ForeignKey('presentations.Presentation')
+    passage_time = models.TimeField(blank=True, null=True, verbose_name='Вреся прохождения')
+
+    def __str__(self):
+        return '{} - {}'.format(self.user, self.presentation)
 
     class Meta:
         db_table = 'user_presentations'
+        verbose_name = "Завершенные презентации"
+        verbose_name_plural = "Завершенные презентации"
 
 
 class UserSlides(models.Model):

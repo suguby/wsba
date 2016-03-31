@@ -20,3 +20,6 @@ admin.site.register(ProjectUser)
 admin.site.register(Organisation)
 admin.site.register(Presentation, PresentationAdmin)
 admin.site.register(CoreSlide, CoreSlideAdmin)
+admin.site.register(UserPresentation)
+
+
