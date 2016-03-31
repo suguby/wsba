@@ -8,5 +8,10 @@ from presentations.models import Organisation
 
 class ProjectUserTestCase(TestCase):
     def setUp(self):
-        org = self.Organisation.objects.create(name='testorg')
-        self.ProjectUser.objects.create(name="username", organisation=org)
+        self.org = Organisation.objects.create(name='testorg')
+        self.user = ProjectUser.objects.create(name="username", organisation=self.org)
+
+
+def test_presentations(self):
+        self.org.id
+        self.user.id
