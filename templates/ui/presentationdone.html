@@ -1,0 +1,27 @@
+{% extends 'ui/base.html' %}
+
+{% block container %}
+    <div class="row" style="padding-top: 50px;">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Сводка</h3>
+                </div>
+                <div class="panel-body">
+                    Презентация пройдена.
+                    <hr>
+                    <br>Время начала: {{ request.session.time_start }}
+                    <br>Время завершения: {{ request.session.time_finish }}
+                    <br>
+                    {{ st }}
+                </div>
+
+            </div>
+            <a class="btn btn-default left"
+               href="{% url 'organisation_detail' organisation.slug %}" role="button">К списку презентаций</a>
+
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+{% endblock %}

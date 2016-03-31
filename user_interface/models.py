@@ -22,6 +22,7 @@ class UserPresentation(models.Model):
     """
     user = models.ForeignKey(ProjectUser)
     presentation = models.ForeignKey('presentations.Presentation')
+    passage_time = models.TimeField(blank=True, null=True, verbose_name='Вреся прохождения')
 
     class Meta:
         db_table = 'user_presentations'
