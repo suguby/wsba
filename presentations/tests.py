@@ -65,7 +65,7 @@ class QuestionSingleViewTests(QuestionViewTests):
         answer1 = Answer.objects.create(question_id=self.question.id, variant_number=1, text='Yes', has_comment=True)
         answer2 = Answer.objects.create(question_id=self.question.id, variant_number=2, text='No', has_comment=False)
 
-        response = self.client.post(self.url, {'group1': ['1'], 'comment': 'some text'})
+        response = self.client.post(self.url, {'group1': [answer1.id], 'comment': 'some text'})
         self.assertEqual(response.status_code, 302)
         answers = UserAnswer.objects.filter(user_id=1, answer_id=answer1.id)
         self.assertEqual(len(answers), 1)
@@ -78,7 +78,7 @@ class QuestionSingleViewTests(QuestionViewTests):
         user_answer = UserAnswer.objects.create(user_id=1, answer_id=answer1.id)
 
         response = self.client.get(self.url)
-        self.assertInHTML(needle='<input type="radio" name="group1" value="1" checked="1">'.format(answer1.id),
+        self.assertInHTML(needle='<input type="radio" name="group1" value="{0}" checked="1">'.format(answer1.id),
                           haystack=response.rendered_content)
 
     def test_view_old_single_commented_answer(self):
@@ -88,7 +88,7 @@ class QuestionSingleViewTests(QuestionViewTests):
         user_answer = UserAnswer.objects.create(user_id=1, answer_id=answer1.id, comment="Это комментарий!")
 
         response = self.client.get(self.url)
-        self.assertInHTML(needle='<input type="radio" name="group1" value="1" checked="1">'.format(answer1.id),
+        self.assertInHTML(needle='<input type="radio" name="group1" value="{0}" checked="1">'.format(answer1.id),
                           haystack=response.rendered_content)
         self.assertContains(response, "Это комментарий!")
 
@@ -129,6 +129,6 @@ class QuestionMultiViewTests(QuestionViewTests):
         user_answer = UserAnswer.objects.create(user_id=1, answer_id=answer1.id)
 
         response = self.client.get(self.url)
-        self.assertInHTML(needle='<input type="checkbox" name="group1" value="1" checked="1">'.format(answer1.id),
+        self.assertInHTML(needle='<input type="checkbox" name="group1" value="{0}" checked="1">'.format(answer1.id),
                           haystack=response.rendered_content)
 
