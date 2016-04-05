@@ -22,7 +22,8 @@ class SlideCreateView(LoginRequiredMixin, BaseSlideView, CreateView):
     def get_initial(self):
         initial = super(SlideCreateView, self).get_initial()
         initial_new = initial.copy()
-        initial_new['presentation'] = Presentation.objects.get(id=self.kwargs['presentation'])
+        initial_new['presentation'] = \
+            Presentation.objects.get(id=self.kwargs['presentation'])
         return initial_new
 
 
@@ -43,26 +44,27 @@ class SlideDeleteView(LoginRequiredMixin, BaseSlideView, DeleteView):
 @require_POST
 def slide_up(request, **kwargs):
     slide = CoreSlide.objects.get(id=kwargs['slide'])
-    previous = slide.previous_slide
-    if previous:
-        previous.position += 1
+    previous_slide = slide.previous_slide
+    if previous_slide:
+        previous_slide.position += 1
         slide.position -= 1
-        previous.save()
+        previous_slide.save()
         slide.save()
-    return HttpResponseRedirect(reverse('cms:presentations_detail', args=[kwargs['organisation'],
-                                                                          kwargs['presentation']]))
+    return HttpResponseRedirect(reverse('cms:presentations_detail',
+                                        args=[kwargs['organisation'],
+                                              kwargs['presentation']]))
 
 
 @login_required
 @require_POST
 def slide_down(request, **kwargs):
     slide = CoreSlide.objects.get(id=kwargs['slide'])
-    next = slide.next_slide
-    if next:
-        next.position -= 1
+    next_slide = slide.next_slide
+    if next_slide:
+        next_slide.position -= 1
         slide.position += 1
-        next.save()
+        next_slide.save()
         slide.save()
-    return HttpResponseRedirect(reverse('cms:presentations_detail', args=[kwargs['organisation'],
-                                                                          kwargs['presentation']]))
-
+    return HttpResponseRedirect(reverse('cms:presentations_detail',
+                                        args=[kwargs['organisation'],
+                                              kwargs['presentation']]))

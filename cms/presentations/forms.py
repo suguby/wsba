@@ -6,7 +6,9 @@ from presentations.models import Presentation, Organisation
 
 
 class PresentationForm(ModelForm):
-    organisation = ModelChoiceField(label="Организация", queryset=Organisation.objects.all(), widget=HiddenInput())
+    organisation = ModelChoiceField(label="Организация",
+                                    queryset=Organisation.objects.all(),
+                                    widget=HiddenInput())
     slug = SlugField(label='Код', widget=HiddenInput(), required=False)
 
     class Meta:

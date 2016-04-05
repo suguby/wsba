@@ -11,4 +11,5 @@ class BaseTests(TestCase):
     def setUp(self):
         User.objects.create_user('admin', 'admin@example.com', 'admin')
         self.client.login(username='admin', password='admin')
-        self.organisation = Organisation.objects.create(name='test', slug='test')
+        self.organisation = Organisation.objects.create(name='test',
+                                                        slug='test')

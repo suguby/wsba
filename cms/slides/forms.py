@@ -7,7 +7,9 @@ from presentations.models import CoreSlide
 
 
 class SlideForm(ModelForm):
-    presentation = ModelChoiceField(label="Организация", queryset=Presentation.objects.all(), widget=HiddenInput())
+    presentation = ModelChoiceField(label="Организация",
+                                    queryset=Presentation.objects.all(),
+                                    widget=HiddenInput())
     slug = SlugField(label='Код', widget=HiddenInput(), required=False)
 
     class Meta:

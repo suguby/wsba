@@ -22,7 +22,8 @@ class AnswerCreateView(LoginRequiredMixin, BaseAnswerView, CreateView):
     def get_initial(self):
         initial = super(AnswerCreateView, self).get_initial()
         initial_new = initial.copy()
-        initial_new['question'] = Question.objects.get(id=self.kwargs['question'])
+        initial_new['question'] = \
+            Question.objects.get(id=self.kwargs['question'])
         return initial_new
 
 
@@ -49,7 +50,9 @@ def answer_up(request, **kwargs):
         answer.position -= 1
         previous.save()
         answer.save()
-    return HttpResponseRedirect(reverse('cms:questions_detail', args=[kwargs['organisation'], kwargs['question']]))
+    return HttpResponseRedirect(
+        reverse('cms:questions_detail', args=[kwargs['organisation'],
+                                              kwargs['question']]))
 
 
 @login_required
@@ -62,4 +65,6 @@ def answer_down(request, **kwargs):
         answer.position += 1
         next.save()
         answer.save()
-    return HttpResponseRedirect(reverse('cms:questions_detail', args=[kwargs['organisation'], kwargs['question']]))
+    return HttpResponseRedirect(reverse('cms:questions_detail',
+                                        args=[kwargs['organisation'],
+                                              kwargs['question']]))

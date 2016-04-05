@@ -8,7 +8,8 @@ class DashboardViewTests(BaseTests):
 
     def setUp(self):
         super(DashboardViewTests, self).setUp()
-        self.url = reverse('cms:main', kwargs={'organisation': self.organisation.slug})
+        self.url = reverse('cms:main',
+                           kwargs={'organisation': self.organisation.slug})
         self.response = self.client.get(self.url)
 
     def test_access(self):
@@ -19,4 +20,5 @@ class DashboardViewTests(BaseTests):
 
     def test_template(self):
         self.assertTemplateUsed(self.response, 'cms/dashboard/index.html')
-        self.assertEqual(self.organisation, self.response.context['organisation'])
+        self.assertEqual(self.organisation,
+                         self.response.context['organisation'])

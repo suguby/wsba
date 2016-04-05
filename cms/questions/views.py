@@ -19,8 +19,10 @@ class QuestionListView(LoginRequiredMixin, ListView, BaseQuestionView):
     has_question_add_btn = True
 
     def get_queryset(self):
-        organisation = Organisation.objects.get(slug=self.kwargs['organisation']) or None
-        return Question.objects.filter(Q(organisation=organisation) | Q(organisation=None))
+        organisation = Organisation.objects.\
+                           get(slug=self.kwargs['organisation']) or None
+        return Question.objects.\
+            filter(Q(organisation=organisation) | Q(organisation=None))
 
 
 class QuestionDetailView(LoginRequiredMixin, DetailView, BaseQuestionView):
@@ -42,13 +44,15 @@ class QuestionCreateView(LoginRequiredMixin, FormView, BaseQuestionView):
     has_back_to_question_list = True
 
     def get_success_url(self):
-        return reverse('cms:questions_list', kwargs={'organisation': self.kwargs['organisation']})
+        return reverse('cms:questions_list',
+                       kwargs={'organisation': self.kwargs['organisation']})
 
     def form_valid(self, form):
         if not form.cleaned_data['common']:
             del form.cleaned_data['common']
             obj = Question.objects.create(**form.cleaned_data)
-            obj.organisation = Organisation.objects.get(slug=self.kwargs['organisation'])
+            obj.organisation = \
+                Organisation.objects.get(slug=self.kwargs['organisation'])
             obj.save()
         return super(QuestionCreateView, self).form_valid(form)
 
@@ -86,11 +90,13 @@ class QuestionUpdateView(LoginRequiredMixin, FormView, BaseQuestionView):
         return super(QuestionUpdateView, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('cms:questions_detail', kwargs={'organisation': self.kwargs['organisation'],
-                                                       'question': self.kwargs['question']})
+        return reverse('cms:questions_detail',
+                       kwargs={'organisation': self.kwargs['organisation'],
+                               'question': self.kwargs['question']})
 
 
 class QuestionDeleteView(LoginRequiredMixin, DeleteView, BaseQuestionView):
 
     def get_success_url(self):
-        return reverse('cms:questions_list', kwargs={'organisation': self.kwargs['organisation']})
+        return reverse('cms:questions_list',
+                       kwargs={'organisation': self.kwargs['organisation']})

@@ -1,13 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from django.views.generic.base import ContextMixin, View
-from presentations.models import Organisation, Question, Answer, Presentation, CoreSlide
+from presentations.models import Organisation, Question, Answer, \
+    Presentation, CoreSlide
 from django.core.urlresolvers import reverse
+
 
 class BaseCmsWithContextView(ContextMixin, View):
 
     def get_context_data(self, **kwargs):
-        # TODO тут нужно включить все переменные и контекст, которые будут использоваться во всех наследниках
+
         context = super().get_context_data(**kwargs)
         if 'organisation' in self.kwargs:
             context['organisation'] = \
@@ -20,19 +22,21 @@ class BaseCmsWithContextView(ContextMixin, View):
         if 'presentation' in self.kwargs:
             context['presentation'] = \
                 Presentation.objects.get(pk=self.kwargs['presentation'])
-            context['slide_list'] = \
-                CoreSlide.objects.filter(presentation=self.kwargs['presentation'])
+            context['slide_list'] = CoreSlide.objects.\
+                filter(presentation=self.kwargs['presentation'])
         self.url_kwargs = {'organisation': self.kwargs['organisation']}
 
         if 'question' in self.kwargs:
-            self.kwargs_question = {'organisation': self.kwargs['organisation'],
-                                    'question': self.kwargs['question']}
+            self.kwargs_question = \
+                {'organisation': self.kwargs['organisation'],
+                 'question': self.kwargs['question']}
         else:
             self.kwargs_question = None
 
         if 'presentation' in self.kwargs:
-            self.kwargs_presentation = {'organisation': self.kwargs['organisation'],
-                                   'presentation': self.kwargs['presentation']}
+            self.kwargs_presentation = \
+                {'organisation': self.kwargs['organisation'],
+                 'presentation': self.kwargs['presentation']}
         else:
             self.kwargs_presentation = None
 
@@ -57,17 +61,23 @@ class BaseQuestionView(BaseCmsWithContextView):
         context = super().get_context_data(**kwargs)
 
         if self.has_back_to_question_list:
-            context['back_button'] = reverse('cms:questions_list', kwargs=self.url_kwargs)
+            context['back_button'] = reverse('cms:questions_list',
+                                             kwargs=self.url_kwargs)
         if self.has_question_add_btn:
-            context['add_button'] = reverse('cms:questions_add', kwargs=self.url_kwargs)
+            context['add_button'] = reverse('cms:questions_add',
+                                            kwargs=self.url_kwargs)
         if self.has_question_edit_btn:
-            context['edit_button'] = reverse('cms:questions_edit', kwargs=self.kwargs_question)
+            context['edit_button'] = reverse('cms:questions_edit',
+                                             kwargs=self.kwargs_question)
         if self.has_question_delete_btn:
-            context['del_button'] = reverse('cms:questions_delete', kwargs=self.kwargs_question)
+            context['del_button'] = reverse('cms:questions_delete',
+                                            kwargs=self.kwargs_question)
         if self.has_answer_add_btn:
-            context['add_button'] = reverse('cms:answers_add', kwargs=self.kwargs_question)
+            context['add_button'] = reverse('cms:answers_add',
+                                            kwargs=self.kwargs_question)
         if self.has_back_to_question:
-            context['back_button'] = reverse('cms:questions_detail', kwargs=self.kwargs_question)
+            context['back_button'] = reverse('cms:questions_detail',
+                                             kwargs=self.kwargs_question)
         return context
 
 
@@ -82,8 +92,9 @@ class BaseAnswerView(BaseCmsWithContextView):
         self.tab = 'tab_questions'
 
     def get_success_url(self):
-        return reverse('cms:questions_detail', kwargs={'organisation': self.kwargs['organisation'],
-                                                       'question': self.kwargs['question']})
+        return reverse('cms:questions_detail',
+                       kwargs={'organisation': self.kwargs['organisation'],
+                               'question': self.kwargs['question']})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -96,9 +107,11 @@ class BaseAnswerView(BaseCmsWithContextView):
             kwargs_answer = None
 
         if self.has_back_to_question:
-            context['back_button'] = reverse('cms:questions_detail', kwargs=self.kwargs_question)
+            context['back_button'] = reverse('cms:questions_detail',
+                                             kwargs=self.kwargs_question)
         if self.has_answer_delete_btn:
-            context['del_button'] = reverse('cms:answers_delete', kwargs=kwargs_answer)
+            context['del_button'] = reverse('cms:answers_delete',
+                                            kwargs=kwargs_answer)
 
         return context
 
@@ -120,20 +133,24 @@ class BasePresentationsView(BaseCmsWithContextView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-
-
         if self.has_back_to_presentation_list:
-            context['back_button'] = reverse('cms:presentations_list', kwargs=self.url_kwargs)
+            context['back_button'] = reverse('cms:presentations_list',
+                                             kwargs=self.url_kwargs)
         if self.has_presentation_add_btn:
-            context['add_button'] = reverse('cms:presentations_add', kwargs=self.url_kwargs)
+            context['add_button'] = reverse('cms:presentations_add',
+                                            kwargs=self.url_kwargs)
         if self.has_presentation_edit_btn:
-            context['edit_button'] = reverse('cms:presentations_edit', kwargs=self.kwargs_presentation)
+            context['edit_button'] = reverse('cms:presentations_edit',
+                                             kwargs=self.kwargs_presentation)
         if self.has_presentation_delete_btn:
-            context['del_button'] = reverse('cms:presentations_delete', kwargs=self.kwargs_presentation)
+            context['del_button'] = reverse('cms:presentations_delete',
+                                            kwargs=self.kwargs_presentation)
         if self.has_back_to_presentation:
-            context['back_button'] = reverse('cms:presentations_detail', kwargs=self.kwargs_presentation)
+            context['back_button'] = reverse('cms:presentations_detail',
+                                             kwargs=self.kwargs_presentation)
         if self.has_slide_add_btn:
-            context['add_button'] = reverse('cms:slides_add', kwargs=self.kwargs_presentation)
+            context['add_button'] = reverse('cms:slides_add',
+                                            kwargs=self.kwargs_presentation)
 
         return context
 
@@ -149,8 +166,9 @@ class BaseSlideView(BaseCmsWithContextView):
         self.tab = 'tab_presentations'
 
     def get_success_url(self):
-        return reverse('cms:presentations_detail', kwargs={'organisation': self.kwargs['organisation'],
-                                                           'presentation': self.kwargs['presentation']})
+        return reverse('cms:presentations_detail',
+                       kwargs={'organisation': self.kwargs['organisation'],
+                               'presentation': self.kwargs['presentation']})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -163,9 +181,11 @@ class BaseSlideView(BaseCmsWithContextView):
             kwargs_slide = None
 
         if self.has_back_to_presentation:
-            context['back_button'] = reverse('cms:presentations_detail', kwargs=self.kwargs_presentation)
+            context['back_button'] = reverse('cms:presentations_detail',
+                                             kwargs=self.kwargs_presentation)
 
         if self.has_slide_delete_btn:
-            context['del_button'] = reverse('cms:slides_delete', kwargs=kwargs_slide)
+            context['del_button'] = reverse('cms:slides_delete',
+                                            kwargs=kwargs_slide)
 
         return context

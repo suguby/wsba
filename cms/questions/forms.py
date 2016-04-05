@@ -8,7 +8,9 @@ from presentations.models import Question
 
 class QuestionForm(ModelForm):
 
-    common = forms.BooleanField(label='Общий', required=False, help_text="Использовать в разных организациях")
+    common = forms.BooleanField(label='Общий',
+                                required=False,
+                                help_text="Использовать в разных организациях")
 
     class Meta:
         model = Question
