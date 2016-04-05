@@ -3,20 +3,7 @@
 {% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
 
 {% block branding %}
-<h1 id="site-name"><a href="{% url 'admin:index' %}">WSBA</a></h1>
+<h1 id="site-name"><a href="{% url 'admin:index' %}">WSBA Admin</a></h1>
 {% endblock %}
 
-{% block nav-global %}
-    <a href="{% url 'cms:main' organisation='ikea'%}">
-    Панель управления ikea
-    </a>
-/
-    <a href="{% url 'cms:questions_list' organisation='ikea'%}">
-    Вопросы ikea
-    </a>
-/
-    <a href="{% url 'cms:presentations_list' organisation='ikea'%}">
-    Презентации ikea
-    </a>
-{% endblock %}
-
+{% block nav-global %}{% endblock %}

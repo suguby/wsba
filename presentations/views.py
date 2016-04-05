@@ -23,7 +23,7 @@ class SlideView_new(TemplateView):
         slide = self._get_slide(kwargs)
         question = slide.question
 
-        context = super(SlideView, self).get_context_data(**kwargs)
+        context = super(SlideView_new, self).get_context_data(**kwargs)
         context['slide'] = slide
         answers = Answer.objects.filter(question=question)
         for answer in answers:
@@ -90,5 +90,3 @@ class SlideView(TemplateView):
         else:
             raise Exception('Нет такого слайда!!!')
         return slide
-
-

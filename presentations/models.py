@@ -34,6 +34,7 @@ class Presentation(ChangeAbstractModel):
     name = models.CharField(verbose_name='Название презентации', max_length=64)
     slug = models.SlugField(verbose_name='Слаг', null=True, blank=True)
     position = models.IntegerField(verbose_name='Позиция', default=0, editable=False)
+    description = models.TextField(verbose_name='Описание', null=True, blank=True)
 
     objects = SorterManager()
 
@@ -108,6 +109,9 @@ class CoreSlide(ChangeAbstractModel):
             slide.save()
             i += 1
 
+    def __str__(self):
+        return '{presentation} - {position}'.format(presentation=self.presentation, position=self.position)
+
 
 class Question(models.Model):
     ANSWER_TYPE = (
@@ -155,7 +159,8 @@ class Answer(models.Model):
 
     @property
     def next_answer(self):
-        next_answers = Answer.objects.filter(question=self.question_id).filter(position__gt=self.position)
+        next_answers = Answer.objects.filter(question=self.question_id).\
+            filter(position__gt=self.position)
         if next_answers:
             return next_answers.first()
         else:

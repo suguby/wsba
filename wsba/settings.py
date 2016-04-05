@@ -14,6 +14,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 
 import os
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -45,8 +46,8 @@ INSTALLED_APPS = [
     'django_extensions',
     'bootstrap_pagination',
 
-    'user_interface',
     'presentations',
+    'user_interface',
     'cms',
 ]
 
@@ -119,8 +120,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'ru-RU'
 
-TIME_ZONE = 'UTC'
-
 USE_I18N = True
 
 USE_L10N = True
@@ -132,13 +131,20 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+try:
+    from .local_settings import *
+except ImportError as e:
+    print('WARNING! No local_settings - use only base...')
+
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
 STATIC_ROOT = os.path.join(BASE_DIR, 'extra', 'static')
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'extra', 'media')
+
 COMPRESS_ROOT = STATIC_ROOT
 
 # Для уменьшения css и js файлов
@@ -151,3 +157,6 @@ LOGIN_URL = '/admin/'
 
 # Вывод количества объектов из списка на странице с пагинатором
 PAGINATE = 25
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'extra', 'media')
+

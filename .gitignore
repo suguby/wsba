@@ -5,6 +5,9 @@ logs/
 /static/vendors
 
 
+=======
+user_interface/management/run_command.py
+>>>>>>> develop
 
 ### Python template
 
@@ -13,7 +16,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-
+/wsba/local_settings.py
 # C extensions
 *.so
 mcsu/settings

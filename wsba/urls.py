@@ -27,7 +27,6 @@ urlpatterns = [
     url(r'^(?P<organisation>\w+)/cms/', include('cms.urls', namespace='cms')),
     url(r'^slides/', include('presentations.slides_urls')),
     url(r'^(?P<organisation>\w+)/', include('user_interface.urls')),
-
 ]
 
 if settings.DEBUG:

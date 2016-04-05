@@ -2,19 +2,36 @@
 
 {%  block container %}
     <div>
-    <br/><br/><br/>
-        <h3>Презентации для {{ organisation.name }}</h3>
-        <ul>
-            <li>
-                <a href="#">Первая презентация</a>
-            </li>
-            <li>
-                <a href="#">Вторя презентация</a>
-            </li>
-            <li>
-                <a href="#">Третья презентация</a>
-            </li>
-        </ul>
+    <br/><br/>
+        Привет, <strong>{{ user }}</strong>! Ваша компания: <strong>{{ user.organisation.name }}</strong>
+<hr>
+Презентаций: <strong>{{ presentations|length }}</strong>
+<br><br>
+<table class="table table-striped">
+    <thead>
+    <th>Название</th>
+    <th>Дата создания</th>
+    <th>Дата изменения</th>
+    <th>Пройти</th>
+    </thead>
+    {% for presentation in presentations %}
+         <tr>
+    <td>{{ presentation.name }}</td>
+    <td>{{ presentation.created_at }}</td>
+    <td>{{ presentation.modified_at }}</td>
+    <td><a href="{% url 'presentation_begin' organisation.slug presentation.id %}">посмотреть</a></td>
+        </tr>
+{% endfor %}
+</table>
+
+<!--Польвователи текущей организации:-->
+<!--<ul>-->
+<!--{% for i in test.organisation.all %}-->
+   <!--<li>{{ i.name }}</li>-->
+<!--{% endfor %}-->
+<!--(если для пробы - то сделай отдельный файл tmp.html а то не очень понятно планируется ли это в проду? )-->
+<!--</ul>-->
+
 
     </div>
 {% endblock %}
