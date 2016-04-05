@@ -18,10 +18,11 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
-from .views import IndexView, PrefaceView
+from .views import IndexView, PrefaceView, ThanksView
 
 urlpatterns = [
     url(r'^$', PrefaceView.as_view(), name='preface'),
+    url(r'^thanks/', ThanksView.as_view(), name='thanks'),
     url(r'^admin/', admin.site.urls),
     url(r'^slides/', include('presentations.slides_urls')),
     url(r'^(?P<organisation>\w+)/', include('user_interface.urls')),
