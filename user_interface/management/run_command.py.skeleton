@@ -1,0 +1,15 @@
+# -*- coding:utf-8 -*-
+import os
+
+import django
+from django.core.management import call_command
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "wsba.settings")
+django.setup()
+
+call_command('add_test_data',
+             presentations='5-10',
+             clean=True,
+             # refresh=True,
+             # report=True,
+             )

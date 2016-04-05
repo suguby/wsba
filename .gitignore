@@ -1,6 +1,7 @@
 wsba/settings/local.py
 extra/
 logs/
+user_interface/management/run_command.py
 
 ### Python template
 # Byte-compiled / optimized / DLL files
