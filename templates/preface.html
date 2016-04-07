@@ -7,7 +7,14 @@
         <p>Для регистрации организации необходимо заполнить форму:</p>
         <form method="post" action="">
             {% csrf_token %}
-                {{ form }}
+                {% if form.Organisation_name.errors %}
+                    <div class="form-group has-warning has-feedback">
+                        {{ form.Organisation_name }}
+                        {{ form.Organisation_name.errors }}
+                    </div>
+                {% else %}
+                    <div>{{ form.Organisation_name }}</div>
+                {% endif %}
             <input type="submit" class="btn btn-primary" value="Зарегистрировать" >
         </form>
     </div>

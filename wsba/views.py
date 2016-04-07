@@ -21,6 +21,10 @@ class PrefaceView(FormView):
         return render(request, 'preface.html', {'form': form})
 
     def post(self, request, *args, **kwargs):
+        if not request.POST.get('Organisation_name'):
+            form = PrefaceForm()
+            form.errors['Organisation_name'] = ["Введите имя организации"]
+            return self.form_invalid(form)
 
         if Organisation.objects.filter(name=request.POST.get('Organisation_name')):
             # пометить поле как невалидное и сообщить, что такая организация уже есть
