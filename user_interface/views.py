@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 from django.http import Http404
 from django.views.generic import TemplateView
+
+from presentations.views import slide_question_context
 from user_interface.models import ProjectUser, UserPresentation
-from presentations.models import Presentation, CoreSlide, Organisation
+from presentations.models import Presentation, CoreSlide, Organisation, Answer
 from django.http import HttpResponse
 from datetime import datetime, timedelta
 from django.contrib.auth.models import User
@@ -103,6 +105,9 @@ class PresentationSlideView(OrganisationTemplateView):
                 previous_url=previous_url,
 
         )
+        if slide.question:
+            slide_question_context(context=context, kwargs=kwargs)
+
         return context
 
 
