@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load field_css %}
 {%  block container %}
     <div>
         <h1>Добро пожаловать в wsba!</h1><br>
@@ -8,9 +9,11 @@
         <form method="post" action="">
             {% csrf_token %}
                 {% if form.Organisation_name.errors %}
-                    <div class="form-group has-warning has-feedback">
-                        {{ form.Organisation_name }}
-                        {{ form.Organisation_name.errors }}
+                    <div class="form-group has-error">
+                        {{ form.Organisation_name | replace_css_class:"form-control" }}
+                        {% for error in form.Organisation_name.errors %}
+                            <div class="text-warning">{{ error }}</div>
+                        {% endfor %}
                     </div>
                 {% else %}
                     <div>{{ form.Organisation_name }}</div>

@@ -14,6 +14,7 @@ class IndexView(TemplateView):
 
 
 class PrefaceView(FormView):
+    form_class = PrefaceForm
     template_name = 'preface.html'
 
     def get(self, request):
