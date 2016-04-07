@@ -11,7 +11,7 @@ class QuestionViewTests(TestCase):
         self.organisation = Organisation.objects.create(name='Рога и Копыта')
         self.presentation = Presentation.objects.create(organisation=self.organisation)
         self.slide = CoreSlide.objects.create(presentation=self.presentation)
-        self.url = reverse('slide_view', kwargs={'slide': self.slide.id})
+        self.url = reverse('slide_view', kwargs={'slide_id': self.slide.id})
 
     def test_no_question(self):
         response = self.client.get(self.url)

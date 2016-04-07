@@ -27,7 +27,7 @@ def slide_question_context(context, kwargs):
         count = 0
         if len(user_saved_answers):
             for answer in answers:
-                if answer.has_comment:
+                if answer.has_comment and answer.id in user_saved_answers:
                     answer.comment = user_saved_answers[answer.id].comment
                     count += 1
         context['answers'] = answers
@@ -59,4 +59,4 @@ class SlideView(TemplateView):
                 us = UserAnswer(answer_id=answer.id, user_id=1, comment=comment)
 
                 us.save()
-        return redirect(reverse('slide_view', kwargs=kwargs))
+        return redirect(request.POST.get('next', '/'))
