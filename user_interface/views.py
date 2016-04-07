@@ -105,6 +105,7 @@ class PresentationSlideView(OrganisationTemplateView):
                                kwargs=dict(
                                     organisation=presentation.organisation.slug,
                                     presentation_id=presentation.id,
+                                   #  TODO фильтровать по презентации !!!
                                     slide_id=CoreSlide.objects.filter(position__gt=slide.position).order_by('position')[0].id
                                )
                             )
