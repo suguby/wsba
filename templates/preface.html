@@ -10,7 +10,7 @@
             {% csrf_token %}
                 {% if form.Organisation_name.errors %}
                     <div class="form-group has-error">
-                        {{ form.Organisation_name | replace_css_class:"form-control" }}
+                        {{ form.Organisation_name | add_css_class:"form-control" }}
                         {% for error in form.Organisation_name.errors %}
                             <div class="text-warning">{{ error }}</div>
                         {% endfor %}

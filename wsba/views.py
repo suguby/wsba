@@ -28,7 +28,6 @@ class PrefaceView(FormView):
             return self.form_invalid(form)
 
         if Organisation.objects.filter(name=request.POST.get('Organisation_name')):
-            # пометить поле как невалидное и сообщить, что такая организация уже есть
             form = PrefaceForm()
             form.errors['Organisation_name'] = ["Организация уже зарегистрирована ранее"]
             return self.form_invalid(form)
@@ -37,5 +36,7 @@ class PrefaceView(FormView):
             new_org.save()
         return HttpResponseRedirect('/thanks/')
 
+
 class ThanksView(TemplateView):
     template_name = 'thanks.html'
+

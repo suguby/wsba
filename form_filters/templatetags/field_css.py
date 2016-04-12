@@ -39,7 +39,8 @@ class CssChanger:
 _css_changer = CssChanger()
 
 
-@register.filter
+@register.filter(is_safe=True)
+@stringfilter
 def add_css_class(elem, klass):
     return _css_changer.do(elem, klass, _css_changer.add)
 

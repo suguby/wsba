@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'user_interface',
     'presentations',
     'cms',
+    'form_filters'
 ]
 
 MIDDLEWARE_CLASSES = [
