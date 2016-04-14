@@ -1,0 +1,30 @@
+{% url "cms:questions_list" organisation.slug as url_question_list %}
+
+<div class="page-sidebar sidebar">
+
+    <div class="page-sidebar-inner slimscroll">
+
+        <ul class="menu accordion-menu">
+
+            <li {% if view.tab == 'tab_dashboard' %}class="active"{% endif %}>
+                <a href="{% url 'cms:main' organisation.slug %}" class="waves-effect waves-button">
+                    <span class="menu-icon glyphicon glyphicon-home"></span>
+                    <p>Панель</p>
+                </a>
+            </li>
+            <li {% if view.tab == 'tab_presentations' %}class="active"{% endif %}>
+                <a href="{% url "cms:presentations_list" organisation.slug %}" class="waves-effect waves-button">
+                    <span class="menu-icon glyphicon glyphicon-list-alt"></span>
+                    <p>Презентации</p>
+                </a>
+            </li>
+            <li {% if view.tab == 'tab_questions' %}class="active"{% endif %}>
+                <a href="{% url "cms:questions_list" organisation.slug %}" class="waves-effect waves-button">
+                    <span class="menu-icon glyphicon glyphicon-question-sign"></span>
+                    <p>Вопросы</p>
+                </a>
+            </li>
+
+        </ul>
+    </div><!-- Page Sidebar Inner -->
+</div><!-- Page Sidebar -->

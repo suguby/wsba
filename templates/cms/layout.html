@@ -1,0 +1,17 @@
+{% extends 'cms/base.html' %}
+
+{% block title %}{{ block.super }} {% if view.title %} | {{ view.title }}{% endif %}{% endblock title %}
+
+{% block page_title %}{% endblock page_title %}
+
+{% block breadcrumb %}{% endblock breadcrumb %}
+
+{% block layout %}
+
+{% block beforecontent %}{% endblock beforecontent %}
+
+
+{% block content %}{% endblock content %}
+
+
+{% endblock layout %}

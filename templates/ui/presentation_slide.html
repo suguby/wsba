@@ -1,0 +1,21 @@
+{% extends 'ui/base.html' %}
+
+{% block container %}
+
+    <div class="row" style="padding-top: 50px;">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div class="panel panel-primary">
+                <div class="panel-heading">Время начала: {{ request.session.time_start }}
+                    <h3 class="panel-title">{{ presentation.name }} | Слайд {{ slide.position }} из {{ len }}</h3>
+                </div>
+                {% include 'presentations/common_question.html' %}
+            </div>
+
+        </div>
+
+        <div class="col-md-2"></div>
+    </div>
+
+
+{% endblock %}

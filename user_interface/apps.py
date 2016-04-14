@@ -1,7 +1,1 @@
 # -*- coding: utf-8 -*-
-
-from django.apps import AppConfig
-
-
-class UserInterfaceConfig(AppConfig):
-    name = 'user_interface'
