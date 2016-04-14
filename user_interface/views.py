@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
+from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.views.generic import TemplateView
+
+from presentations.views import slide_question_context
 from user_interface.models import ProjectUser, UserPresentation
-from presentations.models import Presentation, CoreSlide, Organisation
+from presentations.models import Presentation, CoreSlide, Organisation, Answer
 from django.http import HttpResponse
 from datetime import datetime, timedelta
 from django.contrib.auth.models import User
@@ -86,14 +89,30 @@ class PresentationSlideView(OrganisationTemplateView):
             raise Http404()
 
         try:
-            previous_url = CoreSlide.objects.filter(position__lt=slide.position).order_by('-position')[0].id
+            # TODO высушить
+            previous_url = reverse('presentation_slide',
+                               kwargs=dict(
+                                    organisation=presentation.organisation.slug,
+                                    presentation_id=presentation.id,
+                                    slide_id=CoreSlide.objects.filter(position__lt=slide.position).order_by('-position')[0].id
+                               )
+                            )
         except IndexError:
             previous_url = False
 
         try:
-            next_url = CoreSlide.objects.filter(position__gt=slide.position).order_by('position')[0].id
+            next_url = reverse('presentation_slide',
+                               kwargs=dict(
+                                    organisation=presentation.organisation.slug,
+                                    presentation_id=presentation.id,
+                                   #  TODO фильтровать по презентации !!!
+                                    slide_id=CoreSlide.objects.filter(position__gt=slide.position).order_by('position')[0].id
+                               )
+                            )
         except IndexError:
             next_url = False
+
+        last_url = reverse('presentationdone', kwargs=dict(organisation=presentation.organisation.slug, pk=presentation.id))
 
         context.update(
                 presentation=presentation,
@@ -101,8 +120,11 @@ class PresentationSlideView(OrganisationTemplateView):
                 len=len(CoreSlide.objects.filter(presentation=presentation_id)),
                 next_url=next_url,
                 previous_url=previous_url,
-
+                last_url=last_url,
         )
+        if slide.question:
+            slide_question_context(context=context, kwargs=kwargs)
+
         return context
 
 

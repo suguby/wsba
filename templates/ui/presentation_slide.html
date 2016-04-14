@@ -9,23 +9,8 @@
                 <div class="panel-heading">Время начала: {{ request.session.time_start }}
                     <h3 class="panel-title">{{ presentation.name }} | Слайд {{ slide.position }} из {{ len }}</h3>
                 </div>
-                <div class="panel-body">{{ slide.description }}</div>
-                <hr>
-                {% if slide.image %}
-                    <div class="panel-body"><img src="{{ slide.image.url }}"></div>
-                {% endif %}
+                {% include 'presentations/common_question.html' %}
             </div>
-
-            {% if previous_url %}
-                <a class="btn btn-default left" href="{{ previous_url }}" role="button">Назад</a>
-            {% endif %}
-
-            {% if next_url %}
-                <a class="btn btn-default left" href="{{ next_url }}" role="button">Далее</a>
-            {% else %}
-                <a class="btn btn-default right" href="{% url 'presentationdone' organisation.slug presentation.id %}" role="button">Закончить</a>
-            {% endif %}
-
 
         </div>
 

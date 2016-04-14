@@ -1,9 +1,0 @@
-{% extends 'presentations/../base.html' %}
-
-{% block container%}
-    <img src="{{ slide.image }}">
-    <p>{{ slide.description }}</p>
-    {% if question %}
-        {{ form }}
-    {% endif %}
-{% endblock %}
