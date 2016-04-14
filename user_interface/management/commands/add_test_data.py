@@ -127,7 +127,6 @@ class DbFiller:
             question, created = Question.objects.get_or_create(
                 text=question_text,
                 defaults=dict(
-                    number=i,
                     answers_type=random.choice(self.ANSWER_TYPE)
                 )
             )
@@ -137,7 +136,6 @@ class DbFiller:
                     question=question,
                     text=random.choice(self.ANSWERS),
                     defaults=dict(
-                        variant_number=j,
                         is_right=random.choice([True, False]),
                         has_comment=random.choice([True, False]),
                     )
