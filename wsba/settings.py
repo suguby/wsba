@@ -41,6 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'compressor',
+    'bootstrapform',
+    'django_extensions',
+    'bootstrap_pagination',
+
     'presentations',
     'user_interface',
     'cms',
@@ -113,7 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-RU'
 
 USE_I18N = True
 
@@ -139,4 +144,19 @@ STATICFILES_DIRS = (
 STATIC_ROOT = os.path.join(BASE_DIR, 'extra', 'static')
 
 MEDIA_URL = '/media/'
+
+COMPRESS_ROOT = STATIC_ROOT
+
+# Для уменьшения css и js файлов
+if DEBUG:
+    COMPRESS_ENABLED = False
+else:
+    COMPRESS_ENABLED = True
+
+LOGIN_URL = '/admin/'
+
+# Вывод количества объектов из списка на странице с пагинатором
+PAGINATE = 25
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'extra', 'media')
+

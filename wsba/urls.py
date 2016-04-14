@@ -24,6 +24,7 @@ from .views import IndexView
 urlpatterns = [
     url(r'^$', IndexView.as_view(), name='index'),
     url(r'^admin/', admin.site.urls),
+    url(r'^(?P<organisation>\w+)/cms/', include('cms.urls', namespace='cms')),
     url(r'^slides/', include('presentations.urls')),
     url(r'^(?P<organisation>\w+)/', include('user_interface.urls')),
 ]

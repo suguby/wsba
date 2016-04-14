@@ -22,7 +22,7 @@ class QuestionSingleViewTests(QuestionViewTests):
 
     def setUp(self):
         super().setUp()
-        self.question = Question.objects.create(number=1, text='Кто виноват?', answers_type='single')
+        self.question = Question.objects.create(text='Кто виноват?', answers_type='single')
         self.slide.question = self.question
         self.slide.save()
 
@@ -32,8 +32,8 @@ class QuestionSingleViewTests(QuestionViewTests):
         self.assertContains(response, self.question.text)
 
     def test_single_answer(self):
-        answer1 = Answer.objects.create(question_id=self.question.id, variant_number=1, text='Yes', has_comment=False)
-        answer2 = Answer.objects.create(question_id=self.question.id, variant_number=2, text='No', has_comment=False)
+        answer1 = Answer.objects.create(question_id=self.question.id, position=1, text='Yes', has_comment=False)
+        answer2 = Answer.objects.create(question_id=self.question.id, position=2, text='No', has_comment=False)
 
         response = self.client.get(self.url)
         self.assertInHTML(needle='<input type="radio" name="group1" value="{}">'.format(answer1.id),
@@ -42,8 +42,8 @@ class QuestionSingleViewTests(QuestionViewTests):
                           haystack=response.rendered_content)
 
     def test_single_commented_answer(self):
-        answer1 = Answer.objects.create(question_id=self.question.id, variant_number=1, text='Yes', has_comment=False)
-        answer2 = Answer.objects.create(question_id=self.question.id, variant_number=2, text='No', has_comment=True)
+        answer1 = Answer.objects.create(question_id=self.question.id, position=1, text='Yes', has_comment=False)
+        answer2 = Answer.objects.create(question_id=self.question.id, position=2, text='No', has_comment=True)
 
         response = self.client.get(self.url)
         self.assertInHTML(needle='<input type="radio" name="group1" value="{}">'.format(answer1.id),
@@ -53,8 +53,8 @@ class QuestionSingleViewTests(QuestionViewTests):
         self.assertContains(response, "Комментарий:")  # тоже хрупко - вдруг в шаблоне поменяется слово? я бы html-элемент искал поле для воода комментария с определенным именем
 
     def test_single_answer_saving(self):
-        answer1 = Answer.objects.create(question_id=self.question.id, variant_number=1, text='Yes', has_comment=False)
-        answer2 = Answer.objects.create(question_id=self.question.id, variant_number=2, text='No', has_comment=False)
+        answer1 = Answer.objects.create(question_id=self.question.id, position=1, text='Yes', has_comment=False)
+        answer2 = Answer.objects.create(question_id=self.question.id, position=2, text='No', has_comment=False)
 
         response = self.client.post(self.url, {'group1': [answer2.id], })
         self.assertEqual(response.status_code, 302)
@@ -62,8 +62,8 @@ class QuestionSingleViewTests(QuestionViewTests):
         self.assertEqual(len(answers), 1)
 
     def test_single_answer_commented_saving(self):
-        answer1 = Answer.objects.create(question_id=self.question.id, variant_number=1, text='Yes', has_comment=True)
-        answer2 = Answer.objects.create(question_id=self.question.id, variant_number=2, text='No', has_comment=False)
+        answer1 = Answer.objects.create(question_id=self.question.id, position=1, text='Yes', has_comment=True)
+        answer2 = Answer.objects.create(question_id=self.question.id, position=2, text='No', has_comment=False)
 
         response = self.client.post(self.url, {'group1': [answer1.id], 'comment': 'some text'})
         self.assertEqual(response.status_code, 302)
@@ -72,8 +72,8 @@ class QuestionSingleViewTests(QuestionViewTests):
         self.assertEqual(answers[0].comment, 'some text')
 
     def test_view_old_single_answer(self):
-        answer1 = Answer.objects.create(question_id=self.question.id, variant_number=1, text='Yes', has_comment=False)
-        answer2 = Answer.objects.create(question_id=self.question.id, variant_number=2, text='No', has_comment=False)
+        answer1 = Answer.objects.create(question_id=self.question.id, position=1, text='Yes', has_comment=False)
+        answer2 = Answer.objects.create(question_id=self.question.id, position=2, text='No', has_comment=False)
 
         user_answer = UserAnswer.objects.create(user_id=1, answer_id=answer1.id)
 
@@ -82,8 +82,8 @@ class QuestionSingleViewTests(QuestionViewTests):
                           haystack=response.rendered_content)
 
     def test_view_old_single_commented_answer(self):
-        answer1 = Answer.objects.create(question_id=self.question.id, variant_number=1, text='Yes', has_comment=True)
-        answer2 = Answer.objects.create(question_id=self.question.id, variant_number=2, text='No', has_comment=False)
+        answer1 = Answer.objects.create(question_id=self.question.id, position=1, text='Yes', has_comment=True)
+        answer2 = Answer.objects.create(question_id=self.question.id, position=2, text='No', has_comment=False)
 
         user_answer = UserAnswer.objects.create(user_id=1, answer_id=answer1.id, comment="Это комментарий!")
 
@@ -97,14 +97,14 @@ class QuestionMultiViewTests(QuestionViewTests):
 
     def setUp(self):
         super().setUp()
-        self.question = Question.objects.create(number=1, text='Что делать?', answers_type='multi')
+        self.question = Question.objects.create(text='Что делать?', answers_type='multi')
         self.slide.question = self.question
         self.slide.save()
 
     def test_multi_answer(self):
-        answer1 = Answer.objects.create(question_id=self.question.id, variant_number=1, text='Yes', has_comment=False)
-        answer2 = Answer.objects.create(question_id=self.question.id, variant_number=2, text='No', has_comment=False)
-        answer3 = Answer.objects.create(question_id=self.question.id, variant_number=3, text='Nothing',
+        answer1 = Answer.objects.create(question_id=self.question.id, position=1, text='Yes', has_comment=False)
+        answer2 = Answer.objects.create(question_id=self.question.id, position=2, text='No', has_comment=False)
+        answer3 = Answer.objects.create(question_id=self.question.id, position=3, text='Nothing',
                                         has_comment=False)
 
         response = self.client.get(self.url)
@@ -114,8 +114,8 @@ class QuestionMultiViewTests(QuestionViewTests):
         self.assertInHTML(needle=checkbox_html.format(answer3.id), haystack=response.rendered_content)
 
     def test_multi_answer_saving(self):
-        answer1 = Answer.objects.create(question_id=self.question.id, variant_number=1, text='Yes', has_comment=False)
-        answer2 = Answer.objects.create(question_id=self.question.id, variant_number=2, text='No', has_comment=False)
+        answer1 = Answer.objects.create(question_id=self.question.id, position=1, text='Yes', has_comment=False)
+        answer2 = Answer.objects.create(question_id=self.question.id, position=2, text='No', has_comment=False)
 
         response = self.client.post(self.url, {'group1': [answer2.id, answer1.id,]})
         self.assertEqual(response.status_code, 302)
@@ -123,8 +123,8 @@ class QuestionMultiViewTests(QuestionViewTests):
         self.assertEqual(len(answers), 2)
 
     def test_view_old_multi_answer(self):
-        answer1 = Answer.objects.create(question_id=self.question.id, variant_number=1, text='Yes', has_comment=False)
-        answer2 = Answer.objects.create(question_id=self.question.id, variant_number=2, text='No', has_comment=False)
+        answer1 = Answer.objects.create(question_id=self.question.id, position=1, text='Yes', has_comment=False)
+        answer2 = Answer.objects.create(question_id=self.question.id, position=2, text='No', has_comment=False)
 
         user_answer = UserAnswer.objects.create(user_id=1, answer_id=answer1.id)
 
