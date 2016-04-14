@@ -6,10 +6,10 @@
         <h3>Регистрация в системе</h3>
         <form role="form" action="" method="post" >
             {% csrf_token %}
-            {{ form }}<br />
+            {{ form|bootstrap }}<br />
             <button type="submit" class="btn btn-primary">Войти</button>
         </form>
         <br>
-        <a href="">Забыли пароль?</a> / <a href="">Регистрация</a>
+        <a href="{% url "password_reset" %}">Забыли пароль?</a> / <a href="{% url "login" %}?next={{ next }}">Вход в систему</a>
     </div>
 {% endblock %}

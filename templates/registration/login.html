@@ -10,6 +10,6 @@
             <button type="submit" class="btn btn-primary">Войти</button>
         </form>
         <br>
-        <a href="">Забыли пароль?</a> / <a href="">Регистрация</a>
+        <a href="{% url "password_reset" %}">Забыли пароль?</a> / <a href="{% url "registration" %}?next={{ next }}">Регистрация</a>
     </div>
 {% endblock %}

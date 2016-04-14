@@ -35,11 +35,11 @@ class OrganisationTemplateView(OrganisationLoginRequiredMixin, TemplateView):
             organisation = Organisation.objects.get(slug=org_slug)
         except Organisation.DoesNotExist:
             raise Http404()
-        self.request.session['user'] = ProjectUser.objects.get(name='tester').name
+        self.request.session['user'] = self.request.user.username
 
         context.update(
                 organisation=organisation,
-                project_user=ProjectUser.objects.get(name='tester')
+                project_user=self.request.user,
         )
         return context
 
@@ -49,7 +49,7 @@ class OrganisationIndexView(OrganisationTemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        project_user = ProjectUser.objects.get(name='tester')
+        project_user = ProjectUser.objects.get(id=self.request.user.id)
 
         context.update({
             'user': project_user,

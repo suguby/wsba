@@ -3,7 +3,7 @@
 {%  block container %}
     <div>
     <br/><br/>
-        Привет, <strong>{{ user }}</strong>! Ваша компания: <strong>{{ user.organisation.name }}</strong>
+        Привет, <strong>{{ user.username }}</strong>! Ваша компания: <strong>{{ user.organisation.name }}</strong>
 <hr>
 Презентаций: <strong>{{ presentations|length }}</strong>
 <br><br>
