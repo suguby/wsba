@@ -1,4 +1,4 @@
-{% extends 'ui/base.html' %}
+{% extends 'registration/base.html' %}
 {% load bootstrap %}
 
 {%  block container %}
@@ -6,7 +6,7 @@
         <h3>Вход в систему</h3>
         <form role="form" action="" method="post" >
             {% csrf_token %}
-            {{ aform|bootstrap }}<br />
+            {{ form|bootstrap }}<br />
             <button type="submit" class="btn btn-primary">Войти</button>
         </form>
         <br>

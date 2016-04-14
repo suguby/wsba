@@ -1,0 +1,15 @@
+{% extends 'registration/base.html' %}
+{% load bootstrap %}
+
+{%  block container %}
+    <div>
+        <h3>Регистрация в системе</h3>
+        <form role="form" action="" method="post" >
+            {% csrf_token %}
+            {{ form }}<br />
+            <button type="submit" class="btn btn-primary">Войти</button>
+        </form>
+        <br>
+        <a href="">Забыли пароль?</a> / <a href="">Регистрация</a>
+    </div>
+{% endblock %}

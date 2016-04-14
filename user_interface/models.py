@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
+from django.contrib.auth.models import User
 from django.db import models
 
 
-class ProjectUser(models.Model):
-    name = models.CharField(max_length=64)
-    organisation = models.ForeignKey('presentations.Organisation', related_name='organisation')
+class ProjectUser(User):
+    organisation = models.ForeignKey('presentations.Organisation',
+                                     related_name='organisation', null=True, blank=True)
 
     def __str__(self):
-        return self.name
+        return self.get_full_name()
 
     class Meta:
         db_table = 'project_users'

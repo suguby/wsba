@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 
-from django.contrib.auth.forms import AuthenticationForm
 from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.http import HttpResponseRedirect
@@ -17,8 +16,7 @@ class OrganisationLoginRequiredMixin(object):
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated():
             return super(OrganisationLoginRequiredMixin, self).dispatch(request, *args, **kwargs)
-        organisation = kwargs.get('organisation')
-        redirect_to = reverse('organisation_login', kwargs=dict(organisation=organisation))
+        redirect_to = reverse('login')
         redirect_to += '?next={}'.format(request.get_full_path())
         return HttpResponseRedirect(redirect_to=redirect_to)
 
@@ -171,15 +169,4 @@ class PresentationDoneView(OrganisationTemplateView):
         )
         return context
 
-class OrganisationLoginView(TemplateView):
-    template_name = 'ui/login.html'
 
-    def get_context_data(self, **kwargs):
-        aform = AuthenticationForm()
-        aform.fields['username'].label = u'Имя пользователя'
-        aform.fields['password'].label = u'Пароль'
-        context = dict(aform=aform)
-        return context
-
-    def post(self, request, *args, **kwargs):
-        return 'wow'
