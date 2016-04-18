@@ -9,12 +9,26 @@ from presentations.models import Organisation, Presentation
 class ProjectUserTestCase(TestCase):
     def setUp(self):
         self.org = Organisation.objects.create(name='testorg', slug='testorg')
-        self.user = ProjectUser.objects.create(name="username", organisation=self.org)
-
+        self.user = ProjectUser.objects.create(name='tester1', organisation=self.org)
+        self.url = reverse(viewname='organisation_detail', kwargs=dict(organisation=self.org.slug,))
 
     def test_presentations(self):
-            presentation_1 = Presentation.objects.create(organisation=self.org, name='test_presentation1')
-            presentation_2 = Presentation.objects.create(organisation=self.org, name='test_presentation2')
-            response = self.client.get(reverse(viewname='organisation_detail', kwargs=dict(organisation=self.org.slug)))
+            presentation_1 = Presentation.objects.create(
+                    organisation=self.org,
+                    name='test_presentation1',
+                    description='описание 1',
+            )
+            presentation_2 = Presentation.objects.create(
+                    organisation=self.org,
+                    name='test_presentation2',
+                    description='описание 2',
+            )
+            response = self.client.get(self.url)
+            self.assertContains(response, status_code=200, text=self.org.slug)
             self.assertContains(response, status_code=200, text=presentation_1.name)
             self.assertContains(response, status_code=200, text=presentation_2.name)
+            self.assertContains(response, status_code=200, text='посмотреть', count=2)
+            self.assertInHTML(needle='<a href="/{}/presentation/{}/">посмотреть</a>'.format(self.org.slug, presentation_1.id),
+                              haystack=response.rendered_content)
+            self.assertInHTML(needle='<a href="/{}/presentation/{}/">посмотреть</a>'.format(self.org.slug, presentation_2.id),
+                              haystack=response.rendered_content)

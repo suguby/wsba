@@ -40,10 +40,15 @@ class OrganisationIndexView(OrganisationTemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         project_user = ProjectUser.objects.get(name='tester')
+        org_slug = kwargs.get('organisation', '')
+        try:
+            organisation = Organisation.objects.get(slug=org_slug)
+        except Organisation.DoesNotExist:
+            raise Http404()
 
         context.update({
             'user': project_user,
-            'presentations': Presentation.objects.filter(organisation=project_user.organisation),
+            'presentations': Presentation.objects.filter(organisation=organisation),
 
         })
         return context
