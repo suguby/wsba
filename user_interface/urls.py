@@ -6,7 +6,7 @@ from .views import OrganisationIndexView, PresentationBeginView, PresentationSli
 
 urlpatterns = [
     url(r'^$', OrganisationIndexView.as_view(), name='organisation_detail'),
-    url(r'^presentation/(?P<pk>\d+)/$',  # TODO изменить на presentation_id
+    url(r'^presentation/(?P<presentation_id>\d+)/$',  # TODO изменить на presentation_id
         PresentationBeginView.as_view(), name='presentation_begin'),
     url(r'^presentation/(?P<presentation_id>\d+)/slides/(?P<slide_id>\d+)$',
         PresentationSlideView.as_view(), name='presentation_slide'),

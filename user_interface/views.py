@@ -59,7 +59,7 @@ class PresentationBeginView(OrganisationTemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        presentation_id = kwargs.get('pk', '')
+        presentation_id = kwargs.get('presentation_id', '')
 
         try:
             presentation = Presentation.objects.get(id=presentation_id)
