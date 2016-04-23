@@ -72,6 +72,7 @@ class CoreSlide(ChangeAbstractModel):
 
     objects = SorterManager()
 
+
     class Meta:
         db_table = 'slides'
         verbose_name = 'Слайд'
@@ -98,7 +99,17 @@ class CoreSlide(ChangeAbstractModel):
     def save(self, *args, **kwargs):
         if self.position == 0:
             self.position = CoreSlide.objects.filter(presentation=self.presentation).count() + 1
-        return super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
+
+        import PIL
+        from PIL import Image
+
+        basewidth = 700
+        img = Image.open(self.image.path)
+        wpercent = (basewidth / float(img.size[0]))
+        hsize = int((float(img.size[1]) * float(wpercent)))
+        img = img.resize((basewidth, hsize), PIL.Image.ANTIALIAS)
+        img.save(self.image.path)
 
     def delete(self, using=None, keep_parents=False):
         super().delete()
