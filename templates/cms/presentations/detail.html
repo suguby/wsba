@@ -1,0 +1,87 @@
+{% extends 'cms/layout.html' %}
+{% load bootstrap_pagination static %}
+
+{% block content %}
+
+{% include 'cms/_modal_delete.html' %}
+
+<div class="col-lg-12 col-md-12">
+  <div class="panel panel-green">
+    <div class="panel-body">
+        {{ object.name }}
+    </div>
+</div>
+{% if slide_list %}
+<div class="sortable ui-sortable">
+{% for slide in slide_list %}
+    <div class="panel panel-white ui-sortable-handle">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <a class="m-r-xs" href="{% url 'cms:slides_edit' organisation.slug object.pk slide.pk %}">Слайд {{ slide.position }}</a>
+            </h3>
+
+            {% if slide.previous_slide %}
+            <form id="slide_{{ slide.pk }}_up" action='{% url 'cms:slides_up' organisation.slug object.pk slide.pk %}' method='post'>
+            {% csrf_token %}
+             </form>
+            {% endif %}
+
+            {% if slide.next_slide %}
+            <form id="slide_{{ slide.pk }}_down" action='{% url 'cms:slides_down' organisation.slug object.pk slide.pk %}' method='post'>
+            {% csrf_token %}
+            </form>
+            {% endif %}
+             <div class="panel-control pull-left">
+            {% if slide.previous_slide %}
+            <a href="" class="m-r-xs" onClick="document.getElementById('slide_{{ slide.pk }}_up').submit(); return false;"><i class="icon-arrow-up"></i></a>
+            {% else %}
+                <i class="icon-arrow-up m-r-xs" style="color: white;"></i>
+            {% endif %}
+
+            {% if slide.next_slide %}
+            <a href="" class="m-r-xs m-r-xs" onClick="document.getElementById('slide_{{ slide.pk }}_down').submit(); return false;"><i class="icon-arrow-down"></i></a>
+            {% else %}
+                <i class="icon-arrow-down m-r-xs    " style="color: white;"></i>
+            {% endif %}
+            </div>
+
+            <div class="panel-control">
+                <a href="{% url 'cms:slides_edit' organisation.slug object.pk slide.pk %}"><i class="icon-pencil"></i></a>
+                <a href="javascript:void(0);" data-toggle="modal" data-target=".bs-example-modal-sm" onClick='obj_delete("Слайд {{ slide.position }}",
+                                        "{% url 'cms:slides_delete' organisation.slug object.pk slide.pk %}");'><i class="icon-close"></i></a>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-2 col-xs-2">
+                    {% if slide.image %}
+                <img class="img-thumbnail" width="160" src="{{ slide.image.url }}" alt="Слайд {{ slide.position }}">
+                    {% else %}
+                <img class="img-thumbnail" width="160" src="{% static 'img/no-image.png' %}" alt="Слайд {{ slide.position }}">
+                    {% endif %}
+                </div>
+                <div class="col-md-10">
+                <h4>Описание</h4>
+                    <p>{{ slide.description }}</p>
+
+                <h4>Вопрос</h4>
+                    <p>{% if slide.question %}{{ slide.question }}{% else %}Слайд без вопроса{% endif %}</p>
+                </div>
+            </div>
+        </div>
+     </div>
+
+{% endfor %}
+</div>
+{% else %}
+  <div class="panel">
+    <div class="panel-body">
+        В данной презентации еще нет слайдов. <a href="{% url 'cms:slides_add' organisation.slug object.pk %}">Добавить</a>
+    </div>
+</div>
+
+{% endif %}
+
+</div>
+
+{% endblock content %}

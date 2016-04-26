@@ -1,4 +1,4 @@
-#! /home/avis/envs/dj1.9/bin python
+#!/usr/bin/env python
 import os
 import sys
 

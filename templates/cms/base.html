@@ -1,0 +1,189 @@
+{% spaceless %}
+{% load staticfiles compress %}
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <!-- Title -->
+        <title>{% block title %}WSBA{% endblock title %}</title>
+
+        <meta content="width=device-width, initial-scale=1" name="viewport">
+        <meta charset="UTF-8">
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <meta name="author" content="">
+
+        <!-- Styles -->
+        {% block fonts %}
+        <link href='https://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+        {% endblock fonts %}
+        {% compress css %}
+        {% block styles %}
+
+        <link href="{% static 'vendors/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'vendors/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'vendors/simple-line-icons/css/simple-line-icons.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'vendors/Waves/dist/waves.min.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'vendors/Blueprint-SlidePushMenus/css/component.css' %}" rel="stylesheet" type="text/css">
+
+        <!-- Theme Styles -->
+        <link href="{% static 'css/temp.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'css/themes/green.css' %}" class="theme-color" rel="stylesheet" type="text/css">
+        <link href="{% static 'css/custom.css' %}" rel="stylesheet" type="text/css">
+
+        {% endblock styles %}
+        {% endcompress %}
+
+        {% block start_scripts %}
+            {% compress js %}{% endcompress %}
+        {% endblock start_scripts %}
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+    </head>
+    <body class="page-header-fixed">
+        <div class="overlay"></div>
+
+        <main class="page-content content-wrap">
+
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <div class="sidebar-pusher">
+                        <a href="javascript:void(0);" class="waves-effect waves-classic push-sidebar">
+                            <i class="fa fa-bars"></i>
+                        </a>
+                    </div>
+                    <div class="logo-box">
+                        <a href="{% url 'cms:main' organisation.slug %}" class="logo-text"><span>WSBA</span></a>
+                    </div><!-- Logo Box -->
+
+                    <div class="topmenu-outer">
+                        <div class="top-menu">
+                            <ul class="nav navbar-nav navbar-left">
+                                <li>
+                                    <a href="javascript:void(0);" class="waves-effect waves-button waves-classic sidebar-toggle">
+                                        <i class="fa fa-bars"></i>
+                                    </a>
+                                </li>
+
+                                {% if back_button %}
+                                <li>
+                                   <a href="{{ back_button }}" id="back_button" class="waves-effect waves-button waves-classic cd-nav-trigger"><i class="fa fa-arrow-left"></i></a>
+                                </li>
+                                {% endif %}
+                                {% if add_button %}
+                                <li>
+                                   <a href="{{ add_button }}" id="add_button" class="waves-effect waves-button waves-classic cd-nav-trigger"><i class="fa fa-plus"></i></a>
+                                </li>
+                                {% endif %}
+                                {% if edit_button %}
+                                <li>
+                                   <a href="{{ edit_button }}" id="edit_button" class="waves-effect waves-button waves-classic cd-nav-trigger"><i class="fa fa-pencil"></i></a>
+                                </li>
+                                {% endif %}
+                                {% if del_button %}
+                                <li>
+                                   <a href="" id="del_button" data-toggle="modal" data-target=".bs-example-modal-sm" onClick='obj_delete("{{ object.text }}",
+                                        "{{ del_button }}");'
+                                      class="waves-effect waves-button waves-classic cd-nav-trigger"><i class="fa fa-times"></i></a>
+                                </li>
+                                {% endif %}
+
+                            </ul>
+                            <ul class="nav navbar-nav navbar-right">
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle waves-effect waves-button waves-classic" data-toggle="dropdown">
+                                        <span class="user-name">{{ user }}<i class="fa fa-angle-down"></i></span>
+                                        <img class="img-circle avatar" src="{% static 'img/no-image.png' %}" width="40" height="40" alt="">
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-list" role="menu">
+
+                                        <li role="presentation">
+                                            <a href="#">
+                                                <i class="fa fa-user"></i>
+                                                Профиль
+                                            </a>
+                                        </li>
+                                        <li role="presentation">
+                                            <a href="#">
+                                                <i class="fa fa-envelope"></i>
+                                                Сообщения
+                                                <span class="badge badge-success pull-right">4</span>
+                                            </a>
+                                        </li>
+                                        {% if user.is_superuser %}
+                                         <li role="presentation">
+                                            <a href="{% url 'admin:index' %}">
+                                                <i class="fa fa-cogs"></i>
+                                                Администрирование
+                                            </a>
+                                        </li>
+                                        {% endif %}
+                                        <li role="presentation" class="divider"></li>
+                                        <li role="presentation">
+                                            <a href="#">
+                                                <i class="fa fa-sign-out m-r-xs"></i>
+                                                Выход
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul><!-- Nav -->
+                        </div><!-- Top Menu -->
+                    </div>
+                </div>
+            </div><!-- Navbar -->
+
+            {% include 'cms/_sidebar.html' %}
+
+            <div class="page-inner" style="min-height:648px !important"> <!--TODO сделать авто ширину скриптом-->
+
+            {% block page_title %}
+                <div class="page-title">
+                    <h3>{{ view.title }}</h3>
+                </div>
+
+            {% endblock page_title %}
+
+                <div id="main-wrapper">
+
+                    <div class="row">
+                        {% block layout %}{% endblock layout %}
+                    </div><!-- Row -->
+
+                </div><!-- Main Wrapper -->
+
+                {% include 'cms/_footer.html' %}
+
+            </div><!-- Page Inner -->
+        </main><!-- Page Content -->
+
+        <div class="cd-overlay"></div>
+
+        {% compress js %}
+
+        {% block scripts %}
+        <!-- Javascripts -->
+
+        {% block vendor_scripts %}
+        <script src="{% static 'vendors/jquery/dist/jquery.min.js' %}"></script>
+        <script src="{% static 'vendors/jquery-ui/jquery-ui.min.js' %}"></script>
+        <script src="{% static 'vendors/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'vendors/Waves/dist/waves.min.js' %}"></script>
+        {% endblock vendor_scripts %}
+
+        {% block extrascripts %}
+        <script src="{% static 'js/main.js' %}"></script>
+        {% endblock extrascripts %}
+
+        {% endblock scripts %}
+
+        {% endcompress %}
+    </body>
+</html>
+{% endspaceless %}

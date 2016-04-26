@@ -1,0 +1,67 @@
+{% extends 'cms/layout.html' %}
+
+{% block content %}
+
+{% include 'cms/_modal_delete.html' %}
+
+<div class="col-lg-12 col-md-12">
+  <div class="panel">
+    <div class="panel-body">
+        {{ object.text }}
+        <span class="label label-info m-l-xs">{{ object.get_answers_type_display }}</span>
+        {% if not object.organisation %}
+         <span class="label label-warning m-l-xs">Общий</span>
+        {% endif %}
+    </div>
+
+    <ul class="list-group">
+        {% if answers_list %}
+         {% for answer in answers_list %}
+        <li position="{{ answer.position }}" class="list-group-item" id="answer_{{ answer.id }}">
+
+            {% if answer.previous_answer %}
+            <form id="answer_{{ answer.pk }}_up" action='{% url 'cms:answers_up' organisation.slug object.pk answer.pk %}' method='post'>
+            {% csrf_token %}
+             </form>
+            {% endif %}
+
+            {% if answer.next_answer %}
+            <form id="answer_{{ answer.pk }}_down" action='{% url 'cms:answers_down' organisation.slug object.pk answer.pk %}' method='post'>
+            {% csrf_token %}
+            </form>
+            {% endif %}
+
+            {% if answer.previous_answer %}
+            <a href="" class="m-l-xs" onClick="document.getElementById('answer_{{ answer.pk }}_up').submit(); return false;"><i class="fa fa-arrow-up"></i></a>
+            {% else %}
+                <i class="fa fa-arrow-up m-l-xs"></i>
+            {% endif %}
+
+            {% if answer.next_answer %}
+            <a href="" class="m-l-xs m-r-xs" onClick="document.getElementById('answer_{{ answer.pk }}_down').submit(); return false;"><i class="fa fa-arrow-down"></i></a>
+            {% else %}
+                <i class="fa fa-arrow-down m-l-xs m-r-xs"></i>
+            {% endif %}
+
+            {{ answer.text }}
+            {% if answer.is_right %}
+            <span class="label label-success m-l-xs">Правильный</span>
+            {% endif %}
+            {% if answer.has_comment %}
+            <span class="label label-primary m-l-xs">С комментарием</span>
+            {% endif %}
+            <div class="pull-right">
+            <a href="{% url 'cms:answers_edit' organisation.slug object.pk answer.pk %}" class="m-l-xs"><i class="fa fa-pencil"></i></a>
+            <a href="" class="m-l-xs" data-toggle="modal" data-target=".bs-example-modal-sm" onClick='obj_delete("{{ answer.text }}",
+                                        "{% url 'cms:answers_delete' organisation.slug object.pk answer.pk %}");'><i class="fa fa-times"></i></a>
+            </div>
+        </li>
+         {% endfor %}
+         {% else %}
+        <li class="list-group-item">Нет ответов</li>
+    {% endif %}
+    </ul>
+
+ </div>
+</div>
+{% endblock content %}
