@@ -6,6 +6,7 @@ from django.utils.text import slugify
 from unidecode import unidecode
 from presentations.managers import SorterManager
 from user_interface.models import ProjectUser
+from PIL import Image
 
 
 class ChangeAbstractModel(models.Model):
@@ -72,6 +73,8 @@ class CoreSlide(ChangeAbstractModel):
 
     objects = SorterManager()
 
+    IMAGE_MAX_WIDTH = 700  # TODO вынести в настройки - зависит от дизайна + сделать IMAGE_MAX_HEIGHT
+
     class Meta:
         db_table = 'slides'
         verbose_name = 'Слайд'
@@ -98,7 +101,13 @@ class CoreSlide(ChangeAbstractModel):
     def save(self, *args, **kwargs):
         if self.position == 0:
             self.position = CoreSlide.objects.filter(presentation=self.presentation).count() + 1
-        return super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
+        img = Image.open(self.image.path)
+        if img.width > self.IMAGE_MAX_WIDTH:
+            wpercent = (self.IMAGE_MAX_WIDTH / float(img.size[0]))
+            hsize = int((float(img.size[1]) * float(wpercent)))
+            img = img.resize((self.IMAGE_MAX_WIDTH, hsize), Image.ANTIALIAS)
+            img.save(self.image.path)
 
     def delete(self, using=None, keep_parents=False):
         super().delete()
