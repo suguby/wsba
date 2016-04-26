@@ -99,24 +99,30 @@ class PresentationSlideView(OrganisationTemplateView):
             raise Http404()
 
         try:
-            # TODO высушить
+            prev_slide = CoreSlide.objects.filter(
+                presentation=presentation,
+                position__gt=slide.position,
+            ).order_by('-position')[0]
             previous_url = reverse('presentation_slide',
                                kwargs=dict(
                                     organisation=presentation.organisation.slug,
                                     presentation_id=presentation.id,
-                                    slide_id=CoreSlide.objects.filter(position__lt=slide.position).order_by('-position')[0].id
+                                    slide_id=prev_slide.id
                                )
                             )
         except IndexError:
             previous_url = False
 
         try:
+            next_slide = CoreSlide.objects.filter(
+                presentation=presentation,
+                position__gt=slide.position,
+            ).order_by('position')[0]
             next_url = reverse('presentation_slide',
                                kwargs=dict(
                                     organisation=presentation.organisation.slug,
                                     presentation_id=presentation.id,
-                                   #  TODO фильтровать по презентации !!!
-                                    slide_id=CoreSlide.objects.filter(position__gt=slide.position).order_by('position')[0].id
+                                    slide_id=next_slide.id
                                )
                             )
         except IndexError:
