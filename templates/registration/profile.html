@@ -1,0 +1,10 @@
+{% extends 'registration/base.html' %}
+{% load bootstrap %}
+
+{%  block container %}
+    <div>
+        <h3>Профайл пользователя <strong>{{ request.user.name }}</strong></h3>
+        <a href="{% url "password_change" %}">Изменить пароль</a>
+        <a href="{% url "logout" %}">Выйти из системы</a>
+    </div>
+{% endblock %}

@@ -7,7 +7,7 @@
         <form role="form" action="" method="post" >
             {% csrf_token %}
             {{ form|bootstrap }}<br />
-            <button type="submit" class="btn btn-primary">Войти</button>
+            <button type="submit" class="btn btn-primary">Зарегестрироваться</button>
         </form>
         <br>
         <a href="{% url "password_reset" %}">Забыли пароль?</a> / <a href="{% url "login" %}?next={{ next }}">Вход в систему</a>

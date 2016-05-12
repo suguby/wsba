@@ -45,3 +45,7 @@ class RegistrationView(TemplateView):
             return HttpResponseRedirect(redirect_to=next)
         context = dict(form=form)
         return self.render_to_response(context=context)
+
+
+class ProfileView(TemplateView):
+    template_name = 'registration/profile.html'
